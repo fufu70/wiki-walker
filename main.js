@@ -34,6 +34,11 @@ import {
 } from './src/levels/constants/CivicsQuestions.js';
 import {JobManager} from './src/helpers/JobManager.js';
 import {default as wtf} from 'wtf_wikipedia';
+import {updateFPS} from './console.js';
+import {ImageViewer} from './imageViewer.js';
+import {VideoViewer} from './videoViewer.js';
+import {TableViewer} from './tableViewer.js';
+
 window.wtf = wtf;
 window.JobManager = JobManager;
 // grabbing the canvas to draw to

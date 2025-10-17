@@ -1,4 +1,4 @@
-const VideoViewer = ((sources) => {
+export const VideoViewer = ((sources) => {
 	const CLASS_NAME = "video-viewer__video";
 
 
@@ -75,3 +75,5 @@ const VideoViewer = ((sources) => {
 	}
 });
 window.VideoViewer = VideoViewer();
+
+export default VideoViewer;

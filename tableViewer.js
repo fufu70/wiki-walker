@@ -1,4 +1,4 @@
-const TableViewer = ((table) => {
+export const TableViewer = ((table) => {
 	const CLASS_NAME = "table-viewer__table";
 
 	const handleEscape = function(e) {
@@ -134,3 +134,5 @@ const TableViewer = ((table) => {
 });
 window.TableViewer = TableViewer();
 window.TableViewer.addTableStyle();
+
+export default TableViewer;

@@ -1,4 +1,4 @@
-const ImageViewer = ((source) => {
+export const ImageViewer = ((source) => {
 	const CLASS_NAME = "image-viewer__image";
 
 

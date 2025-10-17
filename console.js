@@ -164,7 +164,7 @@ var evalInput = () => {
 var lastTime = window.performance.now();
 var fpsArr = [];
 var fpsIndex = 0;
-var updateFPS = () => {
+export const updateFPS = () => {
   var fps =  Math.ceil(1000 / (window.performance.now() - lastTime));
   fpsIndex ++;
   if (fpsIndex == 60) {
