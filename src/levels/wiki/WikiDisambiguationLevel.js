@@ -50,8 +50,6 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 			this.placeLink(this.links[i], spot);
 			this.floors = [];
 		}
-
-		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));		
 	}
 	
 	addItems(floorPlan, params) {
@@ -101,5 +99,7 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 		});
 
 		events.emit('END_LOADING', {});
+
+		console.log("FLOOR", this.floorPlan, this.floorPlan.toString().replaceAll("0", " "));		
 	}
 }

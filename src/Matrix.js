@@ -94,7 +94,14 @@ export class Matrix {
 	}
 
 	calculateXStart() {
-		return 0;
+		let min = 0;
+		Object.keys(this.matrix).forEach(y => {
+			let tempMin = Math.min(...Object.keys(this.matrix[y]));
+			if (tempMin < min) {
+				min = tempMin;
+			}
+		})
+		return min;
 	}
 
 	yStart() {
