@@ -14,6 +14,7 @@ export const TRANSFERRED_CHARACTERS = {
 	"\n": " ",
 	"\t": " ",
 	"–": "-",
+	"—": "-",
 	"”": "\"",
 	"“": "\"",
 	"’": "'",
