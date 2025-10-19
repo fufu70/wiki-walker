@@ -1,77 +1,82 @@
 var style = `
 .console {
-width: 100vw;
-height: 100vh;
-background: rgba(0, 0, 0, 0.5);
-position: fixed;
-top: 0;
-left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
 
-color: white;
-font-family: monospace;
--webkit-text-stroke-width: 0.5px;
--webkit-text-stroke-color: black;
+  color: white;
+  font-family: monospace;
+  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-color: black;
 }
 
 .console-input {
-background: rgba(0,0,0,0.7);
-width: 100%;
-border: 0px;
-padding: 10px;
-text-indent: 20px;
+  background: rgba(0,0,0,0.7);
+  width: 100%;
+  border: 0px;
+  padding: 10px;
+  text-indent: 20px;
 }
 
 .console-input:read-write:focus {
-outline: none;
+  outline: none;
 }
 
 .console-input::before {
-content: "$";
-left: -8px;
-position: absolute;
+  content: "$";
+  left: -8px;
+  position: absolute;
 }
 
 .console-fps {
-position: fixed;
-display: block;
-right: 0px;
-top: 0px;
-padding: 10px;
+  position: fixed;
+  display: block;
+  right: 0px;
+  top: 0px;
+  padding: 10px;
 }
 
 .console-output {
-width: 100%;
-height: 100%;
-overflow-y: scroll;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
 }
 
 .console-output-log,
 .console-output-info,
 .console-output-warn,
 .console-output-error {
-padding: 10px;
-width: calc(100% - 20px);
-overflow-wrap: break-word;
+  padding: 10px;
+  width: calc(100% - 20px);
+  overflow-wrap: break-word;
 }
 
 .console-output-log span {
-background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .console-output-log {
-color: #eeeeee;
+  color: #eeeeee;
 }
 
 .console-output-error {
-color: #ff8080;
+  color: #ff8080;
 }
 
 .console-output-warn {
-color: #ffe65e;
+  color: #ffe65e;
 }
 
 .console-output-info {
-color: #71f2ff;
+  color: #71f2ff;
+}
+
+.console-output__trace {
+  padding-left: 20px;
+  padding-top: 10px;
 }
 `;
 var consoleStyle = document.createElement('style');
@@ -205,11 +210,13 @@ document.addEventListener('keyup', function(event) {
   pressedKeys[event.code] = false; // Remove the released key
 });
 
-var updateConsole = function(type, args) {
+var updateConsole = function(type, args, trace) {
   capturedConsole.push({
     time: new Date().valueOf(),
     type: type, 
-    args: Array.from(args)
+    args: Array.from(args),
+    trace: trace,
+    // stack: arguments['callee'].stack
   });
   renderConsole();
 }
@@ -239,42 +246,63 @@ var renderConsole = () => {
   capturedConsole.sort((a, b) => {
     return b.time - a.time
   }).map(log => {
-    elem = document.createElement("div");
+    const elem = document.createElement("div");
     elem.className = "console-output-" + log.type;
     elem.innerHTML = '<span>' + JSON.stringify(log.args, getCircularReplacer()) + '</span>';
+    if (log.trace) {
+      elem.innerHTML += '<div class="console-output__trace">' + log.trace.join('<br>') + '</div>'; 
+    }
     return elem;
   }).forEach(elem => {
     consoleOutput.appendChild(elem);
   });
 }
 
-// var originalLog = console.log;
-// console.log = function(message) {
-//     updateConsole("log", arguments);
-//     originalLog.apply(console, arguments); // Call the original console.log
-// };
+function getStackTrace () {
+  var stack;
+
+  try {
+    throw new Error('');
+  }
+  catch (error) {
+    stack = error.stack || '';
+  }
+
+  stack = stack.split('\n').map(function (line) { return line.trim(); });
+  return stack.splice(stack[0] == 'Error' ? 3 : 2);
+}
+
+var originalLog = console.log;
+console.log = function(args) {
+  const trace = getStackTrace();
+  updateConsole("log", arguments, trace);
+  originalLog.apply(console, arguments); // Call the original console.log
+};
 
 
-// var originalWarn = console.warn;
-// console.warn = function(message) {
-//     updateConsole("warn", arguments);
-//     originalWarn.apply(console, arguments); // Call the original console.log
-// };
+var originalWarn = console.warn;
+console.warn = function(message) {
+  const trace = getStackTrace();
+  updateConsole("warn", arguments, trace);
+  originalWarn.apply(console, arguments); // Call the original console.log
+};
 
-// var originalError = console.error;
-// console.error = function(message) {
-//     updateConsole("error", arguments);
-//     originalError.apply(console, arguments); // Call the original console.log
-// };
+var originalError = console.error;
+console.error = function(message) {
+  const trace = getStackTrace();
+  updateConsole("error", arguments, trace);
+  originalError.apply(console, arguments); // Call the original console.log
+};
 
-// var originalInfo = console.info;
-// console.info = function(message) {
-//     updateConsole("info", arguments);
-//     originalInfo.apply(console, arguments); // Call the original console.log
-// };
+var originalInfo = console.info;
+console.info = function(message) {
+  const trace = getStackTrace();
+  updateConsole("info", arguments, trace);
+  originalInfo.apply(console, arguments); // Call the original console.log
+};
 
 // var originalWindowError = window.onerror;
 window.onerror = function(message) {
-    updateConsole("error", arguments);
+    updateConsole("error", arguments, trace);
     // originalWindowError.apply(console, arguments); // Call the original console.log
 };

@@ -67,7 +67,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				requires: [`INTRODUCED_LEVEL WIKI_SEARCH`]
 			},
 			{
-				string: `Hi THere! Welcome to WikiCrawler. Come to me and tell me what you want to know from Wikipedia!`,
+				string: `Hi THere! Welcome to WikiWalker. Come to me and tell me what you want to know from Wikipedia!`,
 				requires: [],
 				addsFlag: `INTRODUCED_LEVEL WIKI_SEARCH`
 			},

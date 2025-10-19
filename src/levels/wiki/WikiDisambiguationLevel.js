@@ -48,8 +48,8 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 			const spot = this.findSpotOnFloor(new Vector2(gridCells(1), gridCells(1)));
 			console.log("spot for " + this.links[i].page, spot);
 			this.placeLink(this.links[i], spot);
-			this.floors = [];
 		}
+		this.floors = [];
 	}
 	
 	addItems(floorPlan, params) {
