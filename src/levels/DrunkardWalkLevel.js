@@ -135,9 +135,9 @@ export class DrunkardWalkLevel extends Level {
 	}
 
 	findRandomSpot(seed, floors, gameObjects, space = new Vector2(gridCells(1), gridCells(1))) {
-		const nextLevelExit = this.findFirstPosition(this.floorPlan);
+		const position = this.findFirstPosition(this.floorPlan);
 		floors = [...floors, {
-			position: nextLevelExit
+			position: position
 		}];
 		return this.findRandomWallSpot(seed, floors, gameObjects, space);
 	}

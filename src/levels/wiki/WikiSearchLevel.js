@@ -21,7 +21,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 			});
 			setTimeout(() => {
 				events.emit("HERO_REQUESTS_ACTION", this.npc);
-			}, 1000);
+			}, 300);
 		} catch (e) {
 			console.error(e);
 		}

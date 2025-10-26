@@ -41,7 +41,7 @@ class Resources {
 			wizard: "sprites/npcs/Wizard_16x16.png",
 
 			// loading screen
-			loadingScreen: 'sprites/loading-stairs.png'
+			loadingScreen: 'sprites/tmp/stairs-3.png'
 		}
 
 		// a bucket to keep all of our images

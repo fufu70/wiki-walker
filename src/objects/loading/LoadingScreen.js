@@ -19,16 +19,16 @@ export class LoadingScreen extends HudGameObject {
 		});
 
 		this.drawLayer = "HUD";
-		this.background = new Sprite({
-			resource: resources.images.shopBackground,
-			frameSize: new Vector2(320, 180)
-		});
-		this.addChild(this.background);
+		// this.background = new Sprite({
+		// 	resource: resources.images.shopBackground,
+		// 	frameSize: new Vector2(320, 180)
+		// });
+		// this.addChild(this.background);
 		this.stairs = new Sprite({
 			resource: resources.images.loadingScreen,
 			frameSize: new Vector2(320, 180),
-			hFrames: 2,
-			vFrames: 4,
+			hFrames: 3,
+			vFrames: 5,
 			frame: 0,
 			animations: new Animations({
 				WALKING_DOWN: new FrameIndexPattern({
@@ -63,6 +63,63 @@ export class LoadingScreen extends HudGameObject {
 							frame: 6
 						},
 					]
+				}),
+				STAY_BOTTOM: new FrameIndexPattern({
+					duration: 2000,
+					frames: [
+						{
+							time: 0,
+							frame: 0
+						},
+						{
+							time: 200,
+							frame: 1
+						},
+						{
+							time: 400,
+							frame: 2
+						},
+						{
+							time: 600,
+							frame: 3
+						},
+						{
+							time: 800,
+							frame: 4
+						},
+						{
+							time: 1000,
+							frame: 5
+						},
+						{
+							time: 1200,
+							frame: 6
+						},
+						{
+							time: 1400,
+							frame: 7
+						},
+						{
+							time: 1500,
+							frame: 8
+						},
+						{
+							time: 1600,
+							frame: 9
+						},
+						{
+							time: 1700,
+							frame: 10
+						},
+						{
+							time: 1800,
+							frame: 11
+						},
+						{
+							time: 1900,
+							frame: 12
+						},
+					]
 				})
 			})
 		});
@@ -70,9 +127,29 @@ export class LoadingScreen extends HudGameObject {
 		this.addChild(this.stairs);
 	}
 
-	destroy() {
-		setTimeout(() => {
-			super.destroy();
-		}, 1300);
+	finish(callback) {
+		this.stairs.animations.play("STAY_BOTTOM");
+		this.stayBottomTime = 2000;
 	}
+
+	step(delta, root) {
+		if (this.stayBottomTime > 0) {
+			this.workOnStayBottom(delta);
+			return;
+		}
+	}
+
+	workOnStayBottom(delta) {
+		this.stayBottomTime -= delta;
+
+		if (this.stayBottomTime <= 0) {
+			super.destroy();
+		}
+	}
+
+	// destroy() {
+	// 	setTimeout(() => {
+	// 		super.destroy();
+	// 	}, 1300);
+	// }
 }

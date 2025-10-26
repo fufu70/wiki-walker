@@ -148,8 +148,10 @@ export class Main extends GameObject {
 		events.on("END_LOADING", this, config => {
 			// const textInput = new SelectInput(config);
 			if (this.loadingScreen !== null) {
-				this.loadingScreen?.destroy();
-				this.loadingScreen = null;	
+				this.loadingScreen.finish(() => {
+					this.loadingScreen?.destroy();
+					this.loadingScreen = null;		
+				})
 			}
 		});
 
@@ -217,6 +219,10 @@ export class Main extends GameObject {
 		// setTimeout(() => {
 		// 	events.emit('SHOW_LOADING', {});
 		// });
+
+		// setTimeout(() => {
+		// 	events.emit('END_LOADING', {});
+		// }, 300);
 	}
 
 	setLevel(newLevelInstance) {

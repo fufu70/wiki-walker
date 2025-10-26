@@ -62,8 +62,8 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 			return;
 		}
 
-		const exitLoc = new Vector2(loc.x, loc.y + gridCells(2));
-		const signLoc = new Vector2(loc.x + gridCells(1), loc.y + gridCells(2));
+		const exitLoc = new Vector2(loc.x, loc.y);
+		const signLoc = new Vector2(loc.x + gridCells(1), loc.y);
 
 		this.floorPlan = this.addFloorAroundPosition(exitLoc, this.floorPlan);
 		this.floorPlan = this.addFloorAroundPosition(signLoc, this.floorPlan);
@@ -99,7 +99,5 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 		});
 
 		events.emit('END_LOADING', {});
-
-		console.log("FLOOR", this.floorPlan, this.floorPlan.toString().replaceAll("0", " "));		
 	}
 }
