@@ -51,27 +51,78 @@ export class WikiPageLevel extends DrunkRoomLevel {
 
 	placeRooms(params) {
 		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
-		console.log("ROOMS", params.sections);
-		console.log("ROOM POSITIONS", this.floorQuery.roomPositions);
-		console.log("HERO_START", this.heroStart, this.floorPlan, this.findFirstPosition(this.floorPlan));
-		console.log("LEVEL", this);
 		this.roomExits = new Map();
 		this.rooms = params.sections;
-		const loc = this.floorQuery.startingPosition.duplicate();
-		loc.x += gridCells(2);
-		loc.y += gridCells(-2);
+		console.log("ROOMS", params.sections);
+		console.log("ROOM POSITIONS", this.getRoomPositions());
+		console.log("HERO_START", this.heroStart, this.floorPlan, this.findFirstPosition(this.floorPlan));
+		console.log("LEVEL", this);
 
 
-		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
-		this.floorQuery.roomPositions.forEach((position, index) => {
+		this.getRoomPositions().forEach((position, index) => {
 			position = new Vector2(gridCells(position.x), gridCells(position.y));
 			const section = params.sections[index];
 			this.placeRoom(params, section, position);
 		});
 
+
+		const loc = this.floorQuery.startingPosition.duplicate();
+		loc.x += gridCells(2);
+		loc.y += gridCells(-2);
+		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 		const spot = new Vector2(loc.x + gridCells(2), loc.y + gridCells(2));
 		this.floorPlan = this.addFloorAroundPosition(spot, this.floorPlan);
 		this.addGameObject(new Vase(spot.x, spot.y, undefined, params.seed));
+	}
+
+	getRoomPositions() {
+		const xIncrement = 4;
+
+		return this.floorQuery.roomPositions.reduce((accu, value, i) => {
+			value = accu.reduce((position, accuVal, j) => {
+				const roomSize = this.getRoomSize(j);
+				const minX = accuVal.x;
+				const minY = accuVal.y;
+				const maxX = roomSize.x + accuVal.x;
+				const maxY = roomSize.y + accuVal.y;
+				if (position.x >= minX && position.y >= minY
+					&& position.y <= maxX && position.y <= maxY) {
+					position.x += xIncrement;
+				}
+				return position;
+			}, value);
+			accu.push(value);
+			return accu;
+		}, []);
+	}
+
+	getRoomSize(index) {
+		const room = this.rooms[index];
+		const loc = new Vector2(gridCells(1), gridCells(1));
+
+		let shelfCount = 0;
+		room.paragraphs.filter(paragraph => {
+			return paragraph.length > 0;
+		}).forEach(paragraph => {
+			loc.y += gridCells(2);
+			shelfCount ++;
+		});
+
+		room.tables.filter(table => {
+			return table !== undefined || table !== null;
+		}).forEach(table => {
+			loc.y += gridCells(2);
+			shelfCount ++;
+		});
+
+		if (shelfCount > 0) {
+			loc.c += gridCells(2);
+		}
+		
+		if (room.links.length > 0) {
+			loc.x += gridCells(1)
+		}
+		return loc;
 	}
 
 	placeRoom(params, room, loc) {
@@ -80,6 +131,8 @@ export class WikiPageLevel extends DrunkRoomLevel {
 			console.log("CANNOT FIND LOCATION FOR", room)
 			return;
 		}
+
+		loc.y += gridCells(1);
 
 		const signLoc    = new Vector2(loc.x + gridCells(-1), loc.y + gridCells(0));
 		const shelfLoc   = new Vector2(loc.x + gridCells(0), loc.y + gridCells(0));

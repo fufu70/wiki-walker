@@ -6,7 +6,13 @@ import {resources} from '../../Resources.js';
 import {Input, LEFT, RIGHT, UP, DOWN} from '../../Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
+
+import {SKIP, EMPTY, Matrix} from "../../Matrix.js";
+import {ORIENTATIONS} from '../../helpers/orientation/Orientation.js';
+import {OUTLINES} from '../../helpers/orientation/Outlines.js';
 import {OrientationFactory} from '../../helpers/orientation/OrientationFactory.js';
+import {JobManager} from '../../helpers/JobManager.js';
+
 import {RoomWallFactory} from './Wall.js';
 import {
 	NORTH_RIGHT,
@@ -170,6 +176,79 @@ export class TrimFactory {
 		});
 
 		return trims;
+	}
+
+
+
+
+	static async generateParallel(params) {
+		if (TrimFactory.cache.has(JSON.stringify(params.floorPlan))) {
+			return TrimFactory.cache.get(JSON.stringify(params.floorPlan));
+		}
+		let {floorPlan} = params;
+		let walls = RoomWallFactory.generate(params);
+		TrimFactory.cache.set(JSON.stringify(params.floorPlan), walls);
+		return await (new (this.prototype.constructor)()).getParallel(floorPlan, walls);
+	}
+
+	async getParallel(floorPlan, walls) {
+		let methodCall = (input) => {
+			let floorPlan = new Matrix(input.floorPlan);
+			let isWall = eval(input.isWallString)
+			const walls = input.walls;
+
+			const trims = [];
+			floorPlan.traverse({
+				callback: (x, y, positionValue) => {
+					if (
+						positionValue != 0 || this.isWall(x, y, walls)
+					) {
+						return;
+					}
+
+					// let orientations = OrientationFactory.getExtractedOrientations(floorPlan.neighborContrast(x, y));
+					let orientations = OrientationFactory.getOrientations(x, y, floorPlan);
+					if (orientations === undefined) {
+						return;
+					}
+					for (var i = 0; i < orientations.length; i++) {
+						trims.push({x, y, orientation: orientations[i]});
+					}
+				},
+				padding: 2
+			});
+
+			return trims;
+		}
+
+		let lambda = `
+			${Matrix.toString()}
+			SKIP = ${SKIP}
+			EMPTY = ${EMPTY}
+			ORIENTATIONS = ${JSON.stringify(ORIENTATIONS)}
+			OUTLINES = ${JSON.stringify(OUTLINES)}
+			${OrientationFactory.toString()}
+			${methodCall.toString()}
+		`;
+
+
+		console.log("LAMBDA", lambda.toString())
+		console.log("WALLS", walls);
+		const input = {
+			floorPlan: floorPlan,
+			walls: JSON.parse(JSON.stringify(walls)),
+			isWallString: `(function ${this.isWall.toString()})`
+		};
+		console.log("INPUT", JSON.parse(JSON.stringify(input)));
+		return new Promise((resolve, reject) => {
+			JobManager.runJob(lambda.toString(), JSON.parse(JSON.stringify(input)), (out) => {
+				console.log("JobManager", out)
+				const trim = out.map(trim => {
+					return new Trim(gridCells(trim.x), gridCells(trim.y), trim.orientation);
+				})
+				resolve(trim);
+			});
+	    });
 	}
 
 	isWall(x, y, walls) {

@@ -44,7 +44,6 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 		}, new Map());
 
 		for (var i = 0; i < this.links.length; i++) {
-			this.addFloors(this.floorPlan, this.params);
 			const spot = this.findSpotOnFloor(new Vector2(gridCells(1), gridCells(1)));
 			console.log("spot for " + this.links[i].page, spot);
 			this.placeLink(this.links[i], spot);
@@ -58,14 +57,18 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 
 	placeLink(link, loc) {
 		if (loc == undefined) {
-			console.log("CANNOT FIND LOCATION FOR", link)
+			console.error("CANNOT FIND LOCATION FOR", link)
 			return;
 		}
+		
+		loc.x -= gridCells(2);
 
-		const exitLoc = new Vector2(loc.x, loc.y);
+		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
+		// while (!this.isPositionFree(this.floors, this.gameObjects, loc, new Vector2(gridCells(1), gridCells(1)))) {
+			
+		// 	this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
+		// }
 		const signLoc = new Vector2(loc.x + gridCells(1), loc.y);
-
-		this.floorPlan = this.addFloorAroundPosition(exitLoc, this.floorPlan);
 		this.floorPlan = this.addFloorAroundPosition(signLoc, this.floorPlan);
 		
 		const sign = new Sign(signLoc.x, signLoc.y, {
@@ -75,7 +78,7 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 		}, this.seed);
 		this.addGameObject(sign);
 
-		const exit = new Exit(exitLoc.x, exitLoc.y);
+		const exit = new Exit(loc.x, loc.y);
 		this.linkExit.set(link.page, exit);
 		this.addGameObject(exit);
 	}

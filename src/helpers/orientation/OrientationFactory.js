@@ -1,5 +1,6 @@
 import {ORIENTATIONS} from './Orientation.js';
 import {OUTLINES} from './Outlines.js';
+import {Matrix} from '../../Matrix.js';
 
 export class OrientationFactory {
 
@@ -25,7 +26,12 @@ export class OrientationFactory {
 
 
 		for (let i = 0; i < matrixes.length; i ++) {
-			const matrix = matrixes[i];
+			let matrix = matrixes[i];
+			// console.log(matrix);
+			if (matrix.matches === undefined) {
+				matrix = new Matrix(matrix);
+			}
+
 			if (matrix.matches(fpMatrixExtract)) {
 				return true;
 			}

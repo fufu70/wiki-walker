@@ -14,7 +14,11 @@ import {
 	CENTER_WEST,
 	CENTER_NORTH_EAST,
 } from '../../helpers/orientation/Orientation.js';
+import {SKIP, EMPTY, Matrix} from "../../Matrix.js";
+import {ORIENTATIONS} from '../../helpers/orientation/Orientation.js';
+import {OUTLINES} from '../../helpers/orientation/Outlines.js';
 import {OrientationFactory} from '../../helpers/orientation/OrientationFactory.js';
+import {JobManager} from '../../helpers/JobManager.js';
 
 const BRICK = "BRICK";
 const YELLOW_TILE = "YELLOW_TILE";
@@ -146,6 +150,67 @@ export class FloorFactory {
 
 		return floors;
 	}
+
+	static async generateParallel(params) {
+		let {floorPlan, seed, style} = params;
+		return await (new (this.prototype.constructor)()).getParallel(floorPlan, seed, style);
+	}
+
+	async getParallel(floorPlan, seed, style) {
+		if (!style && seed) {
+			style = this.seedStyle(seed);
+		}
+
+
+		let methodCall = (input) => {
+			let floorPlan = new Matrix(input.floorPlan);
+			let seed = input.seed;
+			let style = input.style;
+			const floors = [];
+
+			floorPlan.traverse({
+				callback: (x, y, matrixValue) => {
+					if (matrixValue > 0) {
+						let orientation = OrientationFactory.getOrientation(x, y, floorPlan);
+						// let orientation = OrientationFactory.getExtractedOrientation(floorPlan.neighborContrast(x, y))
+						floors.push({x, y, style, orientation});
+					}
+				},
+				padding: 2
+			});
+
+			return floors;
+		}
+
+		let lambda = `
+			${Matrix.toString()}
+			SKIP = ${SKIP}
+			EMPTY = ${EMPTY}
+			ORIENTATIONS = ${JSON.stringify(ORIENTATIONS)}
+			OUTLINES = ${JSON.stringify(OUTLINES)}
+			${OrientationFactory.toString()}
+			${methodCall.toString()}
+		`;
+
+
+		console.log("LAMBDA", lambda.toString())
+		const input = {
+			floorPlan: floorPlan,
+			seed: seed,
+			style: style
+		};
+		console.log("INPUT", JSON.parse(JSON.stringify(input)));
+		return new Promise((resolve, reject) => {
+			JobManager.runJob(lambda.toString(), JSON.parse(JSON.stringify(input)), (out) => {
+				console.log("JobManager", out)
+				const floors = out.map(floor => {
+					return this.getFloorSprite(floor.x, floor.y, floor.style, floor.orientation);
+				})
+				resolve(floors);
+			});
+	    });
+	}
+
 
 	getFloorSprite(x, y, style, orientation) {
 		// return new Floor(gridCells(x), gridCells(y), style, orientation);

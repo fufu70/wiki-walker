@@ -21,6 +21,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 			});
 			setTimeout(() => {
 				events.emit("HERO_REQUESTS_ACTION", this.npc);
+				// this.searchWiki("Ergodic literature")
 			}, 300);
 		} catch (e) {
 			console.error(e);

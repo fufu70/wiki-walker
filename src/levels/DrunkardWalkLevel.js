@@ -135,11 +135,17 @@ export class DrunkardWalkLevel extends Level {
 	}
 
 	findRandomSpot(seed, floors, gameObjects, space = new Vector2(gridCells(1), gridCells(1))) {
-		const position = this.findFirstPosition(this.floorPlan);
+		let position = this.findRandomPosition(this.floorPlan, seed, floors, gameObjects, space);
+
 		floors = [...floors, {
 			position: position
 		}];
-		return this.findRandomWallSpot(seed, floors, gameObjects, space);
+		let loc = this.findRandomWallSpot(seed, floors, gameObjects, space);
+		if (loc == undefined) {
+			loc = this.findRandomSpot(seed, floors, gameObjects, space);
+		}
+
+		return loc;
 	}
 
 	findRandomWallSpot(seed, sprites, gameObjects, space = new Vector2(gridCells(1), gridCells(1))) {
@@ -226,12 +232,41 @@ export class DrunkardWalkLevel extends Level {
 	findFirstPosition(floorPlan) {
 		for (let x = 0; x < floorPlan.width(); x ++) {
 			for (let y = 0; y < floorPlan.height(); y ++) {
-				if (floorPlan.get(x, y) > 1) {
+				if (floorPlan.get(x, y) >= 1) {
 					return new Vector2(gridCells(x), gridCells(y));
 				}
 			}
 		}
 		return new Vector2(0, 0);
+	}
+
+	findRandomPosition(floorPlan, seed, sprites, gameObjects, space, depth = 0) {
+		if (depth === 10) {
+			return undefined;
+		}
+		// if (floorPlan.locations().length > 0) {
+			let randomSpot = Math.floor(seed() * floorPlan.locations().length);
+			let loc = floorPlan.locations()[randomSpot];
+			let location = new Vector2(gridCells(loc.x), gridCells(loc.y));
+			return location;
+		// }
+		// let max = floorPlan.width() * floorPlan.height();
+		// let randomSpot = Math.floor(seed() * max);
+		// let spot = randomSpot + 1;
+		// while (spot !== randomSpot) {
+		// 	let x = spot % floorPlan.height();
+		// 	let y = Math.floor(spot / floorPlan.height());
+
+		// 	if (floorPlan.get(x, y) >= 1) {
+		// 		return new Vector2(gridCells(x), gridCells(y));
+		// 	}
+		// 	if (spot >= max) {
+		// 		spot = 0;
+		// 	} else {
+		// 		spot ++;
+		// 	}
+		// }
+		// return new Vector2(0, 0);
 	}
 
 	findHighestPosition(floorPlan) {

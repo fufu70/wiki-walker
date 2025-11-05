@@ -23,10 +23,19 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 		const floors = RoomFloorFactory.generate({
 			floorPlan,
 			seed: params.seed
-		});
+		})
 		for (var i = floors.length - 1; i >= 0; i--) {
 			this.addFloor(floors[i]);
 		}
+
+		// RoomFloorFactory.generateParallel({
+		// 	floorPlan,
+		// 	seed: params.seed
+		// }).then(floors => {
+		// 	for (var i = floors.length - 1; i >= 0; i--) {
+		// 		this.addFloor(floors[i]);
+		// 	}	
+		// })
 	}
 
 	addWalls(floorPlan, params) {
@@ -46,6 +55,15 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 		for (var i = walls.length - 1; i >= 0; i--) {
 			this.addWall(walls[i]);
 		}
+
+		// RoomWallFactory.generateParallel({
+		// 	floorPlan,
+		// 	seed: params.seed
+		// }).then(walls => {
+		// 	for (var i = walls.length - 1; i >= 0; i--) {
+		// 		this.addWall(walls[i]);
+		// 	}	
+		// })
 	}
 
 	addTrimSprites(floorPlan) {
@@ -55,6 +73,14 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 		for (var i = trims.length - 1; i >= 0; i--) {
 			this.addChild(trims[i]);
 		}
+		
+		// TrimFactory.generateParallel({
+		// 	floorPlan,
+		// }).then(trims => {
+		// 	for (var i = trims.length - 1; i >= 0; i--) {
+		// 		this.addChild(trims[i]);
+		// 	}
+		// })
 	}
 
 	addItems(floorPlan, params) {

@@ -7,6 +7,7 @@ export class Matrix {
 	constructor(matrix = {}) {
 		if (Object.keys(matrix).indexOf('matrix') > -1) {
 			this.matrix = matrix.matrix;
+			this._locations = matrix._locations;
 		} else {
 			this.matrix = matrix;
 		}
@@ -15,6 +16,7 @@ export class Matrix {
 		this._width = this.width();
 		this._height = this.height();
 		this.neighborCache = new Map();
+		this._locations = this.locations();
 	}
 
 	add(x, y, value) {
@@ -22,7 +24,8 @@ export class Matrix {
 			this.matrix[y] = {};
 		}
 
-		this.matrix[y][x] = value;		
+		this.matrix[y][x] = value;
+		this._locations.push({x, y});
 		this.clearSize();
 	}
 
@@ -147,7 +150,7 @@ export class Matrix {
 	}
 
 	neighborContrast(x, y) {
-		const key = `${x}-${y}`;
+		const key = x+'-'+ y;
 		if (this.neighborCache.has(key)) {
 			return this.neighborCache.get(key);
 		}
@@ -188,21 +191,42 @@ export class Matrix {
 	}
 
 	toString() {
-		let str = "";
+		let str = new String();
 
 		this.traverse({
 			callback: (x, y, value) => {
-				str += "\t" + this.get(x, y)
+				str += String.fromCharCode(9) + this.get(x, y)
 			},
 			callbackEachRow: (y) => {
-				str += "\n";
+				str += String.fromCharCode(10);
 			}
 		});
 
 		return str;
 	}
 
+	locations() {
+		if (this._locations !== undefined) {
+			return this._locations;
+		}
+		const a = this.calculateLocations();
+		this._locations = a;
+		return this._locations;
+	}
 
+	calculateLocations() {
+		let locs = [];
+
+		this.traverse({
+			callback: (x, y, value) => {
+				if (value > EMPTY) {
+					locs.push({x, y});
+				}
+			}
+		});
+
+		return locs;
+	}
 }
 
 /**
@@ -297,3 +321,19 @@ console.assert(new Matrix([
 	[ 8, 9,12],
 	[74,53,21]
 ])), "An extraction at the root should match");
+
+
+console.assert(new Matrix([
+	[0,0],
+	[1,1],
+	[0,0]
+]).locations().length == 2, "Locations should be 2");
+
+let locations = new Matrix([
+	[0,0],
+	[1,1],
+	[0,0]
+]).locations();
+
+console.assert(locations[0].x == 0 && locations[0].y == 1, "Location 0 should be 0,1");
+console.assert(locations[1].x == 1 && locations[1].y == 1, "Location 1 should be 1,1");
