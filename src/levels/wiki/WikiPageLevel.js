@@ -26,7 +26,7 @@ export class WikiPageLevel extends DrunkRoomLevel {
 				maxSteps: 35 * params.sections.length,
 				showNextLevel: false,
 				showPreviousLevel: false,
-				rotationChanges: params.sections.length * 1.75 ?? 0,
+				rotationChanges: params.sections.length ?? 0,
 				rooms: params.sections.length,
 				roomParams: {
 					stepSize: 5,
@@ -54,7 +54,8 @@ export class WikiPageLevel extends DrunkRoomLevel {
 		this.roomExits = new Map();
 		this.rooms = params.sections;
 		console.log("ROOMS", params.sections);
-		console.log("ROOM POSITIONS", this.getRoomPositions());
+		console.log("FLOOR QUERY ROOM POSITIONS", JSON.stringify(this.floorQuery.roomPositions));
+		console.log("ROOM POSITIONS", JSON.stringify(this.getRoomPositions()));
 		console.log("HERO_START", this.heroStart, this.floorPlan, this.findFirstPosition(this.floorPlan));
 		console.log("LEVEL", this);
 
@@ -76,53 +77,65 @@ export class WikiPageLevel extends DrunkRoomLevel {
 	}
 
 	getRoomPositions() {
-		const xIncrement = 4;
+		const xIncrement = 2;
 
-		return this.floorQuery.roomPositions.reduce((accu, value, i) => {
-			value = accu.reduce((position, accuVal, j) => {
-				const roomSize = this.getRoomSize(j);
-				const minX = accuVal.x;
-				const minY = accuVal.y;
-				const maxX = roomSize.x + accuVal.x;
-				const maxY = roomSize.y + accuVal.y;
-				if (position.x >= minX && position.y >= minY
-					&& position.y <= maxX && position.y <= maxY) {
-					position.x += xIncrement;
+		const roomPositions = this.floorQuery.roomPositions.reduce((accu, value, roomIndex) => {
+			const positionRoomSize = this.getRoomSize(roomIndex);
+			value = accu.reduce((position, accuVal) => {
+				const roomSize = this.getRoomSize(accuVal.roomIndex);
+				const accuValMinX = accuVal.position.x;
+				const accuValMinY = accuVal.position.y;
+				const accuValMaxX = roomSize.x + accuVal.position.x;
+				const accuValMaxY = roomSize.y + accuVal.position.y;
+
+
+				const valueMinX = position.x;
+				const valueMinY = position.y;
+				const valueMaxX = positionRoomSize.x + position.x;
+				const valueMaxY = positionRoomSize.y + position.y;
+
+				if ((position.x >= accuValMinX && position.y >= accuValMinY
+									&& position.x <= accuValMaxX && position.y <= accuValMaxY)
+					|| (accuVal.position.x >= valueMinX && accuVal.position.y >= valueMinY
+									&& accuVal.position.x <= valueMaxX && accuVal.position.y <= valueMaxY)) {
+					position.x = accuValMaxX + xIncrement;
 				}
 				return position;
-			}, value);
-			accu.push(value);
+			}, value.duplicate());
+			accu.push({roomIndex: roomIndex, position: value, roomSize: this.getRoomSize(roomIndex)});
 			return accu;
 		}, []);
+		console.log(JSON.stringify(roomPositions), roomPositions);
+		return roomPositions.map(roomPosition => roomPosition.position);
 	}
 
 	getRoomSize(index) {
 		const room = this.rooms[index];
-		const loc = new Vector2(gridCells(1), gridCells(1));
+		const roomSize = new Vector2(1, 1);
 
 		let shelfCount = 0;
 		room.paragraphs.filter(paragraph => {
 			return paragraph.length > 0;
 		}).forEach(paragraph => {
-			loc.y += gridCells(2);
+			roomSize.y += 2;
 			shelfCount ++;
 		});
 
 		room.tables.filter(table => {
 			return table !== undefined || table !== null;
 		}).forEach(table => {
-			loc.y += gridCells(2);
+			roomSize.y += 2;
 			shelfCount ++;
 		});
 
 		if (shelfCount > 0) {
-			loc.c += gridCells(2);
+			roomSize.x += 2;
 		}
 		
 		if (room.links.length > 0) {
-			loc.x += gridCells(1)
+			roomSize.x += 1
 		}
-		return loc;
+		return roomSize;
 	}
 
 	placeRoom(params, room, loc) {

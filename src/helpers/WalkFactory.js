@@ -128,7 +128,8 @@ export class WalkFactory {
 	}
 
 	createRoom(query, matrix, position) {
-		query.addRoom(position);
+		query.addRoom(position.duplicate());
+		//64, 88
 		return this.walkDrunk(new WalkFactoryQuery({
 			...query.params,
 			stepSize: query.roomParams.stepSize,
@@ -148,7 +149,6 @@ export class WalkFactory {
 			for (let y = 0; y < query.stepSize; y ++) {
 				if (floorPlan[position.y + x][position.x + y] === undefined) {
 					floorPlan[position.y + x][position.x + y] = 0;
-					// break;
 				}
 
 				floorPlan[position.y + x][position.x + y] += 1;
