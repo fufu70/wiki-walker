@@ -10,6 +10,7 @@ import {Exit} from '../../objects/exit/Exit.js';
 import {Vase} from '../../objects/room/Vase.js';
 import {Sign} from '../../objects/outdoors/Sign.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
+import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
 
 
 export class WikiDisambiguationLevel extends DrunkRoomLevel {
@@ -23,10 +24,10 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 				showNextLevel: false,
 				showPreviousLevel: false,
 				rotationChanges: (params.links.length + 1) ?? 0,
-				rooms: 1,
+				rooms: params.links.length,
 				roomParams: {
-					stepSize: 3,
-					maxSteps: 10,
+					stepSize: 1,
+					maxSteps: 1,
 					rotationChanges: 1,
 				},
 			});
@@ -38,21 +39,35 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 	beforeGeneratingSprites() {
 		this.links = this.params.links;
 		this.linkMap = new Map();
-		this.linkExit= this.links.reduce((acc, curr) => {
+		this.linkExits= this.links.reduce((acc, curr) => {
 			acc.set(curr.page, {})
 			return acc;
 		}, new Map());
 
-		for (var i = 0; i < this.links.length; i++) {
-			const spot = this.findSpotOnFloor(new Vector2(gridCells(1), gridCells(1)));
-			console.log("spot for " + this.links[i].page, spot);
-			this.placeLink(this.links[i], spot);
-		}
+		const getSize = (index) => { return this.getLinkSize(this.links, index)};
+		const roomPositions = RoomPositionFactory.getRoomPositions(this.floorQuery.roomPositions, getSize, 0);
+
+		roomPositions.forEach((position, index) => {
+			// const spot = this.findSpotOnFloor(new Vector2(gridCells(1), gridCells(1)));
+			// console.log("spot for " + this.links[i].page, spot);
+			// this.placeLink(this.links[i], spot);
+
+
+			position = new Vector2(gridCells(position.x), gridCells(position.y));
+			this.placeLink(this.links[index], position);
+		});
 		this.floors = [];
 	}
 	
 	addItems(floorPlan, params) {
 		// leave blank
+	}
+
+
+	getLinkSize(list, index) {
+		const room = list[index];
+		const roomSize = new Vector2(4, 3);
+		return roomSize;
 	}
 
 	placeLink(link, loc) {
@@ -79,28 +94,39 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 		this.addGameObject(sign);
 
 		const exit = new Exit(loc.x, loc.y);
-		this.linkExit.set(link.page, exit);
+		this.linkExits.set(link.page, exit);
 		this.addGameObject(exit);
 	}
 
 	ready() {
 		super.ready();
 		events.on("HERO_EXIT", this, (exit) => {
-			for (var i = 0; i < this.links.length; i++) {
-				if (this.linkExit.get(this.links[i].page).position.matches(exit.position)) {
-					events.emit('SHOW_LOADING', {});
-					WikiLevelFactory.request(this.links[i].page, (level) => {
-						events.emit("CHANGE_LEVEL", level);
-					}, (err) => {
-						events.emit('END_LOADING', {});
-						events.emit("SHOW_TEXTBOX", {
-		   					string: err
-		   				});
-					});
-				}
+			const page = this.getPage(exit);
+			if (!page) {
+				return;
 			}
+
+			events.emit('SHOW_LOADING', {});
+			WikiLevelFactory.request(page, (level) => {
+				events.emit("CHANGE_LEVEL", level);
+			}, (err) => {
+				events.emit('END_LOADING', {});
+				events.emit("SHOW_TEXTBOX", {
+   					string: err
+   				});
+			});
 		});
 
 		events.emit('END_LOADING', {});
+	}
+
+	getPage(exit) {
+		for (var i = 0; i < this.links.length; i++) {
+			const linkExit = this.linkExits.get(this.links[i].page);
+			if (linkExit && linkExit.position.matches(exit.position)) {
+				return this.links[i].page
+			}
+		}
+		return undefined;
 	}
 }

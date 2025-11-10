@@ -23,7 +23,8 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				// events.emit("HERO_REQUESTS_ACTION", this.npc);
 				// this.searchWiki("Nasolacrimal duct")
 				// this.searchWiki("Ergodic literature")
-				this.searchWiki("Nasal concha")
+				// this.searchWiki("Nasal concha")
+				this.searchWiki("test")
 			}, 300);
 		} catch (e) {
 			console.error(e);
@@ -58,7 +59,6 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 
 		const spot = new Vector2(loc.x + gridCells(2), loc.y + gridCells(2));
 		this.floorPlan = this.addFloorAroundPosition(spot, this.floorPlan);
-		this.addGameObject(new Vase(spot.x, spot.y, undefined, params.seed));
 	}
 
 

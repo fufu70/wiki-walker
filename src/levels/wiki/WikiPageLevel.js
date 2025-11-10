@@ -14,6 +14,7 @@ import {Picture} from '../../objects/room/Picture.js';
 import {Television} from '../../objects/room/Television.js';
 import {Sign} from '../../objects/outdoors/Sign.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
+import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
 
 
 export class WikiPageLevel extends DrunkRoomLevel {
@@ -49,18 +50,24 @@ export class WikiPageLevel extends DrunkRoomLevel {
 		this.addGameObject(hero);
 	}
 
+	placeObjects(params) {
+
+	}
+
 	placeRooms(params) {
 		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		this.roomExits = new Map();
 		this.rooms = params.sections;
+		const getSize = (index) => { return this.getRoomSize(this.rooms, index)};
+		const roomPositions = RoomPositionFactory.getRoomPositions(this.floorQuery.roomPositions, getSize);
 		console.log("ROOMS", params.sections);
 		console.log("FLOOR QUERY ROOM POSITIONS", JSON.stringify(this.floorQuery.roomPositions));
-		console.log("ROOM POSITIONS", JSON.stringify(this.getRoomPositions()));
+		console.log("ROOM POSITIONS", JSON.stringify(roomPositions));
 		console.log("HERO_START", this.heroStart, this.floorPlan, this.findFirstPosition(this.floorPlan));
 		console.log("LEVEL", this);
 
 
-		this.getRoomPositions().forEach((position, index) => {
+		roomPositions.forEach((position, index) => {
 			position = new Vector2(gridCells(position.x), gridCells(position.y));
 			const section = params.sections[index];
 			this.placeRoom(params, section, position);
@@ -73,44 +80,10 @@ export class WikiPageLevel extends DrunkRoomLevel {
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 		const spot = new Vector2(loc.x + gridCells(2), loc.y + gridCells(2));
 		this.floorPlan = this.addFloorAroundPosition(spot, this.floorPlan);
-		this.addGameObject(new Vase(spot.x, spot.y, undefined, params.seed));
 	}
 
-	getRoomPositions() {
-		const xIncrement = 2;
-
-		const roomPositions = this.floorQuery.roomPositions.reduce((accu, value, roomIndex) => {
-			const positionRoomSize = this.getRoomSize(roomIndex);
-			value = accu.reduce((position, accuVal) => {
-				const roomSize = this.getRoomSize(accuVal.roomIndex);
-				const accuValMinX = accuVal.position.x;
-				const accuValMinY = accuVal.position.y;
-				const accuValMaxX = roomSize.x + accuVal.position.x;
-				const accuValMaxY = roomSize.y + accuVal.position.y;
-
-
-				const valueMinX = position.x;
-				const valueMinY = position.y;
-				const valueMaxX = positionRoomSize.x + position.x;
-				const valueMaxY = positionRoomSize.y + position.y;
-
-				if ((position.x >= accuValMinX && position.y >= accuValMinY
-									&& position.x <= accuValMaxX && position.y <= accuValMaxY)
-					|| (accuVal.position.x >= valueMinX && accuVal.position.y >= valueMinY
-									&& accuVal.position.x <= valueMaxX && accuVal.position.y <= valueMaxY)) {
-					position.x = accuValMaxX + xIncrement;
-				}
-				return position;
-			}, value.duplicate());
-			accu.push({roomIndex: roomIndex, position: value, roomSize: this.getRoomSize(roomIndex)});
-			return accu;
-		}, []);
-		console.log(JSON.stringify(roomPositions), roomPositions);
-		return roomPositions.map(roomPosition => roomPosition.position);
-	}
-
-	getRoomSize(index) {
-		const room = this.rooms[index];
+	getRoomSize(list, index) {
+		const room = list[index];
 		const roomSize = new Vector2(1, 1);
 
 		let shelfCount = 0;

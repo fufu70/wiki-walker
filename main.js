@@ -34,10 +34,10 @@ import {
 } from './src/levels/constants/CivicsQuestions.js';
 import {JobManager} from './src/helpers/JobManager.js';
 import {default as wtf} from 'wtf_wikipedia';
-import {updateFPS} from './console.js';
-import {ImageViewer} from './imageViewer.js';
-import {VideoViewer} from './videoViewer.js';
-import {TableViewer} from './tableViewer.js';
+import {updateFPS} from './src/console/console.js';
+import {ImageViewer} from './src/viewers/imageViewer.js';
+import {VideoViewer} from './src/viewers/videoViewer.js';
+import {TableViewer} from './src/viewers/tableViewer.js';
 
 window.wtf = wtf;
 window.JobManager = JobManager;

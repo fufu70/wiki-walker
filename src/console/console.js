@@ -303,6 +303,7 @@ console.info = function(message) {
 
 // var originalWindowError = window.onerror;
 window.onerror = function(message) {
-    updateConsole("error", arguments, trace);
-    // originalWindowError.apply(console, arguments); // Call the original console.log
+  const trace = getStackTrace();
+  updateConsole("error", arguments, trace);
+  // originalWindowError.apply(console, arguments); // Call the original console.log
 };
