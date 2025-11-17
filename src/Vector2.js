@@ -1,4 +1,4 @@
-import {LEFT, RIGHT, UP, DOWN} from "./Input.js";
+import {LEFT, RIGHT, UP, DOWN} from "./input/Input.js";
 
 export class Vector2 {
 	constructor(x = 0, y = 0) {

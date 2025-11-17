@@ -3,9 +3,10 @@ import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
 import {resources} from '../../Resources.js';
-import {Input, LEFT, RIGHT, UP, DOWN} from '../../Input.js';
+import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
+import {Storage} from '../../helpers/Storage.js';
 import {
 	NORTH_SINGLE,
 	NORTH_RIGHT,
@@ -54,17 +55,36 @@ export class Wall extends GameObject {
 	}
 }
 
+
+export class RoomWallStorage extends Storage {
+	constructor() {
+		super("WALL");
+	}
+
+	get(floorPlan) {
+		const value = super.get(JSON.stringify(floorPlan));
+		return value.map(val => {
+			return new Wall(gridCells(val.x), gridCells(val.y), val.style, val.orientation);
+		});
+	}
+
+	set(floorPlan, value) {
+		super.set(JSON.stringify(floorPlan), value);
+	}
+}
+
 export class WallFactory {
-	static cache = new Map();
 
 	static generate(params) {
-		if (WallFactory.cache.has(JSON.stringify(params.floorPlan))) {
-			return WallFactory.cache.get(JSON.stringify(params.floorPlan));
-		}
 		let {floorPlan, seed, style} = params;
-		const walls = new (this.prototype.constructor)().get(floorPlan, seed, style);
-		WallFactory.cache.set(JSON.stringify(params.floorPlan), walls);
-		return walls;
+		let factory = new (this.prototype.constructor)();
+
+		if (factory.cache.has(floorPlan)) {
+			return factory.cache.get(floorPlan);
+		}
+		const walls = factory.get(floorPlan, seed, style);
+		factory.cache.set(floorPlan, walls);
+		return factory.cache.get(floorPlan);
 	}
 
 	get(floorPlan, seed, style) {
@@ -88,7 +108,7 @@ export class WallFactory {
 				// const fpMatrixExtract = floorPlan.extract(x - 1, y - 1, 3, 3).compare(0);
 
 				// console.log(fpMatrixExtract.toString());
-				walls.push(this.getWallSprite(x, y, style, orientation));
+				walls.push({x, y, style, orientation});
 			},
 			padding: 2
 		});
@@ -187,11 +207,9 @@ export class WallFactory {
 }
 
 export class RoomWallFactory extends WallFactory {
+	cache = new RoomWallStorage();
+
 	isWall(x, y, matrixValue, floorPlan) {
 		return floorPlan.get(x, y + 1) > 0 && matrixValue == 0
-	}
-
-	getWallSprite(x, y, orientation, style)  {
-		return new Wall(gridCells(x), gridCells(y), orientation, style);
 	}
 }

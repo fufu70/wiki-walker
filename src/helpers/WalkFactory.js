@@ -1,6 +1,6 @@
 import {Vector2} from "../Vector2.js";
 import {Matrix} from "../Matrix.js";
-import {LEFT, RIGHT, UP, DOWN} from '../Input.js';
+import {LEFT, RIGHT, UP, DOWN} from '../input/Input.js';
 import {gridCells} from './Grid.js'
 
 export class WalkFactoryQuery {

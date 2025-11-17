@@ -50,10 +50,6 @@ export class WikiPageLevel extends DrunkRoomLevel {
 		this.addGameObject(hero);
 	}
 
-	placeObjects(params) {
-
-	}
-
 	placeRooms(params) {
 		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		this.roomExits = new Map();

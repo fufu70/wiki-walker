@@ -3,7 +3,7 @@ import {resources} from './src/Resources.js';
 import {Sprite} from './src/Sprite.js';
 import {Vector2} from './src/Vector2.js';
 import {GameLoop} from './src/GameLoop.js';
-import {Input, LEFT, RIGHT, UP, DOWN} from './src/Input.js';
+import {Input, LEFT, RIGHT, UP, DOWN} from './src/input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from './src/helpers/Grid.js'
 import {moveTowards} from './src/helpers/Move.js';
 import {OutdoorLevel1} from './src/levels/OutdoorLevel1.js';
@@ -34,11 +34,13 @@ import {
 } from './src/levels/constants/CivicsQuestions.js';
 import {JobManager} from './src/helpers/JobManager.js';
 import {default as wtf} from 'wtf_wikipedia';
-import {updateFPS} from './src/console/console.js';
-import {ImageViewer} from './src/viewers/imageViewer.js';
-import {VideoViewer} from './src/viewers/videoViewer.js';
-import {TableViewer} from './src/viewers/tableViewer.js';
+import {updateFPS} from './src/console/Console.js';
+import {ImageViewer} from './src/viewers/ImageViewer.js';
+import {VideoViewer} from './src/viewers/VideoViewer.js';
+import {TableViewer} from './src/viewers/TableViewer.js';
+import * as wtfPluginApi from 'wtf-plugin-api';
 
+wtf.extend(wtfPluginApi.default);
 window.wtf = wtf;
 window.JobManager = JobManager;
 // grabbing the canvas to draw to

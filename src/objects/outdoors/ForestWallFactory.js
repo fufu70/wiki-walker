@@ -5,8 +5,12 @@ import {Tree} from './Tree.js';
 import {Rock} from './Rock.js';
 import {Bush} from './Bush.js';
 import {Platform} from './Platform.js';
+import {Storage} from '../../helpers/Storage.js';
+
+export class ForestWallStorage extends Map {}
 
 export class ForestWallFactory extends WallFactory {
+	cache = new ForestWallStorage();
 
 	get(floorPlan, seed, style) {
 		let walls = [];

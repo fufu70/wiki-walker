@@ -15,6 +15,12 @@ export class WikiLevelFactory {
 		})
 	}
 
+	static random(callback, error) {
+		wtf.random().then((doc) => {
+			callback(WikiLevelFactory.getLevel(doc));
+		});
+	}
+
 	static getLevel(doc) {
 		const factory = new WikiLevelFactory();
 		console.log("DOC", doc);
@@ -139,6 +145,8 @@ export class WikiLevelFactory {
 				type: link.type,
 				page: link.page
 			};
+		}).filter(link => {
+			return link.page !== undefined
 		});
 	}
 

@@ -5,7 +5,7 @@ import {Animations} from "../../Animations.js";
 import {FrameIndexPattern} from "../../FrameIndexPattern.js";
 import {moveTowards} from '../../helpers/Move.js';
 import {resources} from '../../Resources.js';
-import {Input, LEFT, RIGHT, UP, DOWN} from '../../Input.js';
+import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 

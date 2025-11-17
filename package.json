@@ -12,6 +12,7 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
-    "wtf_wikipedia": "^10.4.0"
+    "wtf_wikipedia": "^10.4.0",
+    "wtf-plugin-api": "^2.0.1"
   }
 }

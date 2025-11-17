@@ -3,8 +3,12 @@ export const RIGHT = "RIGHT";
 export const UP = "UP";
 export const DOWN = "DOWN";
 
+import {MobileInput} from './MobileInput.js';
+
 
 export class Input {
+	static mobileInput = undefined;
+
 	constructor(SUPPORTED_CHARACTERS = "") {
 		this.heldDirections = [];
 		this.keys = {};
@@ -58,6 +62,67 @@ export class Input {
 			}
 		});
 		this.isFullscreen = false;
+
+		const mobileParams = {
+			leftPressed: () => {
+				this.onArrowPressed(LEFT)
+			},
+			rightPressed: () => {
+				this.onArrowPressed(RIGHT)
+			},
+			upPressed: () => {
+				this.onArrowPressed(UP)
+			},
+			downPressed: () => {
+				this.onArrowPressed(DOWN)
+			},
+			leftReleased: () => {
+				this.onArrowReleased(LEFT)
+			},
+			rightReleased: () => {
+				this.onArrowReleased(RIGHT)
+			},
+			upReleased: () => {
+				this.onArrowReleased(UP)
+			},
+			downReleased: () => {
+				this.onArrowReleased(DOWN)
+			},
+			aPressed: () => {
+				this.keys['Space'] = true;
+				this.lastTextKeys.push('Space');
+			},
+			bPressed: () => {
+				this.keys['Enter'] = true;
+				this.lastTextKeys.push('Enter');
+			},
+			xPressed: () => {
+				this.keys['Escape'] = true;
+				this.lastTextKeys.push('Escape');
+				// this.
+			},
+			yPressed: () => {
+				// this.
+			},
+			aReleased: () => {
+				this.keys['Space'] = false;
+			},
+			bReleased: () => {
+				this.keys['Enter'] = false;
+			},
+			xReleased: () => {
+				this.keys['Escape'] = false;
+			},
+			yReleased: () => {
+				// this.
+			},
+		};
+
+		if (this.isMobile() && Input.mobileInput === undefined) {
+			Input.mobileInput = new MobileInput(mobileParams);
+		} else if (this.isMobile() && Input.mobileInput !== undefined) {
+			Input.mobileInput.applyParams(mobileParams);
+		}
 	}
 
 	get direction() {

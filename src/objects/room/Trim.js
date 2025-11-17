@@ -3,9 +3,10 @@ import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
 import {resources} from '../../Resources.js';
-import {Input, LEFT, RIGHT, UP, DOWN} from '../../Input.js';
+import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
+import {Storage} from '../../helpers/Storage.js';
 
 import {SKIP, EMPTY, Matrix} from "../../Matrix.js";
 import {ORIENTATIONS} from '../../helpers/orientation/Orientation.js';
@@ -127,17 +128,36 @@ export class Trim extends GameObject {
 	}
 }
 
+export class TrimStorage extends Storage {
+
+	constructor() {
+		super("TRIM");
+	}
+
+	get(floorPlan) {
+		const value = super.get(JSON.stringify(floorPlan));
+		return value.map(val => {
+			return new Trim(gridCells(val.x), gridCells(val.y), val.orientation);
+		});
+	}
+
+	set(floorPlan, value) {
+		super.set(JSON.stringify(floorPlan), value);
+	}
+}
+
 export class TrimFactory {
-	static cache = new Map();
+	static cache = new TrimStorage();
 
 	static generate(params) {
-		if (TrimFactory.cache.has(JSON.stringify(params.floorPlan))) {
-			return TrimFactory.cache.get(JSON.stringify(params.floorPlan));
-		}
 		let {floorPlan} = params;
+		if (TrimFactory.cache.has(floorPlan)) {
+			return TrimFactory.cache.get(floorPlan);
+		}
 		let walls = RoomWallFactory.generate(params);
-		TrimFactory.cache.set(JSON.stringify(params.floorPlan), walls);
-		return new TrimFactory().get(floorPlan, walls);
+		let trim = new TrimFactory().get(floorPlan, walls)
+		TrimFactory.cache.set(floorPlan, trim);
+		return TrimFactory.cache.get(floorPlan);
 	}
 
 	get(floorPlan, walls) {
@@ -156,21 +176,8 @@ export class TrimFactory {
 					return;
 				}
 				for (var i = 0; i < orientations.length; i++) {
-					trims.push(new Trim(gridCells(x), gridCells(y), orientations[i]));
+					trims.push({x, y, orientation: orientations[i]});
 				}
-
-				// JobManager.runJob("", {
-				// 		x: x,
-				// 		y: y,
-				// 		matrixValue: matrixValue
-				// }, (output) => {
-				// 	if (output.orientations === undefined) {
-				// 		return;
-				// 	}
-				// 	for (var i = 0; i < output.orientations.length; i++) {
-				// 		trims.push(new Trim(gridCells(output.x), gridCells(output.y), output.orientations[i]));
-				// 	}
-				// });
 			},
 			padding: 2
 		});

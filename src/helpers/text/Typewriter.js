@@ -3,7 +3,7 @@ import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../Move.js';
 import {resources} from '../../Resources.js';
-import {Input, LEFT, RIGHT, UP, DOWN} from '../../Input.js';
+import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../Grid.js'
 import {events} from '../../Events.js';
 import {

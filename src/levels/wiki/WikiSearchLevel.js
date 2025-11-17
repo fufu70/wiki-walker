@@ -9,6 +9,7 @@ import {resources} from '../../Resources.js';
 import {Vase} from '../../objects/room/Vase.js';
 import {Sign} from '../../objects/outdoors/Sign.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
+import {Exit} from '../../objects/exit/Exit.js';
 
 export class WikiSearchLevel extends DrunkOutdoorLevel {
 	constructor(params={}) {
@@ -20,11 +21,11 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				showNextLevel: false,
 			});
 			setTimeout(() => {
-				// events.emit("HERO_REQUESTS_ACTION", this.npc);
+				events.emit("HERO_REQUESTS_ACTION", this.npc);
 				// this.searchWiki("Nasolacrimal duct")
 				// this.searchWiki("Ergodic literature")
 				// this.searchWiki("Nasal concha")
-				this.searchWiki("test")
+				// this.searchWiki("test")
 			}, 300);
 		} catch (e) {
 			console.error(e);
@@ -33,11 +34,12 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 
 	beforeGeneratingSprites() {
 		this.question = "Let's try and find what you're looking for. What do you want to know?";
+		console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		this.placeNpc(this.params);
+		this.placeRandom(this.params);
 	}
 
 	placeNpc(params) {
-		console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		const loc = this.heroStart.duplicate();
 		loc.x += gridCells(1);
 		loc.y += gridCells(-2);
@@ -61,6 +63,15 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		this.floorPlan = this.addFloorAroundPosition(spot, this.floorPlan);
 	}
 
+	placeRandom(params) {
+		const loc = this.heroStart.duplicate();
+		loc.x += gridCells(2);
+		loc.y += gridCells(2);
+		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
+
+		const exit = new Exit(loc.x, loc.y);
+		this.addGameObject(exit);
+	}
 
 	getContent(params) {
 		return [
@@ -80,12 +91,23 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 	ready() {
 		super.ready();
 
-		const searchAnswer = events.on("SUBMIT_INPUT_TEXT", this, ({config, text}) => {
+		events.on("SUBMIT_INPUT_TEXT", this, ({config, text}) => {
 
 			if (config.string === this.question) {
 				this.searchWiki(text);
-				// events.off(searchAnswer);	
 			}
+		});
+
+		events.on("HERO_EXIT", this, (exit) => {
+			events.emit('SHOW_LOADING', {});
+			WikiLevelFactory.random((level) => {
+				events.emit("CHANGE_LEVEL", level );
+			}, (err) => {
+				events.emit('END_LOADING', {});
+				events.emit("SHOW_TEXTBOX", {
+					string: err
+				});
+			});
 		});
 	}
 

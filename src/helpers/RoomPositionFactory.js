@@ -1,6 +1,6 @@
 export class RoomPositionFactory {
 	
-	static getRoomPositions(subjectivePositions, getSize, xIncrement = 2) {
+	static getRoomPositions(subjectivePositions, getSize, xIncrement = 1) {
 
 		const objectPositions = subjectivePositions.reduce((accu, value, index) => {
 			const positionSize = getSize(index);
