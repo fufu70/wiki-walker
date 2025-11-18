@@ -316,7 +316,6 @@ export class MobileInput {
         if (!e.touches || e.touches.length == 0) {
           return;
         }
-        console.log(event)
         const upArrow = document.querySelector('.mobile-controller-arrow-up');
         const downArrow = document.querySelector('.mobile-controller-arrow-down');
         const leftArrow = document.querySelector('.mobile-controller-arrow-left');
@@ -353,7 +352,6 @@ export class MobileInput {
 		if (!e.touches || e.touches.length == 0) {
 			return;
 		}
-		console.log(event)
 		const actionA = document.querySelector('.mobile-controller-action-pad-a');
 		const actionB = document.querySelector('.mobile-controller-action-pad-b');
 		const actionX = document.querySelector('.mobile-controller-action-pad-x');
