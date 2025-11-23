@@ -1,5 +1,6 @@
 import {WikiDisambiguationLevel} from './WikiDisambiguationLevel.js';
 import {WikiPageLevel} from './WikiPageLevel.js';
+import {ArrayFactory} from '../../helpers/ArrayFactory.js';
 
 export class WikiLevelFactory {
 	static request(text, callback, error) {
@@ -63,7 +64,7 @@ export class WikiLevelFactory {
 				paragraphs: section.paragraphs().map(paragraph => paragraph.text()),
 				links: this.getLinks(section),
 				tables: section.tables().map(table => table.keyValue()),
-				doc: section
+				doc: section,
 			};
 		});
 
@@ -132,7 +133,7 @@ export class WikiLevelFactory {
 			links = doc.links;
 		}
 
-		return links.map(link => {
+		return ArrayFactory.removeDuplicates(links.map(link => {
 			if (typeof link.page === 'function') {
 
 				return {
@@ -147,7 +148,7 @@ export class WikiLevelFactory {
 			};
 		}).filter(link => {
 			return link.page !== undefined
-		});
+		}));
 	}
 
 	static getTempPageLevel() {
