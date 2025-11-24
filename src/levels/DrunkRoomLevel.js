@@ -110,7 +110,9 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 		if (spot === undefined) return;
 		spot.x += gridCells(1);
 		spot.y += gridCells(1);
-		this.addGameObject(new Vase(spot.x, spot.y, undefined, params.seed));
+		this.addGameObject(new Vase(spot.x, spot.y, {
+			seed: params.seed
+		}));
 	}
 
 	addPictures(params) {

@@ -27,7 +27,6 @@ export class ArrayFactory {
 		return duplicates;
 	}
 
-
 	static isDuplicate(a, b) {
 		return JSON.stringify(a) == JSON.stringify(b);
 	}

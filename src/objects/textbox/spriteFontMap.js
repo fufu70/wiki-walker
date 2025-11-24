@@ -7,7 +7,9 @@ export const SUPPORTED_CHARACTERS = [
 	"abcdefghijklmnopqrstuvwxyz",
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
 	"0123456789 ",
-	".!-+\\/,?'|:;()[]⬤▶*\"&%~$#"
+	".!-+\\/,?'|:;()[]⬤▶*\"&_%~$#",
+	"äöüßÄÖÜ",  // German Characters
+	"áéíñóú¿¡", // Spanish Characters
 ].join("");
 
 export const TRANSFERRED_CHARACTERS = {
@@ -45,6 +47,11 @@ width.set("'", 2);
 width.set("!", 1);
 width.set("|", 1);
 
+
+width.set("í", 2);
+width.set("ñ", 4);
+width.set("¡", 1);
+
 export const getCharacterWidth = (char) => {
 	return width.get(char) ?? DEFAULT_WIDTH;
 }
@@ -62,5 +69,5 @@ export const getCharacterFrame = (char) => {
 	return frame.get(char) ?? 0;
 }
 
-export const CHARACTER_ROWS = 9;
-export const CHARACTER_COLUMNS = 10;
+export const CHARACTER_ROWS = 10;
+export const CHARACTER_COLUMNS = 11;

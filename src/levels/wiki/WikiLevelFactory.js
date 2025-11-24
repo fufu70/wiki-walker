@@ -2,9 +2,25 @@ import {WikiDisambiguationLevel} from './WikiDisambiguationLevel.js';
 import {WikiPageLevel} from './WikiPageLevel.js';
 import {ArrayFactory} from '../../helpers/ArrayFactory.js';
 
+const languages = {
+	"English": "en",
+	"Deutsch": "de",
+	"Español": "es"
+}
+
 export class WikiLevelFactory {
+	static language = 'en';
+
+	static getLanguages() {
+		return Object.keys(languages);
+	}
+
+	static updateLanguage(text) {
+		WikiLevelFactory.language = languages[text];
+	}
+
 	static request(text, callback, error) {
-		wtf.fetch(text, 'en', function(err, doc) {
+		wtf.fetch(text, WikiLevelFactory.language, function(err, doc) {
 			if (err == null && doc == null) {
 				error(`Article for '${text}' does not exist. Sorry.`)
 			}
@@ -17,7 +33,7 @@ export class WikiLevelFactory {
 	}
 
 	static random(callback, error) {
-		wtf.random().then((doc) => {
+		wtf.getRandomPage({lang:WikiLevelFactory.language}).then((doc) => {
 			callback(WikiLevelFactory.getLevel(doc));
 		});
 	}

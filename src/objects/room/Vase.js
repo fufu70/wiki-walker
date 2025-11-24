@@ -4,7 +4,8 @@ import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
 import {resources} from '../../Resources.js';
 import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
-import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
+import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js';
+import {storyFlags} from '../../StoryFlags.js';
 
 export const BLUE_DIAGONAL = 'BLUE_DIAGONAL';
 export const BLUE_STRIPE = 'BLUE_STRIPE';
@@ -31,15 +32,20 @@ VASE[HONEY_COVERED] = 4;
 VASE[GREEN_DIAGONAL] = 5;
 
 export class Vase extends GameObject {
-	constructor(x, y, style = BLUE_DIAGONAL, seed = undefined) {
+	constructor(x, y, params = {}) {
+		// style = BLUE_DIAGONAL, seed = undefined
 		super({
 			position: new Vector2(x, y),
 			isSolid: true
 		});
+		let style = params.style === undefined ? BLUE_DIAGONAL : params.style;
 
-		if (seed !== undefined) {
-			style = VASE_STYLES[Math.floor(seed() * 6)];
+		if (params.seed !== undefined) {
+			style = VASE_STYLES[Math.floor(params.seed() * 6)];
 		}
+		this.content = params.content === undefined ? [{
+			string: "Huh, just a Vase",
+		}] : params.content;
 
 		this.addChild(new Sprite({
 			resource: resources.images.shadow,
@@ -55,9 +61,25 @@ export class Vase extends GameObject {
 		}));
 	}
 
+	// getContent() {
+	// 	return {
+	// 		string: "Huh, just a Vase",
+	// 	}
+	// }
 	getContent() {
+		// explain story logic
+		const match = storyFlags.getRelevantScenario(this.content);
+		if (!match) {
+			console.warn("No matches found in this list!", this.content);
+			return null;
+		}
+
 		return {
-			string: "Huh, just a Vase",
+			portraitFrame: match.portraitFrame,
+			string: match.stringFunc ? match.stringFunc() : match.string,
+			addFlags: match.addsFlag ?? null,
+			eventType: match.eventType ?? null,
+			options: match.options ?? null
 		}
 	}
 }

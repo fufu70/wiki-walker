@@ -21,7 +21,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				showNextLevel: false,
 			});
 			setTimeout(() => {
-				events.emit("HERO_REQUESTS_ACTION", this.npc);
+				// events.emit("HERO_REQUESTS_ACTION", this.npc);
 				// this.searchWiki("Nasolacrimal duct")
 				// this.searchWiki("Ergodic literature")
 				// this.searchWiki("Nasal concha")
@@ -34,9 +34,11 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 
 	beforeGeneratingSprites() {
 		this.question = "Let's try and find what you're looking for. What do you want to know?";
-		console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
+		this.languageQuestion = "Choose the language you'd like to search in.";
+		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		this.placeNpc(this.params);
 		this.placeRandom(this.params);
+		this.placeLanguage(this.params);
 	}
 
 	placeNpc(params) {
@@ -73,6 +75,24 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		this.addGameObject(exit);
 	}
 
+	placeLanguage(params) {
+		const loc = this.heroStart.duplicate();
+		loc.x += gridCells(-2);
+		loc.y += gridCells( 1);
+		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
+
+		const vase = new Vase(loc.x, loc.y, {
+			seed: params.seed,
+			content: [{
+				eventType: "SELECT_INPUT",
+				string: this.languageQuestion,
+				uuid: this.uuid,
+				options: WikiLevelFactory.getLanguages()
+			}]
+		});
+		this.addGameObject(vase);
+	}
+
 	getContent(params) {
 		return [
 			{
@@ -95,6 +115,10 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 
 			if (config.string === this.question) {
 				this.searchWiki(text);
+			}
+
+			if (config.string === this.languageQuestion) {
+				this.updateLanguage(text);
 			}
 		});
 
@@ -121,6 +145,10 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				string: err
 			});
 		});
+	}
+
+	updateLanguage(text) {
+		WikiLevelFactory.updateLanguage(text);
 	}
 
 	getDisambiguationLevel(doc) {
