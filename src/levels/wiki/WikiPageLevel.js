@@ -56,11 +56,11 @@ export class WikiPageLevel extends DrunkRoomLevel {
 		this.rooms = params.sections;
 		const getSize = (index) => { return this.getRoomSize(this.rooms, index)};
 		const roomPositions = RoomPositionFactory.getRoomPositions(this.floorQuery.roomPositions, getSize);
-		console.log("ROOMS", params.sections);
-		console.log("FLOOR QUERY ROOM POSITIONS", JSON.stringify(this.floorQuery.roomPositions));
-		console.log("ROOM POSITIONS", JSON.stringify(roomPositions));
-		console.log("HERO_START", this.heroStart, this.floorPlan, this.findFirstPosition(this.floorPlan));
-		console.log("LEVEL", this);
+		// console.log("ROOMS", params.sections);
+		// console.log("FLOOR QUERY ROOM POSITIONS", JSON.stringify(this.floorQuery.roomPositions));
+		// console.log("ROOM POSITIONS", JSON.stringify(roomPositions));
+		// console.log("HERO_START", this.heroStart, this.floorPlan, this.findFirstPosition(this.floorPlan));
+		// console.log("LEVEL", this);
 
 
 		roomPositions.forEach((position, index) => {

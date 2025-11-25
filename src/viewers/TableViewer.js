@@ -38,6 +38,12 @@ export const TableViewer = ((table) => {
 	border-width: 3px;
 }
 
+.${CLASS_NAME} thead {
+	position: sticky;
+	top: 0px;
+	background: rgba(0, 0, 0, 0.75);
+}
+
 .${CLASS_NAME} td, th {
 	border-right: solid 1px white ;
     border-bottom: 1px solid white;
