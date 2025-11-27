@@ -1,4 +1,5 @@
 import {events} from '../../Events.js'
+import {SUPPORTED_CHARACTERS} from '../textbox/spriteFontMap.js';
 
 // setTimeout(() => {
 // 		events.emit('SHOW_TEXTBOX', {
@@ -14,7 +15,7 @@ import {events} from '../../Events.js'
 // 		addFlags: null,
 // 		string: `SUPPORTED_CHARACTERS TEST: ${SUPPORTED_CHARACTERS.split("").join(" ")}`
 // 	});
-// });
+// }, 1000);
 
 // setTimeout(() => {
 // 	events.emit("SELECT_INPUT", {

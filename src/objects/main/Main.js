@@ -8,7 +8,6 @@ import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {Inventory} from '../inventory/Inventory.js';
 import {Camera} from '../Camera.js'
-import {SUPPORTED_CHARACTERS} from '../textbox/spriteFontMap.js';
 import {SpriteTextString} from '../textbox/SpriteTextString.js'
 import {storyFlags} from '../../StoryFlags.js';
 import {TextInput} from '../input/TextInput.js';

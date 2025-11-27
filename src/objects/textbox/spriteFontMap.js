@@ -9,7 +9,7 @@ export const SUPPORTED_CHARACTERS = [
 	"0123456789 ",
 	".!-+\\/,?'|:;()[]⬤▶*\"&_%~$#",
 	"äöüßÄÖÜ",  // German Characters
-	"áéíñóú¿¡", // Spanish Characters
+	"áéíñóúÁÉÍÑÓÚ¿¡", // Spanish Characters
 ].join("");
 
 export const TRANSFERRED_CHARACTERS = {

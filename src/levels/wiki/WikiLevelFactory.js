@@ -12,7 +12,7 @@ export class WikiLevelFactory {
 	static language = 'en';
 
 	static getLanguages() {
-		return Object.keys(languages);
+		return Object.keys(languages); 
 	}
 
 	static updateLanguage(text) {
