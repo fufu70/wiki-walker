@@ -21,12 +21,12 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				showNextLevel: false,
 			});
 			setTimeout(() => {
-				// events.emit("HERO_REQUESTS_ACTION", this.npc);
+				events.emit("HERO_REQUESTS_ACTION", this.npc);
 				// this.searchWiki("Nasolacrimal duct")
 				// this.searchWiki("Ergodic literature")
 				// this.searchWiki("Nasal concha")
 				// this.searchWiki("test")
-				this.searchWiki("The Twilight Zone") // multiple rooms are being rendered on top of one another
+				// this.searchWiki("The Twilight Zone") // multiple rooms are being rendered on top of one another
 				// this.searchWiki("List of pending United States Supreme Court cases") // good test for viewing a large table.
 			}, 300);
 		} catch (e) {
