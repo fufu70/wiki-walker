@@ -76,6 +76,7 @@ export class WikiLevelFactory {
 	getPageParams(doc) {
 		const sections = doc.sections().map(section => {
 			return {
+				uuid: crypto.randomUUID(),
 				title: section.title(),
 				paragraphs: section.paragraphs().map(paragraph => paragraph.text()),
 				links: this.getLinks(section),
@@ -92,6 +93,7 @@ export class WikiLevelFactory {
 		});
 
 		return {
+			uuid: crypto.randomUUID(),
 			title: doc.title(),
 			sections: sections,
 			images: this.getImages(doc),

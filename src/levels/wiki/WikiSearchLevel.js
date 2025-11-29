@@ -21,7 +21,8 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				showNextLevel: false,
 			});
 			setTimeout(() => {
-				events.emit("HERO_REQUESTS_ACTION", this.npc);
+				// events.emit("HERO_REQUESTS_ACTION", this.npc);
+				this.searchWiki("Bo")
 				// this.searchWiki("Nasolacrimal duct")
 				// this.searchWiki("Ergodic literature")
 				// this.searchWiki("Nasal concha")

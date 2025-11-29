@@ -102,6 +102,8 @@ export class Input {
 				// this.
 			},
 			yPressed: () => {
+				this.keys['ShiftLeft'] = true;
+				this.lastTextKeys.push('ShiftLeft');
 				// this.
 			},
 			aReleased: () => {
@@ -114,6 +116,7 @@ export class Input {
 				this.keys['Escape'] = false;
 			},
 			yReleased: () => {
+				this.keys['ShiftLeft'] = false;
 				// this.
 			},
 		};
@@ -149,6 +152,10 @@ export class Input {
 			justPressed = true;
 		}
 		return justPressed;
+	}
+
+	getActionHeld(keyCode) {
+		return this.keys[keyCode];
 	}
 
 	onArrowPressed(direction) {

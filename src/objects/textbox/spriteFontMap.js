@@ -8,8 +8,10 @@ export const SUPPORTED_CHARACTERS = [
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
 	"0123456789 ",
 	".!-+\\/,?'|:;()[]⬤▶*\"&_%~$#",
-	"äöüßÄÖÜ",  // German Characters
-	"áéíñóúÁÉÍÑÓÚ¿¡", // Spanish Characters
+	"äöüßÄÖÜ",  				 // German Characters
+	"áéíñóúÁÉÍÑÓÚ¿¡", 			 // Spanish Characters
+	"αβγδεζηθικλμνξοπρσςτυφχψω", // Greek Characters Lowercase
+	"ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",  // Greek Characters Uppercase
 ].join("");
 
 export const TRANSFERRED_CHARACTERS = {
@@ -71,3 +73,6 @@ export const getCharacterFrame = (char) => {
 
 export const CHARACTER_ROWS = 10;
 export const CHARACTER_COLUMNS = 11;
+
+αβγδεζηθικλμνξοπρσςτυφχψω
+

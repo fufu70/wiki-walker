@@ -91,8 +91,13 @@ export class Hero extends GameObject {
 			this.onActionPressed();
 		}
 
+		let speed = 1;
+		if (input?.getActionHeld("ShiftLeft")) {
+			speed = 2;
+		}
 
-		const distance = moveTowards(this, this.destinationPosition, 1);
+
+		const distance = moveTowards(this, this.destinationPosition, speed);
 		const hasArrived = distance <= 1;
 		if (hasArrived) {
 			this.tryMove(root);

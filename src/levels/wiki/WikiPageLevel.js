@@ -60,7 +60,7 @@ export class WikiPageLevel extends DrunkRoomLevel {
 		// console.log("FLOOR QUERY ROOM POSITIONS", JSON.stringify(this.floorQuery.roomPositions));
 		// console.log("ROOM POSITIONS", JSON.stringify(roomPositions));
 		// console.log("HERO_START", this.heroStart, this.floorPlan, this.findFirstPosition(this.floorPlan));
-		// console.log("LEVEL", this);
+		console.log("LEVEL", this);
 
 
 		roomPositions.forEach((position, index) => {
@@ -171,7 +171,7 @@ export class WikiPageLevel extends DrunkRoomLevel {
 		if (room.links.length > 0) {
 			const exit = new Exit(exitLoc.x, exitLoc.y);
 			this.addGameObject(exit);
-			this.roomExits.set(room.title, exit);
+			this.roomExits.set(room.uuid, exit);
 		}
 	}
 
@@ -226,16 +226,28 @@ export class WikiPageLevel extends DrunkRoomLevel {
 		super.ready();
 		events.on("HERO_EXIT", this, (exit) => {
 			events.emit('SHOW_LOADING', {});
-			for (var i = 0; i < this.rooms.length; i++) {
-				let roomExit = this.roomExits.get(this.rooms[i].title);
-				if (roomExit != undefined && roomExit.position.matches(exit.position)) {
-					events.emit("CHANGE_LEVEL", (new WikiLevelFactory()).getDisambiguationLevel({
-						links: this.rooms[i].links
-					}));
-				}
+			let room = this.findRoomExit(exit);
+			if (room) {
+				events.emit("CHANGE_LEVEL", (new WikiLevelFactory()).getDisambiguationLevel({
+					links: room.links
+				}));
+			} else {
+				// No room exit was found, hide loading screen
+				events.emit('END_LOADING', {});	
 			}
 		});
 
 		events.emit('END_LOADING', {});
+		// Bo, Exodus Chapter 13
+	}
+
+	findRoomExit(exit) {
+		for (var i = 0; i < this.rooms.length; i++) {
+			let roomExit = this.roomExits.get(this.rooms[i].uuid);
+			if (roomExit?.position.matches(exit.position)) {
+				return this.rooms[i];
+			}
+		}
+		return 
 	}
 }
