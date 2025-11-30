@@ -10,8 +10,8 @@ export const SUPPORTED_CHARACTERS = [
 	".!-+\\/,?'|:;()[]⬤▶*\"&_%~$#",
 	"äöüßÄÖÜ",  				 // German Characters
 	"áéíñóúÁÉÍÑÓÚ¿¡", 			 // Spanish Characters
-	"αβγδεζηθικλμνξοπρσςτυφχψω", // Greek Characters Lowercase
-	"ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",  // Greek Characters Uppercase
+	// "αβγδεζηθικλμνξοπρσςτυφχψω", // Greek Characters Lowercase
+	// "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",  // Greek Characters Uppercase
 ].join("");
 
 export const TRANSFERRED_CHARACTERS = {
