@@ -10,9 +10,12 @@ export const SUPPORTED_CHARACTERS = [
 	".!-+\\/,?'|:;()[]⬤▶*\"&_%~$#",
 	"äöüßÄÖÜ",  				 // German Characters
 	"áéíñóúÁÉÍÑÓÚ¿¡", 			 // Spanish Characters
-	// "αβγδεζηθικλμνξοπρσςτυφχψω", // Greek Characters Lowercase
-	// "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",  // Greek Characters Uppercase
+	"άέήίύόώ", 					 // Greek Lowercase Tonos
+	"Έ",					     // Greek Uppsercase Tonos
+	"αβγδεζηθικλμνξοπρσςτυφχψω", // Greek Characters Lowercase
+	"ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ",  // Greek Characters Uppercase
 ].join("");
+
 
 export const TRANSFERRED_CHARACTERS = {
 	"\n": " ",
@@ -54,6 +57,17 @@ width.set("í", 2);
 width.set("ñ", 4);
 width.set("¡", 1);
 
+// all greek letters 
+const GREEK_START = 110;
+const GREEK_END = 159;
+const GREEK_SKIP = ["ι", "τ"]
+for (let i = 110; i < GREEK_END; i ++) {
+	if (GREEK_SKIP.indexOf(SUPPORTED_CHARACTERS[i]) != -1) {
+		continue;
+	}
+	width.set(SUPPORTED_CHARACTERS[i], 8);
+}
+
 export const getCharacterWidth = (char) => {
 	return width.get(char) ?? DEFAULT_WIDTH;
 }
@@ -71,6 +85,6 @@ export const getCharacterFrame = (char) => {
 	return frame.get(char) ?? 0;
 }
 
-export const CHARACTER_ROWS = 10;
-export const CHARACTER_COLUMNS = 11;
+export const CHARACTER_ROWS = 13;
+export const CHARACTER_COLUMNS = 13;
 

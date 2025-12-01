@@ -21,8 +21,8 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				showNextLevel: false,
 			});
 			setTimeout(() => {
-				// events.emit("HERO_REQUESTS_ACTION", this.npc);
-				this.searchWiki("Bo")
+				events.emit("HERO_REQUESTS_ACTION", this.npc);
+				// this.searchWiki("Bo")
 				// this.searchWiki("Nasolacrimal duct")
 				// this.searchWiki("Ergodic literature")
 				// this.searchWiki("Nasal concha")
@@ -90,6 +90,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				eventType: "SELECT_INPUT",
 				string: this.languageQuestion,
 				uuid: this.uuid,
+				selectedFunc: () => WikiLevelFactory.getSelectedLanguage(),
 				options: WikiLevelFactory.getLanguages()
 			}]
 		});
@@ -104,7 +105,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				requires: [`INTRODUCED_LEVEL WIKI_SEARCH`]
 			},
 			{
-				string: `Hi THere! Welcome to WikiWalker. Walk down the stairs to a random article or come to me and tell me what you want to know from Wikipedia!`,
+				string: `Hi THere! Welcome to WikiWalker. Walk down the stairs to a random article or come to me and tell me what you want to know from Wikipedia! The Vase let's you pick a different language to search from.`,
 				requires: [],
 				addsFlag: `INTRODUCED_LEVEL WIKI_SEARCH`
 			},

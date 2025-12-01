@@ -77,9 +77,7 @@ export class Vase extends GameObject {
 		return {
 			portraitFrame: match.portraitFrame,
 			string: match.stringFunc ? match.stringFunc() : match.string,
-			addFlags: match.addsFlag ?? null,
-			eventType: match.eventType ?? null,
-			options: match.options ?? null
+			...match
 		}
 	}
 }

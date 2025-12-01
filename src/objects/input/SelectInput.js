@@ -23,7 +23,8 @@ export class SelectInput extends UserInputBox {
 		this.options = this.options.sort((a, b) => {
 			return a.toUpperCase().localeCompare(b.toUpperCase());
 		});
-		this.selectedOptionIndex = 0;
+		this.selected = this.getSelected(config)
+		this.selectedOptionIndex = this.options.indexOf(this.selected);
 		this.triangle = this.typewriter.getCharacterSprite("▶");
 		this.stepToNextMove = 100;
 		this.lastMove = this.stepToNextMove;
@@ -31,6 +32,16 @@ export class SelectInput extends UserInputBox {
 
 		// User Text Input
 		this.input = new Input(SUPPORTED_CHARACTERS);
+	}
+
+	getSelected(config) {
+		if (config.selectedFunc) {
+			return config.selectedFunc();
+		}
+		if (config.selected) {
+			return config.selected;
+		}
+		return this.options[0];
 	}
 
 	step(delta, root) {

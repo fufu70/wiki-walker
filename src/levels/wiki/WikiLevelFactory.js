@@ -3,13 +3,18 @@ import {WikiPageLevel} from './WikiPageLevel.js';
 import {ArrayFactory} from '../../helpers/ArrayFactory.js';
 
 const languages = {
-	"English": "en",
-	"Deutsch": "de",
-	"Español": "es"
+	"English":  "en",
+	"Deutsch":  "de",
+	"Español":  "es",
+	"Ελληνικά": "el"
 }
 
 export class WikiLevelFactory {
 	static language = 'en';
+
+	static getSelectedLanguage() {
+		return Object.keys(languages).find(lang => languages[lang] == WikiLevelFactory.language)
+	}
 
 	static getLanguages() {
 		return Object.keys(languages); 
