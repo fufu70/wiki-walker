@@ -304,12 +304,21 @@ export class MobileInput {
 	}
 
 	isInElement(event, element) {
-        const eventX = event.touches[0].clientX; 
-        const eventY = event.touches[0].clientY;
+		let isIn = false;
         const elementBox = element.getBoundingClientRect();
+		for (let i = 0; i < event.touches.length; i ++) {
+			const touch = event.touches[i];
+	        const eventX = touch.clientX; 
+	        const eventY = touch.clientY;
 
-        return (eventX >= elementBox.left && eventX <= elementBox.right)
-          && (eventY >= elementBox.top && eventY <= elementBox.bottom)
+	        isIn = (eventX >= elementBox.left && eventX <= elementBox.right)
+	          && (eventY >= elementBox.top && eventY <= elementBox.bottom);
+          	if (isIn) {
+          		return true;
+          	}
+		}
+
+		return false;
     }
 
     handleArrowPad(e, params) {

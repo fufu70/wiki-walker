@@ -68,7 +68,7 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 		const room = list[index];
 		let roomSize = new Vector2(4, 3);	
 		if (Math.floor(this.params.seed() * 2) % 2 == 0) {
-			roomSize = new Vector2(2, 1);	
+			roomSize = new Vector2(3, 1);	
 		}
 		return roomSize;
 	}

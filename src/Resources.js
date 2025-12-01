@@ -9,8 +9,7 @@ class Resources {
 			stairs: "/sprites/stairs.png",
 			rod: "/sprites/rod.png",
 			ground: "/sprites/ground.png",
-			// fontWhite: "/sprites/sprite-font-white-3.png",
-			fontWhite: "/sprites/sprite-font-white.png",
+			fontWhite: "/sprites/font/sprite-font-white.png",
 			textBox: "/sprites/text-box.png",
 			userInputBox: "/sprites/user-input-box.png",
 			sky: "/sprites/sky.png",
@@ -41,7 +40,7 @@ class Resources {
 			wizard: "sprites/npcs/Wizard_16x16.png",
 
 			// loading screen
-			loadingScreen: 'sprites/tmp/stairs-3.png'
+			loadingScreen: 'sprites/loading/loading-stairs.png'
 		}
 
 		// a bucket to keep all of our images
