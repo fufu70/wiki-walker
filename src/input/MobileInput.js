@@ -217,10 +217,10 @@ export class MobileInput {
 	}
 
 	applyDynamicStyles() {
-		const limit = 200;
-		const append = "px";
+		const limit = 200 / 16;
+		const append = "rem";
 		const triangleSize = (30 / 350) * limit;
-		const border = 5;
+		const border = 5 / 16;
 		const triangleSizeBackground = triangleSize + border;
 
 
