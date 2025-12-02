@@ -189,16 +189,17 @@ const template = `
 
 export class MobileInput {
 	constructor(params) {
+		this.params = params;
+		this.params.disableDoubleClick = this.params.disableDoubleClick ?? true;
 		this.addStyle();
 		this.addTemplate();
 
 		this.applyDynamicStyles();
-
-		this.attachActions(params);
-		this.params = params;
+		this.attachActions(this.params);
 	}
 
 	applyParams(params) {
+		params.disableDoubleClick = params.disableDoubleClick ?? true;
 		this.attachActions(params);
 	}
 
@@ -422,5 +423,11 @@ export class MobileInput {
 			params.xReleased();
 			params.yReleased();
 		});
+
+		if (params.disableDoubleClick) {
+			document.ondblclick = function(e) {
+				e.preventDefault();
+			}
+		}
 	}
 }
