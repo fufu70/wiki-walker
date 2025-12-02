@@ -217,10 +217,10 @@ export class MobileInput {
 	}
 
 	applyDynamicStyles() {
-		const limit = 200 / 16;
+		const limit = 200 / 17;
 		const append = "rem";
 		const triangleSize = (30 / 350) * limit;
-		const border = 5 / 16;
+		const border = 5 / 17;
 		const triangleSizeBackground = triangleSize + border;
 
 
@@ -250,14 +250,14 @@ export class MobileInput {
 		document.querySelectorAll('.mobile-controller-arrow').forEach(elem => {
 			elem.style.width = ((100 / 350) * limit) + append;
 			elem.style.height = ((60 / 350) * limit) + append;
-		elem.style.left = ((35 / 350) * limit) + append;
+			elem.style.left = ((35 / 350) * limit) + append;
 		});
 		document.querySelectorAll('.mobile-controller-triangle').forEach(elem => {
 
 			elem.style.borderTopWidth = triangleSize + append;
 			elem.style.borderBottomWidth = triangleSize + append;
 			elem.style.borderRightWidth = triangleSize + append;
-			elem.style.left = "-" + (triangleSize -0) + append;
+			elem.style.left = "-" + (triangleSize - 0.175) + append;
 		});
 		document.querySelectorAll('.mobile-controller-background-triangle').forEach(elem => {
 			elem.style.borderTopWidth = triangleSizeBackground + append;

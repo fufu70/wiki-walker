@@ -1,6 +1,7 @@
 import {WikiDisambiguationLevel} from './WikiDisambiguationLevel.js';
 import {WikiPageLevel} from './WikiPageLevel.js';
 import {ArrayFactory} from '../../helpers/ArrayFactory.js';
+import {WikiStorage} from './WikiStorage.js';
 
 const languages = {
 	"English":  "en",
@@ -10,9 +11,24 @@ const languages = {
 }
 
 export class WikiLevelFactory {
-	static language = 'en';
+	static language = undefined;
+	static storage = new WikiStorage();
+
+	static getStorageLanguage() {
+		return WikiLevelFactory.storage.get('language');
+	}
+
+	static setStorageLanguage(val) {
+		WikiLevelFactory.storage.set('language', val);
+	}
 
 	static getSelectedLanguage() {
+		console.log(WikiLevelFactory.language, WikiLevelFactory.storage);
+		if (WikiLevelFactory.language === undefined) {
+			WikiLevelFactory.language = WikiLevelFactory.getStorageLanguage();
+		} else {
+			WikiLevelFactory.updateLanguage('English');
+		}
 		return Object.keys(languages).find(lang => languages[lang] == WikiLevelFactory.language)
 	}
 
@@ -22,6 +38,7 @@ export class WikiLevelFactory {
 
 	static updateLanguage(text) {
 		WikiLevelFactory.language = languages[text];
+		WikiLevelFactory.setStorageLanguage(WikiLevelFactory.language)
 	}
 
 	static request(text, callback, error) {
