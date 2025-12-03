@@ -92,7 +92,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				eventType: "SELECT_INPUT",
 				string: this.languageQuestion,
 				uuid: this.uuid,
-				selectedFunc: () => WikiLevelFactory.getSelectedLanguage(),
+				selectedFunc: () => WikiLevelFactory.getLanguage(),
 				options: WikiLevelFactory.getLanguages()
 			}]
 		});
@@ -112,7 +112,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				eventType: "SELECT_INPUT",
 				string: this.languageQuestion,
 				uuid: this.uuid,
-				selectedFunc: () => WikiLevelFactory.getSelectedLanguage(),
+				selectedFunc: () => WikiLevelFactory.getLanguage(),
 				options: WikiLevelFactory.getLanguages()
 			}]
 		});

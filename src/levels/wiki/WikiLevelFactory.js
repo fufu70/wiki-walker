@@ -5,7 +5,7 @@ import {WikiStorage} from './WikiStorage.js';
 import {languages} from './constants.js';
 
 export class WikiLevelFactory {
-	static language = undefined;
+	static _language = undefined;
 	static storage = new WikiStorage();
 
 	static getStorageLanguage() {
@@ -16,13 +16,22 @@ export class WikiLevelFactory {
 		WikiLevelFactory.storage.set('language', val);
 	}
 
-	static getSelectedLanguage() {
-		if (WikiLevelFactory.language === undefined) {
-			WikiLevelFactory.language = WikiLevelFactory.getStorageLanguage();
+	static getLanguage() {
+		if (WikiLevelFactory._language === undefined) {
+			WikiLevelFactory._language = WikiLevelFactory.getStorageLanguage();
 		} else {
 			WikiLevelFactory.updateLanguage('English');
 		}
-		return Object.keys(languages).find(lang => languages[lang] == WikiLevelFactory.language)
+		return Object.keys(languages).find(lang => languages[lang] == WikiLevelFactory._language)
+	}
+
+	static getLang() {
+		if (WikiLevelFactory._language === undefined) {
+			WikiLevelFactory._language = WikiLevelFactory.getStorageLanguage();
+		} else {
+			WikiLevelFactory.updateLanguage('English');
+		}
+		return WikiLevelFactory._language;
 	}
 
 	static getLanguages() {
@@ -30,12 +39,12 @@ export class WikiLevelFactory {
 	}
 
 	static updateLanguage(text) {
-		WikiLevelFactory.language = languages[text];
-		WikiLevelFactory.setStorageLanguage(WikiLevelFactory.language)
+		WikiLevelFactory._language = languages[text];
+		WikiLevelFactory.setStorageLanguage(WikiLevelFactory._language)
 	}
 
 	static request(text, callback, error) {
-		wtf.fetch(text, WikiLevelFactory.language, function(err, doc) {
+		wtf.fetch(text, WikiLevelFactory.getLang(), function(err, doc) {
 			if (err == null && doc == null) {
 				error(`Article for '${text}' does not exist. Sorry.`)
 			}
@@ -48,7 +57,7 @@ export class WikiLevelFactory {
 	}
 
 	static random(callback, error) {
-		wtf.getRandomPage({lang:WikiLevelFactory.language}).then((doc) => {
+		wtf.getRandomPage({lang:WikiLevelFactory.getLang()}).then((doc) => {
 			callback(WikiLevelFactory.getLevel(doc));
 		});
 	}

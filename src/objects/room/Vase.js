@@ -61,11 +61,6 @@ export class Vase extends GameObject {
 		}));
 	}
 
-	// getContent() {
-	// 	return {
-	// 		string: "Huh, just a Vase",
-	// 	}
-	// }
 	getContent() {
 		// explain story logic
 		const match = storyFlags.getRelevantScenario(this.content);
