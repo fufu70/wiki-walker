@@ -58,12 +58,12 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		}, this.seed);
 		this.addGameObject(this.npc);
 
-		this.sign = new Sign(loc.x - gridCells(1), loc.y, {
-			content: [ {
-				string: "Go ahead! Ask the wizard whatever you want to know!"
-			}]
-		}, this.seed);
-		this.addGameObject(this.sign);
+		// this.sign = new Sign(loc.x - gridCells(1), loc.y, {
+		// 	content: [ {
+		// 		string: "Go ahead! Ask the wizard whatever you want to know!"
+		// 	}]
+		// }, this.seed);
+		// this.addGameObject(this.sign);
 
 
 		const spot = new Vector2(loc.x + gridCells(2), loc.y + gridCells(2));
