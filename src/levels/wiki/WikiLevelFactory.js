@@ -2,13 +2,7 @@ import {WikiDisambiguationLevel} from './WikiDisambiguationLevel.js';
 import {WikiPageLevel} from './WikiPageLevel.js';
 import {ArrayFactory} from '../../helpers/ArrayFactory.js';
 import {WikiStorage} from './WikiStorage.js';
-
-const languages = {
-	"English":  "en",
-	"Deutsch":  "de",
-	"Español":  "es",
-	"Ελληνικά": "el"
-}
+import {languages} from './constants.js';
 
 export class WikiLevelFactory {
 	static language = undefined;
@@ -23,7 +17,6 @@ export class WikiLevelFactory {
 	}
 
 	static getSelectedLanguage() {
-		console.log(WikiLevelFactory.language, WikiLevelFactory.storage);
 		if (WikiLevelFactory.language === undefined) {
 			WikiLevelFactory.language = WikiLevelFactory.getStorageLanguage();
 		} else {

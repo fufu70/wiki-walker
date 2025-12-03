@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "wtf_wikipedia": "^10.4.0",
-    "wtf-plugin-api": "^2.0.1"
+    "wtf-plugin-api": "^2.0.1",
+    "wtf-plugin-image": "^1.1.1"
   }
 }

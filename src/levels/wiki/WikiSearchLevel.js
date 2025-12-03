@@ -8,6 +8,7 @@ import {events} from '../../Events.js';
 import {resources} from '../../Resources.js';
 import {Vase} from '../../objects/room/Vase.js';
 import {Sign} from '../../objects/outdoors/Sign.js';
+import {Campfire} from '../../objects/outdoors/Campfire.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {Exit} from '../../objects/exit/Exit.js';
 
@@ -21,7 +22,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				showNextLevel: false,
 			});
 			setTimeout(() => {
-				events.emit("HERO_REQUESTS_ACTION", this.npc);
+				// events.emit("HERO_REQUESTS_ACTION", this.npc);
 				// this.searchWiki("Bo")
 				// this.searchWiki("Nasolacrimal duct")
 				// this.searchWiki("Ergodic literature")
@@ -42,6 +43,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		this.placeNpc(this.params);
 		this.placeRandom(this.params);
 		this.placeLanguage(this.params);
+		this.placeCampfire(this.params);
 	}
 
 	placeNpc(params) {
@@ -85,6 +87,26 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 
 		const vase = new Vase(loc.x, loc.y, {
+			seed: params.seed,
+			content: [{
+				eventType: "SELECT_INPUT",
+				string: this.languageQuestion,
+				uuid: this.uuid,
+				selectedFunc: () => WikiLevelFactory.getSelectedLanguage(),
+				options: WikiLevelFactory.getLanguages()
+			}]
+		});
+		this.addGameObject(vase);
+	}
+
+	placeCampfire(params) {
+
+		const loc = this.heroStart.duplicate();
+		loc.x += gridCells(-1);
+		loc.y += gridCells(1);
+		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
+
+		const vase = new Campfire(loc.x, loc.y, {
 			seed: params.seed,
 			content: [{
 				eventType: "SELECT_INPUT",

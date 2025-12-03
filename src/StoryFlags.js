@@ -1,6 +1,14 @@
+import {Storage} from './helpers/Storage.js';
+
+class StoryFlagStorage extends Storage {
+	constructor() {
+		super("STORY_FLAGS");
+	}
+}
+
 class StoryFlags {
 	constructor() {
-		this.flags = new Map();
+		this.flags = new StoryFlagStorage();
 	}
 
 	add(flag) {

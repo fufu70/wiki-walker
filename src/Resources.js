@@ -14,10 +14,10 @@ class Resources {
 			userInputBox: "/sprites/user-input-box.png",
 			sky: "/sprites/sky.png",
 			cave: "/sprites/cave.png",
-			portraits: "/sprites/portraits-sheet.png",
+			portraits: "/sprites/npcs/portraits-sheet.png",
 
 			// modern interiors
-			shopBackground: "/sprites/shop-background.png",
+			shopBackground: "/sprites/shop-assets/shop-background.png",
 			shopFloor: "sprites/shop-assets/Room_Builder_free_16x16.png",
 			shopObjects: "sprites/shop-assets/Interiors_free_16x16.png",
 			vase: "sprites/shop-assets/Vase_16x16.png",
@@ -27,12 +27,13 @@ class Resources {
 			drawer: "sprites/shop-assets/Drawer_16x16.png",
 
 			// Exterior Assets
-			outdoors: "/sprites/outdoors.png",
-			greenBackground: "/sprites/green-background.png",
-			sign: "sprites/shop-assets/Sign_16x32.png",
+			outdoors: "/sprites/outdoor/outdoors.png",
+			greenBackground: "/sprites/outdoor/green-background.png",
+			sign: "sprites/outdoor/Sign_16x32.png",
+			campfire: "sprites/outdoor/campfire_16x16.png",
 
 			//npcs
-			knight: "/sprites/knight-sheet-1.png",
+			knight: "/sprites/npcs/knight-sheet-1.png",
 			adam: "sprites/npcs/Adam_16x16.png",
 			alex: "sprites/npcs/Alex_16x16.png",
 			amelia: "sprites/npcs/Amelia_16x16.png",

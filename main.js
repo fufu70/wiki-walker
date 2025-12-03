@@ -39,10 +39,13 @@ import {ImageViewer} from './src/viewers/ImageViewer.js';
 import {VideoViewer} from './src/viewers/VideoViewer.js';
 import {TableViewer} from './src/viewers/TableViewer.js';
 import * as wtfPluginApi from 'wtf-plugin-api';
+// import * as wtfPluginImage from 'wtf-plugin-image';
 
 wtf.extend(wtfPluginApi.default);
+// wtf.extend(require('wtf-plugin-image'));
 window.wtf = wtf;
 window.JobManager = JobManager;
+window.events = events;
 // grabbing the canvas to draw to
 const canvas = document.querySelector("#game-canvas");
 const ctx = canvas.getContext("2d");
