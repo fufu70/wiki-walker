@@ -5,7 +5,6 @@ import {WikiStorage} from './WikiStorage.js';
 import {languages} from './constants.js';
 
 export class WikiLevelFactory {
-	static _language = undefined;
 	static storage = new WikiStorage();
 
 	static getStorageLanguage() {
@@ -17,21 +16,17 @@ export class WikiLevelFactory {
 	}
 
 	static getLanguage() {
-		if (WikiLevelFactory._language === undefined) {
-			WikiLevelFactory._language = WikiLevelFactory.getStorageLanguage();
-		} else {
+		if (WikiLevelFactory.getStorageLanguage() === undefined) {
 			WikiLevelFactory.updateLanguage('English');
 		}
-		return Object.keys(languages).find(lang => languages[lang] == WikiLevelFactory._language)
+		return Object.keys(languages).find(lang => languages[lang] == WikiLevelFactory.getStorageLanguage())
 	}
 
 	static getLang() {
-		if (WikiLevelFactory._language === undefined) {
-			WikiLevelFactory._language = WikiLevelFactory.getStorageLanguage();
-		} else {
+		if (WikiLevelFactory.getStorageLanguage() === undefined) {
 			WikiLevelFactory.updateLanguage('English');
 		}
-		return WikiLevelFactory._language;
+		return WikiLevelFactory.getStorageLanguage();
 	}
 
 	static getLanguages() {
@@ -39,8 +34,7 @@ export class WikiLevelFactory {
 	}
 
 	static updateLanguage(text) {
-		WikiLevelFactory._language = languages[text];
-		WikiLevelFactory.setStorageLanguage(WikiLevelFactory._language)
+		WikiLevelFactory.setStorageLanguage(languages[text])
 	}
 
 	static request(text, callback, error) {
