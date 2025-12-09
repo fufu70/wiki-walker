@@ -1,3 +1,4 @@
+import {Hero} from '../../objects/hero/Hero.js';
 import {default as wtf} from 'wtf_wikipedia';
 import {DrunkRoomLevel} from '../DrunkRoomLevel.js';
 import {QuestionRod} from '../../objects/rod/QuestionRod.js';
@@ -31,6 +32,7 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 					rotationChanges: 1,
 				},
 			});
+			this.disambiguationLevelParams = params;
 		} catch (e) {
 			console.error(e);
 		}
@@ -63,6 +65,15 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 		// leave blank
 	}
 
+
+	addHero(heroStart) {
+		heroStart = this.floorQuery.startingPosition.duplicate();
+		this.hero = new Hero(gridCells(heroStart.x), gridCells(heroStart.y));
+		this.addGameObject(this.hero);
+
+		const stairsUp = new Exit(gridCells(heroStart.x + 1), gridCells(heroStart.y), true);
+		this.addGameObject(stairsUp);
+	}
 
 	getLinkSize(list, index) {
 		const room = list[index];
@@ -111,6 +122,10 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 
 			events.emit('SHOW_LOADING', {});
 			WikiLevelFactory.request(page, (level) => {
+				WikiLevelFactory.stashDisambiguationLevel(
+					exit.position.duplicate(),
+					this.disambiguationLevelParams
+				);
 				events.emit("CHANGE_LEVEL", level);
 			}, (err) => {
 				events.emit('END_LOADING', {});
@@ -119,6 +134,13 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
    				});
 			});
 		});
+
+
+		events.on("HERO_EXIT_UP", this, (exit) => {
+			events.emit("CHANGE_LEVEL", WikiLevelFactory.loadPop(
+				WikiLevelFactory.popLevel()
+			));
+		})
 
 		events.emit('END_LOADING', {});
 	}

@@ -13,6 +13,7 @@ export class Exit extends GameObject {
 		super({
 			position: new Vector2(x, y)
 		});
+		this.isUp = isUp;
 
 		const sprite = new Sprite({
 			resource: resources.images.stairs,
@@ -23,8 +24,7 @@ export class Exit extends GameObject {
 			position: new Vector2(0, -16) // nudge upwards visually
 		});
 		this.addChild(sprite);
-
-		this.drawLayer = "EXIT";
+		this.drawLayer = isUp ? "EXIT_UP" : "EXIT";
 	}
 
 	ready() {
@@ -39,8 +39,14 @@ export class Exit extends GameObject {
 	}
 
 	enteredSpace() {
-		events.emit("HERO_EXIT", {
-			position: this.position
-		});
+		if (this.isUp) {
+			events.emit("HERO_EXIT_UP", {
+				position: this.position
+			});	
+		} else {
+			events.emit("HERO_EXIT", {
+				position: this.position
+			});	
+		}
 	}
 }

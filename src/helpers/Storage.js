@@ -27,7 +27,7 @@ export class Storage {
 		try {
 			window.localStorage.setItem(key, value);	
 		} catch (e) {
-			console.error(e, key, value);
+			// console.error(e, key, value);
 			this.fallbackCache.set(key, value)
 		}
 		

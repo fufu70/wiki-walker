@@ -111,8 +111,14 @@ export class DrunkardWalkLevel extends Level {
 	}
 
 	addHero(heroStart) {
-		const hero = new Hero(heroStart.x, heroStart.y);
-		this.addGameObject(hero);
+		this.hero = new Hero(heroStart.x, heroStart.y);
+		this.addGameObject(this.hero);
+	}
+
+	teleportHero(position) {
+		this.hero.destinationPosition = position.duplicate();
+		this.hero.position = position.duplicate();
+		events.emit("HERO_POSITION", this.hero.position);
 	}
 
 	addGameObject(gameObject) {

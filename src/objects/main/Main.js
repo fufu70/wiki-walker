@@ -183,6 +183,7 @@ export class Main extends GameObject {
 	setLevel(newLevelInstance) {
 		if (this.level) {
 			this.level.destroy();
+			this.level = undefined;
 		}
 
 		this.level = newLevelInstance;

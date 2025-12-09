@@ -55,7 +55,6 @@ const mainScene = new Main({
 	position: new Vector2(0, 0)
 });
 // mainScene.setLevel(new OutdoorLevel1());
-// mainScene.setLevel(WikiLevelFactory.getTempPageLevel());
 mainScene.setLevel(new WikiSearchLevel());
 // mainScene.setLevel(new WikiDisambiguationLevel({
 // 	links: [

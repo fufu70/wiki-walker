@@ -13,5 +13,6 @@ export class Level extends GameObject {
 		this.background = null;
 		this.foreground = null;
 		this.drawLayer = "LEVEL";
+		window.level = this;
 	}
 }

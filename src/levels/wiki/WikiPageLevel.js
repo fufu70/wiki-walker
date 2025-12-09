@@ -18,23 +18,24 @@ import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
 
 
 export class WikiPageLevel extends DrunkRoomLevel {
-	constructor(params={}) {
+	constructor(wikiParams={}) {
 		try {
 			super({
-				...params,
-				width: 20 * params.sections.length,
-				height: 20 * params.sections.length,
-				maxSteps: 35 * params.sections.length,
+				...wikiParams,
+				width: 20 * wikiParams.sections.length,
+				height: 20 * wikiParams.sections.length,
+				maxSteps: 35 * wikiParams.sections.length,
 				showNextLevel: false,
 				showPreviousLevel: false,
-				rotationChanges: params.sections.length ?? 0,
-				rooms: params.sections.length,
+				rotationChanges: wikiParams.sections.length ?? 0,
+				rooms: wikiParams.sections.length,
 				roomParams: {
 					stepSize: 5,
 					maxSteps: 1,
 					rotationChanges: 1,
 				},
 			});
+			this.pageLevelParams = {...wikiParams};
 		} catch (e) {
 			console.error(e);
 		}
@@ -46,8 +47,11 @@ export class WikiPageLevel extends DrunkRoomLevel {
 
 	addHero(heroStart) {
 		heroStart = this.floorQuery.startingPosition.duplicate();
-		const hero = new Hero(gridCells(heroStart.x), gridCells(heroStart.y));
-		this.addGameObject(hero);
+		this.hero = new Hero(gridCells(heroStart.x), gridCells(heroStart.y));
+		this.addGameObject(this.hero);
+
+		const stairsUp = new Exit(gridCells(heroStart.x + 1), gridCells(heroStart.y), true);
+		this.addGameObject(stairsUp);
 	}
 
 	placeRooms(params) {
@@ -60,7 +64,7 @@ export class WikiPageLevel extends DrunkRoomLevel {
 		// console.log("FLOOR QUERY ROOM POSITIONS", JSON.stringify(this.floorQuery.roomPositions));
 		// console.log("ROOM POSITIONS", JSON.stringify(roomPositions));
 		// console.log("HERO_START", this.heroStart, this.floorPlan, this.findFirstPosition(this.floorPlan));
-		console.log("LEVEL", this);
+		// console.log("LEVEL", this);
 
 
 		roomPositions.forEach((position, index) => {
@@ -108,7 +112,7 @@ export class WikiPageLevel extends DrunkRoomLevel {
 	}
 
 	placeRoom(params, room, loc) {
-		console.log("PLACE ROOM", room, loc)
+		// console.log("PLACE ROOM", room, loc)
 		if (loc == undefined) {
 			console.log("CANNOT FIND LOCATION FOR", room)
 			return;
@@ -228,6 +232,10 @@ export class WikiPageLevel extends DrunkRoomLevel {
 			events.emit('SHOW_LOADING', {});
 			let room = this.findRoomExit(exit);
 			if (room) {
+				WikiLevelFactory.stashPageLevel(
+					exit.position.duplicate(),
+					this.pageLevelParams
+				);
 				events.emit("CHANGE_LEVEL", (new WikiLevelFactory()).getDisambiguationLevel({
 					links: room.links
 				}));
@@ -237,8 +245,13 @@ export class WikiPageLevel extends DrunkRoomLevel {
 			}
 		});
 
+		events.on("HERO_EXIT_UP", this, (exit) => {
+			events.emit("CHANGE_LEVEL", WikiLevelFactory.loadPop(
+				WikiLevelFactory.popLevel()
+			));
+		})
+
 		events.emit('END_LOADING', {});
-		// Bo, Exodus Chapter 13
 	}
 
 	findRoomExit(exit) {

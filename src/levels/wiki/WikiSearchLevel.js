@@ -151,6 +151,10 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		events.on("HERO_EXIT", this, (exit) => {
 			events.emit('SHOW_LOADING', {});
 			WikiLevelFactory.random((level) => {
+				WikiLevelFactory.stashSearchLevel(
+					window.renderPosition.duplicate(),
+					this.params
+				);
 				events.emit("CHANGE_LEVEL", level );
 			}, (err) => {
 				events.emit('END_LOADING', {});
@@ -164,6 +168,10 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 	searchWiki(text) {
 		events.emit('SHOW_LOADING', {});
 		WikiLevelFactory.request(text, (level) => {
+			WikiLevelFactory.stashSearchLevel(
+				window.renderPosition.duplicate(),
+				this.params
+			);
 			events.emit("CHANGE_LEVEL", level );
 		}, (err) => {
 			events.emit('END_LOADING', {});

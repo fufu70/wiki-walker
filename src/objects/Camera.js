@@ -16,7 +16,6 @@ export class Camera extends GameObject {
 	}
 
 	centerPositionOnTarget(pos) {
-
 		pos = pos ?? new Vector2(0, 0);
 		const personHalf = 8;
 		const canvasWidth = 320;
