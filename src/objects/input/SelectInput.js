@@ -28,7 +28,7 @@ export class SelectInput extends UserInputBox {
 		this.triangle = this.typewriter.getCharacterSprite("▶");
 		this.stepToNextMove = 100;
 		this.lastMove = this.stepToNextMove;
-		this.updateIndexState(this.LINE_HEIGHT);
+		this.updateIndexState();
 
 		// User Text Input
 		this.input = new Input(SUPPORTED_CHARACTERS);
@@ -135,7 +135,7 @@ export class SelectInput extends UserInputBox {
 			return;
 		}
 		this.cursorY = cursorY;
-		this.visibleStartIndex = this.getVisibleStartIndex(this.selectedOptionIndex);
+		this.visibleStartIndex = this.getVisibleStartIndex(this.selectedOptionIndex, cursorY);
 		this.visibleEndIndex = this.getVisibleEndIndex(this.selectedOptionIndex, cursorY);
 		this.maxVisibleOptions = this.getMaxVisibleOptions(cursorY);
 	}
@@ -145,10 +145,18 @@ export class SelectInput extends UserInputBox {
 	}
 
 	getMaxVisibleOptions(cursorY) {
-		return Math.ceil(this.MAX_VISIBLE_OPTIONS - (cursorY / this.LINE_HEIGHT)) + 1;
+		let max = this.MAX_VISIBLE_OPTIONS;
+		if (this.options.length < this.MAX_VISIBLE_OPTIONS) {
+			max = this.options.length
+		}
+		return Math.ceil(max - (cursorY / this.LINE_HEIGHT)) + 1;
 	}
 
 	getVisibleStartIndex(selectedOptionIndex, cursorY) {
+		const maxVisibleOptions = this.getMaxVisibleOptions(cursorY);
+		if (selectedOptionIndex > this.options.length - maxVisibleOptions) {
+			return this.options.length - 1 - maxVisibleOptions;
+		}
 		return selectedOptionIndex;
 	}
 

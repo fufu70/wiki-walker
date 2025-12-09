@@ -22,7 +22,7 @@ import {SUPPORTED_CHARACTERS} from '../textbox/spriteFontMap.js';
 // 		string: "Rock blasting at the large open-pit Twin Creeks gold mine in Nevada, United States. View image?",
 // 		options: ["Steve", "john", "Red", "Bob", "Matt", "Jerry", "Terry",
 // 			"Lteve", "Eohn", "Ted", "Uob", "Hatt", "Ferry", "ATerry"],
-// 		selected: "Red"
+// 		selected: "Hatt"
 // 	});
 // })
 
