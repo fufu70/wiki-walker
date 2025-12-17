@@ -11,6 +11,7 @@ import {Sign} from '../../objects/outdoors/Sign.js';
 import {Campfire} from '../../objects/outdoors/Campfire.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {Exit} from '../../objects/exit/Exit.js';
+import {QuestionFactory} from '../../helpers/questions/QuestionFactory.js';
 
 export class WikiSearchLevel extends DrunkOutdoorLevel {
 	constructor(params={}) {
@@ -22,6 +23,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				showNextLevel: false,
 			});
 			setTimeout(() => {
+				this.placeQuestionRod();
 				// events.emit("HERO_REQUESTS_ACTION", this.npc);
 				// this.searchWiki("Typographical syntax") // issue with hero and first room collision
 				// this.searchWiki("Typographical error") // issue with hero and first disambiguation room collision
@@ -44,7 +46,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		this.placeNpc(this.params);
 		this.placeRandom(this.params);
-		// this.placeLanguage(this.params);
+		this.placeLanguage(this.params);
 		this.placeCampfire(this.params);
 	}
 
@@ -84,8 +86,8 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 
 	placeLanguage(params) {
 		const loc = this.heroStart.duplicate();
-		loc.x += gridCells(-2);
-		loc.y += gridCells( 1);
+		loc.x += gridCells( 3);
+		loc.y += gridCells(-1);
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 
 		const vase = new Vase(loc.x, loc.y, {
@@ -165,6 +167,28 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				});
 			});
 		});
+
+		events.on("HERO_ANSWERED_CORRECTLY", this, (question) => {
+			// remove question from list
+			this.placeQuestionRod();
+		});
+
+		events.on("HERO_ANSWERED_INCORRECTLY", this, (question) => {
+			events.emit("HERO_LOSES_ITEM", {
+				image: resources.images.rod
+			});
+			this.placeQuestionRod();
+		});
+	}
+
+
+	placeQuestionRod() {
+		const vector = this.findRandomSpot(this.seed, this.floors, this.gameObjects);
+		const question = QuestionFactory.random(this.params.seed);
+		this.addChild(new QuestionRod({
+			position: vector,
+			...question
+		}));
 	}
 
 	searchWiki(text) {

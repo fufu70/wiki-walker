@@ -23,7 +23,7 @@ export class QuestionRod extends Rod {
 				if (this.isCorrect(text)) {
 					this.answeredCorrectly(text);
 				} else {
-					this.answeredIncorrectly();
+					this.answeredIncorrectly(text);
 				}
 				console.log("Answered with ", text, "This was ", this.isCorrect(text) ? "Correct" : "Incorrect");
 			});
@@ -33,6 +33,9 @@ export class QuestionRod extends Rod {
 	}
 
 	isCorrect(text) {
+		if (this.params.isCorrect) {
+			return this.params.isCorrect(text);
+		}
 		return this.params.answers?.indexOf(text) > -1;
 	}
 
@@ -43,6 +46,20 @@ export class QuestionRod extends Rod {
 			position: this.position
 		});
 
+		events.emit("SHOW_TEXTBOX", {
+			portraitFrame: this.portraitFrame,
+			string: this.getCorrectResponse(text),
+			addFlags: null,
+			onEnd: () => {
+				events.emit("HERO_ANSWERED_CORRECTLY", this.params.config.string);
+			}
+		});
+	}
+
+	getCorrectResponse(text) {
+		if (this.params.getResponse) {
+			return this.params.getResponse(text);
+		}
 		let str = "";
 		if (this.params.answers.length > 1) {
 			str = "Correct! You could've also answered with " + this.params.answers.map((ans) => {
@@ -52,17 +69,25 @@ export class QuestionRod extends Rod {
 		} else {
 			str = `Exactly! the correct answer was '${text}'`
 		}
+		return str;
+	}
+
+	answeredIncorrectly(text) {
 		events.emit("SHOW_TEXTBOX", {
 			portraitFrame: this.portraitFrame,
-			string: str,
+			string: this.getIncorrectResponse(text),
 			addFlags: null,
 			onEnd: () => {
-				events.emit("HERO_ANSWERED_CORRECTLY", this.params.config.string);
+				this.destroy();
+				events.emit("HERO_ANSWERED_INCORRECTLY", this.params.config.string);
 			}
 		});
 	}
 
-	answeredIncorrectly() {
+	getIncorrectResponse(text) {
+		if (this.params.getResponse) {
+			return this.params.getResponse(text);
+		}
 		let str = "";
 		if (this.params.answers.length > 1) {
 			str = "Sorry. Try again. The correct answers could've been " + this.params.answers.map((ans) => {
@@ -71,15 +96,6 @@ export class QuestionRod extends Rod {
 		} else {
 			str = `Hmm, no, try again. The correct answer was '${this.params.answers[0]}'`
 		}
-
-		events.emit("SHOW_TEXTBOX", {
-			portraitFrame: this.portraitFrame,
-			string: str,
-			addFlags: null,
-			onEnd: () => {
-				this.destroy();
-				events.emit("HERO_ANSWERED_INCORRECTLY", this.params.config.string);
-			}
-		});
+		return str;
 	}
 }
