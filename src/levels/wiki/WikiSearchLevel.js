@@ -23,6 +23,8 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 			});
 			setTimeout(() => {
 				// events.emit("HERO_REQUESTS_ACTION", this.npc);
+				// this.searchWiki("Typographical syntax") // issue with hero and first room collision
+				// this.searchWiki("Typographical error") // issue with hero and first disambiguation room collision
 				// this.searchWiki("Bo")
 				// this.searchWiki("Nasolacrimal duct")
 				// this.searchWiki("Ergodic literature")

@@ -11,10 +11,11 @@ import {Exit} from '../../objects/exit/Exit.js';
 import {Vase} from '../../objects/room/Vase.js';
 import {Sign} from '../../objects/outdoors/Sign.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
+import {WikiRoomLevel} from './WikiRoomLevel.js';
 import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
 
 
-export class WikiDisambiguationLevel extends DrunkRoomLevel {
+export class WikiDisambiguationLevel extends WikiRoomLevel {
 	constructor(params={}) {
 		try {
 			super({
@@ -41,22 +42,19 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 	beforeGeneratingSprites() {
 		this.links = this.params.links;
 		this.linkMap = new Map();
-		this.linkExits= this.links.reduce((acc, curr) => {
+		this.roomExits = this.links.reduce((acc, curr) => {
 			acc.set(curr.page, {})
 			return acc;
 		}, new Map());
 
-		const getSize = (index) => { return this.getLinkSize(this.links, index)};
-		const roomPositions = RoomPositionFactory.getRoomPositions(this.floorQuery.roomPositions, getSize, 0);
+		// const getSize = (index) => { return this.getLinkSize(this.links, index)};
+		// const roomPositions = RoomPositionFactory.getRoomPositions(this.floorQuery.roomPositions, getSize, 0);
+		this.rooms = this.params.links;
+		const roomPositions = this.getRoomPositions(this.rooms, this.floorQuery.roomPositions);
 
 		roomPositions.forEach((position, index) => {
-			// const spot = this.findSpotOnFloor(new Vector2(gridCells(1), gridCells(1)));
-			// console.log("spot for " + this.links[i].page, spot);
-			// this.placeLink(this.links[i], spot);
-
-
 			position = new Vector2(gridCells(position.x), gridCells(position.y));
-			this.placeLink(this.links[index], position);
+			this.placeRoom(this.rooms[index], position);
 		});
 		this.floors = [];
 	}
@@ -65,18 +63,12 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 		// leave blank
 	}
 
-
-	addHero(heroStart) {
-		heroStart = this.floorQuery.startingPosition.duplicate();
-		this.hero = new Hero(gridCells(heroStart.x), gridCells(heroStart.y));
-		this.addGameObject(this.hero);
-
-		const stairsUp = new Exit(gridCells(heroStart.x + 1), gridCells(heroStart.y), true);
-		this.addGameObject(stairsUp);
-	}
-
-	getLinkSize(list, index) {
+	getRoomSize(list, index) {
 		const room = list[index];
+		if (room.hero === true) {
+			return new Vector2(4, 4);
+		}
+
 		let roomSize = new Vector2(4, 3);	
 		if (Math.floor(this.params.seed() * 2) % 2 == 0) {
 			roomSize = new Vector2(3, 1);	
@@ -84,9 +76,9 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 		return roomSize;
 	}
 
-	placeLink(link, loc) {
+	placeRoom(room, loc) {
 		if (loc == undefined) {
-			console.error("CANNOT FIND LOCATION FOR", link)
+			console.error("CANNOT FIND LOCATION FOR", room)
 			return;
 		}
 		
@@ -102,20 +94,20 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
 		
 		const sign = new Sign(signLoc.x, signLoc.y, {
 			content: [ {
-				string: `The sign reads '${link.page}'`
+				string: `The sign reads '${room.page}'`
 			}]
 		}, this.seed);
 		this.addGameObject(sign);
 
 		const exit = new Exit(loc.x, loc.y);
-		this.linkExits.set(link.page, exit);
+		this.roomExits.set(room.page, exit);
 		this.addGameObject(exit);
 	}
 
 	ready() {
 		super.ready();
 		events.on("HERO_EXIT", this, (exit) => {
-			const page = this.getPage(exit);
+			const page = this.getRoom(exit);
 			if (!page) {
 				return;
 			}
@@ -134,20 +126,11 @@ export class WikiDisambiguationLevel extends DrunkRoomLevel {
    				});
 			});
 		});
-
-
-		events.on("HERO_EXIT_UP", this, (exit) => {
-			events.emit("CHANGE_LEVEL", WikiLevelFactory.loadPop(
-				WikiLevelFactory.popLevel()
-			));
-		})
-
-		events.emit('END_LOADING', {});
 	}
 
-	getPage(exit) {
+	getRoom(exit) {
 		for (var i = 0; i < this.links.length; i++) {
-			const linkExit = this.linkExits.get(this.links[i].page);
+			const linkExit = this.roomExits.get(this.links[i].page);
 			if (linkExit && linkExit.position.matches(exit.position)) {
 				return this.links[i].page
 			}

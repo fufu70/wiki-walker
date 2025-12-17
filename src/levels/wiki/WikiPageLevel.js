@@ -15,9 +15,10 @@ import {Television} from '../../objects/room/Television.js';
 import {Sign} from '../../objects/outdoors/Sign.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
+import {WikiRoomLevel} from './WikiRoomLevel.js';
 
 
-export class WikiPageLevel extends DrunkRoomLevel {
+export class WikiPageLevel extends WikiRoomLevel {
 	constructor(wikiParams={}) {
 		try {
 			super({
@@ -45,21 +46,11 @@ export class WikiPageLevel extends DrunkRoomLevel {
 		this.placeRooms(this.params);
 	}
 
-	addHero(heroStart) {
-		heroStart = this.floorQuery.startingPosition.duplicate();
-		this.hero = new Hero(gridCells(heroStart.x), gridCells(heroStart.y));
-		this.addGameObject(this.hero);
-
-		const stairsUp = new Exit(gridCells(heroStart.x + 1), gridCells(heroStart.y), true);
-		this.addGameObject(stairsUp);
-	}
-
 	placeRooms(params) {
 		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		this.roomExits = new Map();
 		this.rooms = params.sections;
-		const getSize = (index) => { return this.getRoomSize(this.rooms, index)};
-		const roomPositions = RoomPositionFactory.getRoomPositions(this.floorQuery.roomPositions, getSize);
+		const roomPositions = this.getRoomPositions(this.rooms, this.floorQuery.roomPositions);
 		// console.log("ROOMS", params.sections);
 		// console.log("FLOOR QUERY ROOM POSITIONS", JSON.stringify(this.floorQuery.roomPositions));
 		// console.log("ROOM POSITIONS", JSON.stringify(roomPositions));
@@ -69,8 +60,7 @@ export class WikiPageLevel extends DrunkRoomLevel {
 
 		roomPositions.forEach((position, index) => {
 			position = new Vector2(gridCells(position.x), gridCells(position.y));
-			const section = params.sections[index];
-			this.placeRoom(params, section, position);
+			this.placeRoom(params, this.rooms[index], position);
 		});
 
 
@@ -85,6 +75,9 @@ export class WikiPageLevel extends DrunkRoomLevel {
 	getRoomSize(list, index) {
 		const room = list[index];
 		const roomSize = new Vector2(1, 1);
+		if (room.hero === true) {
+			return new Vector2(3, 3);
+		}
 
 		let shelfCount = 0;
 		room.paragraphs.filter(paragraph => {
@@ -232,26 +225,26 @@ export class WikiPageLevel extends DrunkRoomLevel {
 			events.emit('SHOW_LOADING', {});
 			let room = this.findRoomExit(exit);
 			if (room) {
-				WikiLevelFactory.stashPageLevel(
-					exit.position.duplicate(),
-					this.pageLevelParams
-				);
-				events.emit("CHANGE_LEVEL", (new WikiLevelFactory()).getDisambiguationLevel({
-					links: room.links
-				}));
+				this.stashLevel(exit.position)
+				events.emit("CHANGE_LEVEL", this.getNextLevel(room));
 			} else {
 				// No room exit was found, hide loading screen
 				events.emit('END_LOADING', {});	
 			}
 		});
+	}
 
-		events.on("HERO_EXIT_UP", this, (exit) => {
-			events.emit("CHANGE_LEVEL", WikiLevelFactory.loadPop(
-				WikiLevelFactory.popLevel()
-			));
+	stashLevel(exitPosition) {
+		WikiLevelFactory.stashPageLevel(
+			exitPosition.duplicate(),
+			this.pageLevelParams
+		);
+	}
+
+	getNextLevel(room) {
+		return (new WikiLevelFactory()).getDisambiguationLevel({
+			links: room.links
 		})
-
-		events.emit('END_LOADING', {});
 	}
 
 	findRoomExit(exit) {

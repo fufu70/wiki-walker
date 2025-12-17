@@ -19,7 +19,7 @@ export class RoomPositionFactory {
 			return accu;
 		}, []);
 
-		console.log("POSITIONS", objectPositions);
+		// console.log("POSITIONS", objectPositions);
 
 		return objectPositions.map(objectPosition => objectPosition.position);
 	}
