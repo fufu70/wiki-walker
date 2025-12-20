@@ -19,6 +19,15 @@ export const ASK_LANGUAGE = {
 	"es": "¿En qué idioma le gustaría realizar la búsqueda?",
 	"el": "Σε ποια γλώσσα θέλετε να γίνει η αναζήτηση;"
 }
+
+export const DEAD_END_FLAG = "DEAD_END";
+export const DEAD_END = {
+	"en": "Hmm ... looks like this is a dead end",
+	"de": "Tya ... da können wir nicht weitergehen",
+	"es": "Parece un callejón sin salida",
+	"el": "Μοιάζει με αδιέξοδο"
+}
 export const STORY = {}
 STORY[ASK_WIZARD_FLAG] = ASK_WIZARD;
 STORY[ASK_LANGUAGE_FLAG] = ASK_LANGUAGE;
+STORY[DEAD_END_FLAG] = DEAD_END;

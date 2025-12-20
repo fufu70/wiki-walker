@@ -47,15 +47,16 @@ export class Exit extends GameObject {
 	}
 
 	close() {
+		this.style = CLOSED_STAIRS;
 		this.stairs.frame = EXIT[CLOSED_STAIRS];
 	}
 
 	enteredSpace() {
-		if (this.isUp) {
+		if (this.style === UP_STAIRS) {
 			events.emit("HERO_EXIT_UP", {
 				position: this.position
 			});	
-		} else {
+		} else if (this.style === DOWN_STAIRS) {
 			events.emit("HERO_EXIT", {
 				position: this.position
 			});	

@@ -44,7 +44,6 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 	}
 
 	beforeGeneratingSprites() {
-		this.updateLanguage();
 		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		this.placeNpc(this.params);
 		this.placeRandom(this.params);
@@ -83,7 +82,6 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 
 		const exit = new Exit(loc.x, loc.y);
-		console.log(exit);
 		this.addGameObject(exit);
 	}
 
@@ -220,8 +218,6 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		if (text) {
 			WikiLevelFactory.updateLanguage(text);	
 		}
-		// this.question = ;
-		this.languageQuestion = Story.getDialog(ASK_LANGUAGE_FLAG);
 	}
 
 	getDisambiguationLevel(doc) {

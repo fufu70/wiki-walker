@@ -13,7 +13,8 @@ import {Sign} from '../../objects/outdoors/Sign.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {WikiRoomLevel} from './WikiRoomLevel.js';
 import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
-
+import {Story} from './Story.js';
+import {DEAD_END_FLAG} from './constants.js';
 
 export class WikiDisambiguationLevel extends WikiRoomLevel {
 	constructor(params={}) {
@@ -120,13 +121,21 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 				);
 				events.emit("CHANGE_LEVEL", level);
 			}, (err) => {
-				exit.close();
+				this.roomExits.get(page).close();
 				events.emit('END_LOADING', {});
+
 				events.emit("SHOW_TEXTBOX", {
-   					string: err
+   					string: this.getError(err)
    				});
 			});
 		});
+	}
+
+	getError(err) {
+		if (err == 'can\'t access property "isDisambiguation", doc is null') {
+			err = Story.getDialog(DEAD_END_FLAG)
+		}
+		return err;
 	}
 
 	getRoom(exit) {
