@@ -120,6 +120,7 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 				);
 				events.emit("CHANGE_LEVEL", level);
 			}, (err) => {
+				exit.close();
 				events.emit('END_LOADING', {});
 				events.emit("SHOW_TEXTBOX", {
    					string: err

@@ -12,6 +12,8 @@ import {Campfire} from '../../objects/outdoors/Campfire.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {Exit} from '../../objects/exit/Exit.js';
 import {QuestionFactory} from '../../helpers/questions/QuestionFactory.js';
+import {Story} from './Story.js';
+import {ASK_WIZARD_FLAG, ASK_LANGUAGE_FLAG} from './constants.js';
 
 export class WikiSearchLevel extends DrunkOutdoorLevel {
 	constructor(params={}) {
@@ -22,6 +24,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				showPreviousLevel: false,
 				showNextLevel: false,
 			});
+
 			setTimeout(() => {
 				this.placeQuestionRod();
 				// events.emit("HERO_REQUESTS_ACTION", this.npc);
@@ -41,8 +44,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 	}
 
 	beforeGeneratingSprites() {
-		this.question = "Let's try and find what you're looking for. What do you want to know?";
-		this.languageQuestion = "Choose the language you'd like to search in.";
+		this.updateLanguage();
 		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		this.placeNpc(this.params);
 		this.placeRandom(this.params);
@@ -81,6 +83,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 
 		const exit = new Exit(loc.x, loc.y);
+		console.log(exit);
 		this.addGameObject(exit);
 	}
 
@@ -94,7 +97,9 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 			seed: params.seed,
 			content: [{
 				eventType: "SELECT_INPUT",
-				string: this.languageQuestion,
+				stringFunc: () => {
+					return Story.getDialog(ASK_LANGUAGE_FLAG);
+				},
 				uuid: this.uuid,
 				selectedFunc: () => WikiLevelFactory.getLanguage(),
 				options: WikiLevelFactory.getLanguages()
@@ -114,7 +119,9 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 			seed: params.seed,
 			content: [{
 				eventType: "SELECT_INPUT",
-				string: this.languageQuestion,
+				stringFunc: () => {
+					return Story.getDialog(ASK_LANGUAGE_FLAG);
+				},
 				uuid: this.uuid,
 				selectedFunc: () => WikiLevelFactory.getLanguage(),
 				options: WikiLevelFactory.getLanguages()
@@ -126,7 +133,9 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 	getContent(params) {
 		return [
 			{
-				string: this.question,
+				stringFunc: () => {
+					return Story.getDialog(ASK_WIZARD_FLAG);
+				},
 				eventType: "TEXT_INPUT",
 				requires: [`INTRODUCED_LEVEL WIKI_SEARCH`]
 			},
@@ -143,11 +152,11 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 
 		events.on("SUBMIT_INPUT_TEXT", this, ({config, text}) => {
 
-			if (config.string === this.question) {
+			if (config.string === Story.getDialog(ASK_WIZARD_FLAG)) {
 				this.searchWiki(text);
 			}
 
-			if (config.string === this.languageQuestion) {
+			if (config.string === Story.getDialog(ASK_LANGUAGE_FLAG)) {
 				this.updateLanguage(text);
 			}
 		});
@@ -208,7 +217,11 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 	}
 
 	updateLanguage(text) {
-		WikiLevelFactory.updateLanguage(text);
+		if (text) {
+			WikiLevelFactory.updateLanguage(text);	
+		}
+		// this.question = ;
+		this.languageQuestion = Story.getDialog(ASK_LANGUAGE_FLAG);
 	}
 
 	getDisambiguationLevel(doc) {

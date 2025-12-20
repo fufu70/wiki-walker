@@ -6,7 +6,7 @@ import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js';
 import {Vector2} from "../../Vector2.js";
 import {events} from '../../Events.js';
 import {resources} from '../../Resources.js';
-import {Exit} from '../../objects/exit/Exit.js';
+import {Exit, UP_STAIRS} from '../../objects/exit/Exit.js';
 import {Vase} from '../../objects/room/Vase.js';
 import {Bookshelf} from '../../objects/room/Bookshelf.js';
 import {Drawer} from '../../objects/room/Drawer.js';
@@ -33,7 +33,7 @@ export class WikiRoomLevel extends DrunkRoomLevel {
 
 		const stairsUpLoc = new Vector2(gridCells(heroStart.x + 1), gridCells(heroStart.y));
 		this.floorPlan = this.addFloorAroundPosition(stairsUpLoc, this.floorPlan);
-		const stairsUp = new Exit(stairsUpLoc.x, stairsUpLoc.y, true);
+		const stairsUp = new Exit(stairsUpLoc.x, stairsUpLoc.y, UP_STAIRS);
 		this.addGameObject(stairsUp);
 	}
 
