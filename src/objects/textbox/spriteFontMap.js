@@ -27,8 +27,9 @@ export const SUPPORTED_CHARACTERS = [
 export const TRANSFERRED_CHARACTERS = {
 	"\n": " ",
 	"\t": " ",
-	"–": "-",
+	"–": "-", 
 	"—": "-",
+	"−": "-",
 	"”": "\"",
 	"“": "\"",
 	"’": "'",
