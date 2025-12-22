@@ -25,6 +25,7 @@ class Resources {
 			television: "sprites/shop-assets/TV_16x16.png",
 			bookshelf: "sprites/shop-assets/Bookshelf_16x16.png",
 			drawer: "sprites/shop-assets/Drawer_16x16.png",
+			globe: "sprites/shop-assets/Globe_16x32.png",
 
 			// Exterior Assets
 			outdoors: "/sprites/outdoor/outdoors.png",

@@ -1,7 +1,5 @@
 import {
 	languages,
-	ASK_WIZARD_FLAG,
-	ASK_LANGUAGE_FLAG,
 	STORY,
 } from './constants.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';

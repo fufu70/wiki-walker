@@ -24,7 +24,7 @@ export class DrunkardWalkLevel extends Level {
 
 	constructor(params={}) {
 		super();
-		console.log("PARAMS: ", params);
+		// console.log("PARAMS: ", params);
 		try {
 			this.params = params;
 			this.background = params.background ?? new Sprite({

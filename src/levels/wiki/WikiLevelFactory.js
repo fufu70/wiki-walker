@@ -94,6 +94,8 @@ export class WikiLevelFactory {
 	static getLevel(doc) {
 		const factory = new WikiLevelFactory();
 		// console.log("DOC", doc);
+
+		window.doc = doc;
 		if (doc.isDisambiguation()) {
 			return factory.getDisambiguationLevel(doc);
 		} else {
@@ -150,6 +152,7 @@ export class WikiLevelFactory {
 			doc: doc,
 			uuid: crypto.randomUUID(),
 			title: doc.title(),
+			infobox: this.getInfoBox(doc),
 			sections: sections,
 			images: this.getImages(doc),
 			videos: this.getVideos(doc),
@@ -173,7 +176,6 @@ export class WikiLevelFactory {
 		const urlParts = url.split(".");
 		return SUPPORTED_TYPES.indexOf(urlParts[urlParts.length - 1]) > -1;
 	}
-
 
 	getVideos(doc) {
 		return doc.images()
@@ -222,6 +224,41 @@ export class WikiLevelFactory {
 		}).filter(link => {
 			return link.page !== undefined
 		}));
+	}
+
+	/**
+	 * Infoboxes contain a multitude of information that can be gleaned from the entire article and 
+	 * also hidden information, like what the coordinates are from a location. For our purposes we 
+	 * will pull in all information from the info boxes "text" attributes. The coordinates will be 
+	 * treated seperately and cleaned to allow external map visualizations to pin point the location
+	 * on a map.
+	 * 
+	 * [	
+	 * 	{
+	 * 		"birth_name":{"text":"Francis Harry Compton Crick"},
+	 * 		"image":{"text":"Francis Crick crop.jpg"},
+	 * 		"birth_date":{"text":"June 8, 1916"},
+	 * 		"birth_place":{"text":"Weston Favell, Northamptonshire, England","links":[{"type":"internal","page":"Weston Favell"}]},
+	 * 		"death_date":{"text":"July 28, 2004"},
+	 * 		"death_place":{"text":"San Diego, California, US","links":[{"type":"internal","page":"San Diego"}]},
+	 * 		"occupation":{"text":"Molecular biologist · biophysicist · neuroscientist"},
+	 * 		"field":{"text":"Physics\n\nMolecular biology","links":[{"type":"internal","page":"Physics"},{"type":"internal","page":"Molecular biology"}]},
+	 * 		"education":{"text":"University College London\n\nUniversity of London (BSc)\n\nUniversity of Cambridge (PhD)","links":[{"type":"internal","page":"University College London"},{"type":"internal","page":"University of London"},{"type":"internal","page":"University of Cambridge"}]},
+	 * 		"workplaces":{"text":"University of Cambridge\n\nUniversity College London\n\nCavendish Laboratory\n\nLaboratory of Molecular Biology\n\nSalk Institute for Biological Studies","links":[{"type":"internal","page":"Cavendish Laboratory"},{"type":"internal","page":"Laboratory of Molecular Biology"},{"type":"internal","page":"Salk Institute for Biological Studies"}]},
+	 * 		"doctoral_advisor":{"text":"Max Perutz","links":[{"type":"internal","page":"Max Perutz"}
+	 * 		...
+	 */
+	getInfoBox(doc) {
+		if (!doc.infobox()) {
+			return undefined;
+		}
+		const infobox = doc.infobox().json();
+		const map = Object.keys(infobox).reduce((acc, curr) => { 
+			acc[curr] = infobox[curr].text; 
+			return acc;
+		}, {});
+		// const 
+		return map;
 	}
 
 	/**

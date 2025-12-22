@@ -7,6 +7,7 @@ import {Vector2} from "../../Vector2.js";
 import {events} from '../../Events.js';
 import {resources} from '../../Resources.js';
 import {Vase} from '../../objects/room/Vase.js';
+import {Globe} from '../../objects/room/Globe.js';
 import {Sign} from '../../objects/outdoors/Sign.js';
 import {Campfire} from '../../objects/outdoors/Campfire.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
@@ -113,18 +114,19 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		loc.y += gridCells(1);
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 
-		const vase = new Campfire(loc.x, loc.y, {
-			seed: params.seed,
-			content: [{
-				eventType: "SELECT_INPUT",
-				stringFunc: () => {
-					return Story.getDialog(ASK_LANGUAGE_FLAG);
-				},
-				uuid: this.uuid,
-				selectedFunc: () => WikiLevelFactory.getLanguage(),
-				options: WikiLevelFactory.getLanguages()
-			}]
-		});
+		// const vase = new Campfire(loc.x, loc.y, {
+		// 	seed: params.seed,
+		// 	content: [{
+		// 		eventType: "SELECT_INPUT",
+		// 		stringFunc: () => {
+		// 			return Story.getDialog(ASK_LANGUAGE_FLAG);
+		// 		},
+		// 		uuid: this.uuid,
+		// 		selectedFunc: () => WikiLevelFactory.getLanguage(),
+		// 		options: WikiLevelFactory.getLanguages()
+		// 	}]
+		// });
+		const vase = new Globe(loc.x, loc.y);
 		this.addGameObject(vase);
 	}
 

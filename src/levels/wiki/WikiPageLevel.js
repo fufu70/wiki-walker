@@ -11,6 +11,7 @@ import {Vase} from '../../objects/room/Vase.js';
 import {Bookshelf} from '../../objects/room/Bookshelf.js';
 import {Drawer} from '../../objects/room/Drawer.js';
 import {Picture} from '../../objects/room/Picture.js';
+import {Globe} from '../../objects/room/Globe.js';
 import {Television} from '../../objects/room/Television.js';
 import {Sign} from '../../objects/outdoors/Sign.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
@@ -50,6 +51,10 @@ export class WikiPageLevel extends WikiRoomLevel {
 		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		this.roomExits = new Map();
 		this.rooms = params.sections;
+
+		if (params.infobox) {
+			this.rooms = [params.infobox, ...this.rooms];
+		}
 		const roomPositions = this.getRoomPositions(this.rooms, this.floorQuery.roomPositions);
 		// console.log("ROOMS", params.sections);
 		// console.log("FLOOR QUERY ROOM POSITIONS", JSON.stringify(this.floorQuery.roomPositions));
