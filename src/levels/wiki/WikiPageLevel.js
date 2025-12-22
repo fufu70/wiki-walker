@@ -52,9 +52,9 @@ export class WikiPageLevel extends WikiRoomLevel {
 		this.roomExits = new Map();
 		this.rooms = params.sections;
 
-		if (params.infobox) {
-			this.rooms = [params.infobox, ...this.rooms];
-		}
+		// if (params.infobox) {
+		// 	this.rooms = [params.infobox, ...this.rooms];
+		// }
 		const roomPositions = this.getRoomPositions(this.rooms, this.floorQuery.roomPositions);
 		// console.log("ROOMS", params.sections);
 		// console.log("FLOOR QUERY ROOM POSITIONS", JSON.stringify(this.floorQuery.roomPositions));
