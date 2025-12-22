@@ -114,19 +114,19 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		loc.y += gridCells(1);
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 
-		// const vase = new Campfire(loc.x, loc.y, {
-		// 	seed: params.seed,
-		// 	content: [{
-		// 		eventType: "SELECT_INPUT",
-		// 		stringFunc: () => {
-		// 			return Story.getDialog(ASK_LANGUAGE_FLAG);
-		// 		},
-		// 		uuid: this.uuid,
-		// 		selectedFunc: () => WikiLevelFactory.getLanguage(),
-		// 		options: WikiLevelFactory.getLanguages()
-		// 	}]
-		// });
-		const vase = new Globe(loc.x, loc.y);
+		const vase = new Campfire(loc.x, loc.y, {
+			seed: params.seed,
+			content: [{
+				eventType: "SELECT_INPUT",
+				stringFunc: () => {
+					return Story.getDialog(ASK_LANGUAGE_FLAG);
+				},
+				uuid: this.uuid,
+				selectedFunc: () => WikiLevelFactory.getLanguage(),
+				options: WikiLevelFactory.getLanguages()
+			}]
+		});
+		// const vase = new Globe(loc.x, loc.y);
 		this.addGameObject(vase);
 	}
 

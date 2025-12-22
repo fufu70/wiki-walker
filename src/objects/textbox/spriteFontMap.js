@@ -3,14 +3,14 @@ const DEFAULT_WIDTH = 5;
 const width = new Map();
 
 export const CHARACTER_ROWS = 14;
-export const CHARACTER_COLUMNS = 14;
+export const CHARACTER_COLUMNS = 15;
 
 // supported characters
 export const SUPPORTED_CHARACTERS = [
 	"abcdefghijklmnopqrstuvwxyz",
 	"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
 	"0123456789 ",
-	".!-+\\/,?'|:;(){}[]⬤▶*\"„&_%~$#",
+	".!-+=°\\/,?'|:;(){}[]⬤▶*\"„&_%~$#",
 	"ß",         				 // German Characters
 	"ñÑ¡¿",         			 // Spanish Characters
 	"áéíóúÁÉÍÓÚ",				 // Accent Acute Characters
@@ -70,6 +70,10 @@ width.set("W", 7);
 width.set(" ", 3);
 width.set("'", 2);
 width.set("„", 3);
+width.set("-", 3);
+width.set("+", 3);
+width.set("=", 3);
+width.set("°", 3);
 width.set("!", 1);
 width.set("|", 1);
 
