@@ -66,9 +66,9 @@ export class WikiRoomLevel extends DrunkRoomLevel {
 			));
 		});
 
-		// events.on("HERO_POSITION", this, (position) => {
-		// 	WikiLevelFactory.updateLastPosition(this.levelParams, position)
-		// });
+		events.on("HERO_POSITION", this, (position) => {
+			WikiLevelFactory.updateLastPosition(this.levelParams, position)
+		});
 
 		events.emit('END_LOADING', {});
 	}
