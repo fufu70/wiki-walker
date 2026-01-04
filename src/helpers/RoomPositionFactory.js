@@ -11,7 +11,7 @@ export class RoomPositionFactory {
 				isOver = factory.findObjectOver(value, positionSize, accu, getSize);
 				if (isOver) {
 					const roomSize = getSize(isOver.index);
-					value.x = roomSize.x + isOver.position.x + xIncrement;
+					value.x = roomSize.x + xIncrement;
 				}
 			} while (isOver)
 

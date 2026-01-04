@@ -66,6 +66,23 @@ export class WikiLevelFactory {
 		return level;
 	}
 
+	static storedLocation() {
+		return WikiLevelFactory.storage.get('lastPosition') != undefined
+			&& WikiLevelFactory.storage.get('lastPosition') != null;
+	}
+
+	static updateLastPosition(levelParams, position) {
+		WikiLevelFactory.storage.set('lastPosition', {
+			title: levelParams.title,
+			language: WikiLevelFactory.getLanguage(),
+			position: position
+		})
+	}
+
+	static loadLastLocation() {
+		return WikiLevelFactory.storage.get('lastPosition');
+	}
+
 	/**
 	 * LEVEL GENERATION
 	 */

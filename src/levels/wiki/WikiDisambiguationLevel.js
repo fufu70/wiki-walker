@@ -34,7 +34,7 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 					rotationChanges: 1,
 				},
 			});
-			this.disambiguationLevelParams = params;
+			this.updateLevelParams({...params});
 		} catch (e) {
 			console.error(e);
 		}
@@ -71,9 +71,9 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 		}
 
 		let roomSize = new Vector2(4, 3);	
-		if (Math.floor(this.params.seed() * 2) % 2 == 0) {
-			roomSize = new Vector2(3, 1);	
-		}
+		// if (Math.floor(this.params.seed() * 2) % 2 == 0) {
+		// 	roomSize = new Vector2(3, 1);	
+		// }
 		return roomSize;
 	}
 
@@ -83,7 +83,7 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 			return;
 		}
 		
-		loc.x -= gridCells(2);
+		loc.x -= gridCells(4);
 
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 		// while (!this.isPositionFree(this.floors, this.gameObjects, loc, new Vector2(gridCells(1), gridCells(1)))) {
@@ -117,7 +117,7 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 			WikiLevelFactory.request(page, (level) => {
 				WikiLevelFactory.stashDisambiguationLevel(
 					exit.position.duplicate(),
-					this.disambiguationLevelParams
+					this.levelParams
 				);
 				events.emit("CHANGE_LEVEL", level);
 			}, (err) => {

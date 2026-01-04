@@ -25,8 +25,17 @@ export class Campfire extends GameObject {
 			frameSize: new Vector2(16, 16),
 			hFrames: 2,
 			vFrames: 3,
-			frame: 5,
+			frame: 4,
 			animations: new Animations({
+				OUT: new FrameIndexPattern({
+					duration: 1000,
+					frames: [
+						{
+							time: 0,
+							frame: 4
+						}
+					]
+				}),
 				BURN: new FrameIndexPattern({
 					duration: 400,
 					frames: [
@@ -50,7 +59,10 @@ export class Campfire extends GameObject {
 				})
 			})
 		});
-		campfire.animations.play("BURN");
+		
+		if (params.isBurning) {
+			campfire.animations.play("BURN");	
+		}
 		this.addChild(campfire);
 	}
 

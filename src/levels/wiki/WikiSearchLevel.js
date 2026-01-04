@@ -14,7 +14,13 @@ import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {Exit} from '../../objects/exit/Exit.js';
 import {QuestionFactory} from '../../helpers/questions/QuestionFactory.js';
 import {Story} from './Story.js';
-import {ASK_WIZARD_FLAG, ASK_LANGUAGE_FLAG} from './constants.js';
+import {
+	ASK_WIZARD_FLAG, 
+	ASK_LANGUAGE_FLAG, 
+	ASK_STORAGE_FLAG, 
+	NO_STORAGE_FLAG,
+	YES_FLAG
+} from './constants.js';
 
 export class WikiSearchLevel extends DrunkOutdoorLevel {
 	constructor(params={}) {
@@ -114,18 +120,26 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 		loc.y += gridCells(1);
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 
-		const vase = new Campfire(loc.x, loc.y, {
+		const campfireParams = {
 			seed: params.seed,
-			content: [{
+			isBurning: WikiLevelFactory.storedLocation(),
+		};
+
+		if (WikiLevelFactory.storedLocation()) {
+			campfireParams.content = [{
 				eventType: "SELECT_INPUT",
 				stringFunc: () => {
-					return Story.getDialog(ASK_LANGUAGE_FLAG);
+					return Story.getDialog(ASK_STORAGE_FLAG);
 				},
 				uuid: this.uuid,
-				selectedFunc: () => WikiLevelFactory.getLanguage(),
-				options: WikiLevelFactory.getLanguages()
+				options: Story.getConfirmationOptions()
+			}];
+		} else {
+			campfireParams.content = [{
+				string: Story.getDialog(NO_STORAGE_FLAG)
 			}]
-		});
+		}
+		const vase = new Campfire(loc.x, loc.y, campfireParams);
 		// const vase = new Globe(loc.x, loc.y);
 		this.addGameObject(vase);
 	}
@@ -158,6 +172,10 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 
 			if (config.string === Story.getDialog(ASK_LANGUAGE_FLAG)) {
 				this.updateLanguage(text);
+			}
+
+			if (config.string === Story.getDialog(ASK_STORAGE_FLAG)) {
+				this.loadLastLocation(text);
 			}
 		});
 
@@ -219,6 +237,28 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 	updateLanguage(text) {
 		if (text) {
 			WikiLevelFactory.updateLanguage(text);	
+		}
+	}
+
+	loadLastLocation(text) {
+		if (text === Story.getDialog(YES_FLAG)) {
+			events.emit('SHOW_LOADING', {});
+			const lastLocation = WikiLevelFactory.loadLastLocation();
+			this.updateLanguage(lastLocation.language);
+			WikiLevelFactory.request(lastLocation.title, (level) => {
+				WikiLevelFactory.stashSearchLevel(
+					window.renderPosition.duplicate(),
+					this.params
+				);
+				events.emit("CHANGE_LEVEL", level);
+				console.log(level, lastLocation, Vector2)
+				level.teleportHero(new Vector2(lastLocation.position.x, lastLocation.position.y));
+			}, (err) => {
+				events.emit('END_LOADING', {});
+				events.emit("SHOW_TEXTBOX", {
+					string: err
+				});
+			});
 		}
 	}
 

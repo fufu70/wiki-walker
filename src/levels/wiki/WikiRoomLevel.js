@@ -26,6 +26,10 @@ export class WikiRoomLevel extends DrunkRoomLevel {
 		}
 	}
 
+	updateLevelParams(roomLevelParams) {
+		this.levelParams = roomLevelParams;
+	}
+
 	addHero(heroStart) {
 		heroStart = this.floorQuery.startingPosition.duplicate();
 		this.hero = new Hero(gridCells(heroStart.x), gridCells(heroStart.y));
@@ -60,6 +64,10 @@ export class WikiRoomLevel extends DrunkRoomLevel {
 			events.emit("CHANGE_LEVEL", WikiLevelFactory.loadPop(
 				WikiLevelFactory.popLevel()
 			));
+		});
+
+		events.on("HERO_POSITION", this, (position) => {
+			WikiLevelFactory.updateLastPosition(this.levelParams, position)
 		});
 
 		events.emit('END_LOADING', {});

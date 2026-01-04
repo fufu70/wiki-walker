@@ -37,7 +37,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 					rotationChanges: 1,
 				},
 			});
-			this.pageLevelParams = {...wikiParams};
+			this.updateLevelParams({...wikiParams});
 		} catch (e) {
 			console.error(e);
 		}
@@ -242,7 +242,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 	stashLevel(exitPosition) {
 		WikiLevelFactory.stashPageLevel(
 			exitPosition.duplicate(),
-			this.pageLevelParams
+			this.levelParams
 		);
 	}
 
