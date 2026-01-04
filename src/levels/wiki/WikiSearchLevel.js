@@ -136,7 +136,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 			}];
 		} else {
 			campfireParams.content = [{
-				string: Story.getDialog(NO_STORAGE_FLAG)
+				stringFunc: () => Story.getDialog(NO_STORAGE_FLAG)
 			}]
 		}
 		const vase = new Campfire(loc.x, loc.y, campfireParams);
