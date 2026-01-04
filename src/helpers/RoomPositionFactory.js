@@ -3,19 +3,22 @@ export class RoomPositionFactory {
 	static getRoomPositions(subjectivePositions, getSize, xIncrement = 1) {
 
 		const factory = new RoomPositionFactory();
+		const sizes = subjectivePositions.map((a, index) => {
+			return getSize(index);
+		})
 
 		const objectPositions = subjectivePositions.reduce((accu, value, index) => {
-			const positionSize = getSize(index);
+			const positionSize = sizes[index];
 			let isOver = undefined;
 			do {
-				isOver = factory.findObjectOver(value, positionSize, accu, getSize);
+				isOver = factory.findObjectOver(value, positionSize, accu, sizes);
 				if (isOver) {
-					const roomSize = getSize(isOver.index);
-					value.x = roomSize.x + xIncrement;
+					const roomSize = sizes[isOver.index];
+					value.x += xIncrement;
 				}
 			} while (isOver)
 
-			accu.push({index: index, position: value, objectSize: getSize(index)});
+			accu.push({index: index, position: value, objectSize: sizes[index]});
 			return accu;
 		}, []);
 
@@ -24,10 +27,10 @@ export class RoomPositionFactory {
 		return objectPositions.map(objectPosition => objectPosition.position);
 	}
 
-	findObjectOver(position, positionSize, currentRooms, getSize) {
+	findObjectOver(position, positionSize, currentRooms, sizes) {
 		for (let i = 0; i < currentRooms.length; i ++) {
 			const room = currentRooms[i];
-			const roomSize = getSize(room.index);
+			const roomSize = sizes[room.index];
 
 			const accuValMinX = room.position.x;
 			const accuValMinY = room.position.y;
