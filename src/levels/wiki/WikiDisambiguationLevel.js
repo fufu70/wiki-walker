@@ -82,8 +82,6 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 			console.error("CANNOT FIND LOCATION FOR", room)
 			return;
 		}
-		
-		loc.x -= gridCells(4);
 
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 		// while (!this.isPositionFree(this.floors, this.gameObjects, loc, new Vector2(gridCells(1), gridCells(1)))) {
@@ -91,8 +89,7 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 		// 	this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 		// }
 		const signLoc = new Vector2(loc.x + gridCells(1), loc.y);
-		this.floorPlan = this.addFloorAroundPosition(signLoc, this.floorPlan);
-		
+		this.floorPlan = this.addFloorAroundPosition(signLoc.duplicate(), this.floorPlan);
 		const sign = new Sign(signLoc.x, signLoc.y, {
 			content: [ {
 				string: `The sign reads '${room.page}'`
@@ -103,6 +100,17 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 		const exit = new Exit(loc.x, loc.y);
 		this.roomExits.set(room.page, exit);
 		this.addGameObject(exit);
+		
+		loc.x -= gridCells(1);
+		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
+		loc.x += gridCells(2);
+		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
+
+		loc.y -= gridCells(1)
+		loc.x -= gridCells(3);
+		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
+		loc.x += gridCells(2);
+		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 	}
 
 	ready() {
