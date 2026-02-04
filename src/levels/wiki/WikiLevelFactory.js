@@ -285,7 +285,7 @@ export class WikiLevelFactory {
 	static getLanguage() {
 		const factory = new WikiLevelFactory();
 		if (factory.getStorageLanguage() === undefined) {
-			factory.updateLanguage(DEFAULT_LANGUAGE);
+			WikiLevelFactory.updateLanguage(DEFAULT_LANGUAGE);
 		}
 		return Object.keys(languages).find(lang => languages[lang] == factory.getStorageLanguage())
 	}

@@ -146,10 +146,9 @@ export class SelectInput extends UserInputBox {
 
 	getMaxVisibleOptions(cursorY) {
 		let max = this.MAX_VISIBLE_OPTIONS;
-		if (this.options.length < this.MAX_VISIBLE_OPTIONS) {
-			max = this.options.length
-		}
-		return Math.ceil(max - (cursorY / this.LINE_HEIGHT)) + 1;
+		max = Math.ceil(max - ((cursorY - this.PADDING_TOP) / this.LINE_HEIGHT));
+		max = Math.max(1, Math.min(max, this.options.length));
+		return max;
 	}
 
 	getVisibleStartIndex(selectedOptionIndex, cursorY) {
@@ -163,10 +162,6 @@ export class SelectInput extends UserInputBox {
 	getVisibleEndIndex(selectedOptionIndex, cursorY) {
 		return selectedOptionIndex + this.getMaxVisibleOptions(cursorY);
 	}
-
-	// inRange(index, visibleStartIndex, cursorY) {
-	// 	return Math.abs(index - visibleStartIndex) <= this.getMaxVisibleOptions(cursorY);
-	// }
 
 	shiftToVisibleIndex(index, visibleStartIndex) {
 		return index - visibleStartIndex;

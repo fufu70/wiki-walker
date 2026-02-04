@@ -112,7 +112,7 @@ export class WalkFactory {
 			if (position.y >= query.height - query.stepSize) {
 				position.y = query.height - query.stepSize;
 			}
-			if (query.roomsAt.indexOf(steps) > -1) {
+			if (query.roomsAt.indexOf(steps + 1) > -1) {
 				matrix = this.createRoom(query, matrix, position);
 			} else {
 				matrix = this.createStep(position, query, matrix);	

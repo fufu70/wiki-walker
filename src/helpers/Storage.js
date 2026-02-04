@@ -15,10 +15,17 @@ export class Storage {
 
 	get(key) {
 		key = this.generateKey(key);
+		let value = undefined;
 		if (this.fallbackCache.has(key)) {
-			return JSON.parse(this.fallbackCache.get(key));
+			value = this.fallbackCache.get(key);
+		} else {
+			value = window.localStorage.getItem(key);
 		}
-		return JSON.parse(window.localStorage.getItem(key));
+		try {
+			return JSON.parse(value);
+		} catch {
+			return undefined;
+		}
 	}
 
 	set(key, value) {

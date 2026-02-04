@@ -2,7 +2,11 @@ export const languages = {
 	"English":  "en",
 	"Deutsch":  "de",
 	"Español":  "es",
-	"Ελληνικά": "el"
+	"Ελληνικά": "el",
+	"Deitsch": "pdc",
+	"Ido": "io",
+	"Italiano": "it",
+	"Niederländisch": "nl"
 }
 
 export const ASK_WIZARD_FLAG = "ASK_WIZARD";
