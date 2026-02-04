@@ -13,8 +13,8 @@ import {Sign} from '../../objects/outdoors/Sign.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {WikiRoomLevel} from './WikiRoomLevel.js';
 import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
-import {Story} from './Story.js';
-import {DEAD_END_FLAG} from './constants.js';
+import {Story} from '../../stories/Story.js';
+import {DEAD_END_FLAG} from '../../stories/constants.js';
 
 export class WikiDisambiguationLevel extends WikiRoomLevel {
 	constructor(params={}) {

@@ -3,9 +3,7 @@ import {WikiPageLevel} from './WikiPageLevel.js';
 import {WikiSearchLevel} from './WikiSearchLevel.js';
 import {ArrayFactory} from '../../helpers/ArrayFactory.js';
 import {WikiStorage} from './WikiStorage.js';
-import {languages} from './constants.js';
-
-const DEFAULT_LANGUAGE = "English";
+import {LanguageFactory} from '../../stories/LanguageFactory.js';
 
 export class WikiLevelFactory {
 	static storage = new WikiStorage();
@@ -283,34 +281,18 @@ export class WikiLevelFactory {
 	 */
 	
 	static getLanguage() {
-		const factory = new WikiLevelFactory();
-		if (factory.getStorageLanguage() === undefined) {
-			WikiLevelFactory.updateLanguage(DEFAULT_LANGUAGE);
-		}
-		return Object.keys(languages).find(lang => languages[lang] == factory.getStorageLanguage())
+		return LanguageFactory.getLanguage();
 	}
 
 	static getLanguages() {
-		return Object.keys(languages); 
+		return LanguageFactory.getLanguages(); 
 	}
 
 	static updateLanguage(text) {
-		const factory = new WikiLevelFactory();
-		factory.setStorageLanguage(languages[text])
+		LanguageFactory.updateLanguage(text);
 	}
 
 	getLang() {
-		if (this.getStorageLanguage() === undefined) {
-			WikiLevelFactory.updateLanguage(DEFAULT_LANGUAGE);
-		}
-		return this.getStorageLanguage();
-	}
-
-	getStorageLanguage() {
-		return WikiLevelFactory.storage.get('language');
-	}
-
-	setStorageLanguage(val) {
-		WikiLevelFactory.storage.set('language', val);
+		return LanguageFactory.getLang();
 	}
 }

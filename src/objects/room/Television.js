@@ -8,6 +8,7 @@ import {resources} from '../../Resources.js';
 import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
+import {Story} from '../../stories/Story.js';
 
 export const NEWS = 'NEWS';
 export const COOKING = 'COOKING';
@@ -102,7 +103,7 @@ export class Television extends GameObject {
 				return;
 			}
 
-			if (text == "Yes") {
+			if (Story.isConfirmation(text)) {
 				events.emit("SHOW_VIDEO", {
 					urls: this.urls
 				});
@@ -117,7 +118,7 @@ export class Television extends GameObject {
 				eventType: "SELECT_INPUT",
 				string: this.question,
 				uuid: this.uuid,
-				options: ["Yes", "No"]
+				options: Story.getConfirmationOptions()
 			}
 		}
 		return {

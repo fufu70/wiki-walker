@@ -6,6 +6,7 @@ import {resources} from '../../Resources.js';
 import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
+import {Story} from '../../stories/Story.js';
 
 export const MODERN = 'MODERN';
 export const EVIL_PURPLE = 'EVIL_PURPLE';
@@ -61,7 +62,7 @@ export class Picture extends GameObject {
 				return;
 			}
 
-			if (text == "Yes") {
+			if (Story.isConfirmation(text)) {
 				events.emit("SHOW_IMAGE", {
 					url: this.url
 				});
@@ -76,7 +77,7 @@ export class Picture extends GameObject {
 				eventType: "SELECT_INPUT",
 				string: this.question,
 				uuid: this.uuid,
-				options: ["Yes", "No"]
+				options: Story.getConfirmationOptions()
 			}
 		}
 

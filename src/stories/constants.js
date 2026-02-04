@@ -58,8 +58,10 @@ export const ASK_STORAGE = {
 
 export const YES_FLAG = "YES";
 export const YES = {
-	"en": "Yes",
-	"de": "Ja",
+	// "en": "Yes",
+	// "de": "Ja",
+	"de": "Yes",
+	"en": "Ja",
 	"es": "Si",
 	"el": "Ναί",
 	"pdc": "Ya",

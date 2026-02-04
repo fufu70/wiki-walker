@@ -5,7 +5,8 @@ import {moveTowards} from '../../helpers/Move.js';
 import {resources} from '../../Resources.js';
 import {events} from '../../Events.js';
 import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
-import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
+import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js';
+import {Story} from '../../stories/Story.js';
 
 export const LIGHT_BROWN_FULL = 'LIGHT_BROWN_FULL';
 export const LIGHT_BROWN_MID = 'LIGHT_BROWN_MID';
@@ -55,7 +56,7 @@ export class Drawer extends GameObject {
 				return;
 			}
 
-			if (text == "Yes") {
+			if (Story.isConfirmation(text)) {
 				events.emit("SHOW_TABLE", {
 					table: this.table
 				});
@@ -70,7 +71,7 @@ export class Drawer extends GameObject {
 				eventType: "SELECT_INPUT",
 				string: this.question,
 				uuid: this.uuid,
-				options: ["Yes", "No"]
+				options: Story.getConfirmationOptions()
 			}
 		}
 

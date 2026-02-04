@@ -13,14 +13,14 @@ import {Campfire} from '../../objects/outdoors/Campfire.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {Exit} from '../../objects/exit/Exit.js';
 import {QuestionFactory} from '../../helpers/questions/QuestionFactory.js';
-import {Story} from './Story.js';
+import {Story} from '../../stories/Story.js';
 import {
 	ASK_WIZARD_FLAG, 
 	ASK_LANGUAGE_FLAG, 
 	ASK_STORAGE_FLAG, 
 	NO_STORAGE_FLAG,
 	YES_FLAG
-} from './constants.js';
+} from '../../stories/constants.js';
 
 export class WikiSearchLevel extends DrunkOutdoorLevel {
 	constructor(params={}) {
