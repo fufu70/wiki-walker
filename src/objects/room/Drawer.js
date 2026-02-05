@@ -7,6 +7,7 @@ import {events} from '../../Events.js';
 import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js';
 import {Story} from '../../stories/Story.js';
+import {VIEW_TABLE_FLAG} from '../../stories/constants.js';
 
 export const LIGHT_BROWN_FULL = 'LIGHT_BROWN_FULL';
 export const LIGHT_BROWN_MID = 'LIGHT_BROWN_MID';
@@ -65,7 +66,7 @@ export class Drawer extends GameObject {
 	}
 
 	getContent() {
-		this.question = `View table?`;
+		this.question = Story.getDialog(VIEW_TABLE_FLAG);
 		if (this.table !== undefined) {
 			return {
 				eventType: "SELECT_INPUT",

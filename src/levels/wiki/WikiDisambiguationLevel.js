@@ -14,7 +14,7 @@ import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {WikiRoomLevel} from './WikiRoomLevel.js';
 import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
 import {Story} from '../../stories/Story.js';
-import {DEAD_END_FLAG} from '../../stories/constants.js';
+import {DEAD_END_FLAG, SIGN_READS_FLAG} from '../../stories/constants.js';
 
 export class WikiDisambiguationLevel extends WikiRoomLevel {
 	constructor(params={}) {
@@ -92,7 +92,7 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 		this.floorPlan = this.addFloorAroundPosition(signLoc.duplicate(), this.floorPlan);
 		const sign = new Sign(signLoc.x, signLoc.y, {
 			content: [ {
-				string: `The sign reads '${room.page}'`
+				string: `${Story.getDialog(SIGN_READS_FLAG)} '${room.page}'`
 			}]
 		}, this.seed);
 		this.addGameObject(sign);

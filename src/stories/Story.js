@@ -25,6 +25,9 @@ export class Story {
 	}
 
 	static isConfirmation(text, lang = undefined) {
+		if (!lang) {
+			lang = languages[LanguageFactory.getLanguage()];
+		}
 		return  STORY[YES_FLAG][lang] === text;
 	}
 }

@@ -5,6 +5,7 @@ import {moveTowards} from '../../helpers/Move.js';
 import {resources} from '../../Resources.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
+import {VIEW_MAP_FLAG} from '../../stories/constants.js';
 
 export const GOLD = 'GOLD';
 export const SILVER = 'SILVER';
@@ -55,7 +56,7 @@ export class Globe extends GameObject {
 				return;
 			}
 
-			if (text == "Yes") {
+			if (Story.isConfirmation(text)) {
 				events.emit("SHOW_Map", {
 					coordinates: this.coordinates
 				});
@@ -64,13 +65,13 @@ export class Globe extends GameObject {
 	}
 
 	getContent() {
-		this.question = `${this.content} View map?`;
+		this.question = `${this.content} ${Story.getDialog(VIEW_MAP_FLAG)}`;
 		if (this.content !== undefined) {
 			return {
 				eventType: "SELECT_INPUT",
 				string: this.question,
 				uuid: this.uuid,
-				options: ["Yes", "No"]
+				options: Story.getConfirmationOptions()
 			}
 		}
 

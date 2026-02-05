@@ -9,6 +9,7 @@ import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {Story} from '../../stories/Story.js';
+import {VIEW_VIDEO_FLAG} from '../../stories/constants.js';
 
 export const NEWS = 'NEWS';
 export const COOKING = 'COOKING';
@@ -112,7 +113,7 @@ export class Television extends GameObject {
 	}
 
 	getContent() {
-		this.question = `${this.content} View video?`;
+		this.question = `${this.content} ${Story.getDialog(VIEW_VIDEO_FLAG)}`;
 		if (this.content !== undefined) {
 			return {
 				eventType: "SELECT_INPUT",

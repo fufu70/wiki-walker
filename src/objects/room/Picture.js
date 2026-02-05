@@ -7,6 +7,7 @@ import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {Story} from '../../stories/Story.js';
+import {VIEW_IMAGE_FLAG} from '../../stories/constants.js';
 
 export const MODERN = 'MODERN';
 export const EVIL_PURPLE = 'EVIL_PURPLE';
@@ -71,7 +72,7 @@ export class Picture extends GameObject {
 	}
 
 	getContent() {
-		this.question = `${this.content} View image?`;
+		this.question = `${this.content} ${Story.getDialog(VIEW_IMAGE_FLAG)}`;
 		if (this.content !== undefined) {
 			return {
 				eventType: "SELECT_INPUT",

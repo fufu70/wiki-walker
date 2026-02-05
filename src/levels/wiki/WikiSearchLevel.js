@@ -241,7 +241,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 	}
 
 	loadLastLocation(text) {
-		if (text === Story.getDialog(YES_FLAG)) {
+		if (Story.isConfirmation(text)) {
 			events.emit('SHOW_LOADING', {});
 			const lastLocation = WikiLevelFactory.loadLastLocation();
 			this.updateLanguage(lastLocation.language);

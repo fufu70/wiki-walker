@@ -44,6 +44,18 @@ export const DEAD_END = {
 	"nl": "Het lijkt erop dat dit een doodlopende weg is.",
 }
 
+export const SIGN_READS_FLAG = "SIGN_READS";
+export const SIGN_READS = {
+	"en": "The sign reads: ",
+	"de": "Auf dem Schild steht:",
+	"es": "El cartel dice:",
+	"el": "Η πινακίδα γράφει",
+	"pdc": "Uff dem Shild laude:",
+	"io": "La signo legas: ",
+	"it": "Il cartello dice: ",
+	"nl": "Op het bord staat:",
+}
+
 export const ASK_STORAGE_FLAG = "ASK_STORAGE";
 export const ASK_STORAGE = {
 	"en": "Looks like the fire is lit. Would you like to go back to your last location?",
@@ -58,10 +70,10 @@ export const ASK_STORAGE = {
 
 export const YES_FLAG = "YES";
 export const YES = {
-	// "en": "Yes",
-	// "de": "Ja",
-	"de": "Yes",
-	"en": "Ja",
+	"en": "Yes",
+	"de": "Ja",
+	// "de": "Yes",
+	// "en": "Ja",
 	"es": "Si",
 	"el": "Ναί",
 	"pdc": "Ya",
@@ -93,11 +105,64 @@ export const NO_STORAGE = {
 	"nl": "Er brandt niets.",
 }
 
+export const VIEW_TABLE_FLAG = "VIEW_TABLE";
+export const VIEW_TABLE = {
+	"en": "View table?",
+	"de": "Siehe Tabelle?",
+	"es": "Mira la Tabla?",
+	"el": "Δείτε τον πίνακα;",
+	"pdc": "Aaweise Auskunft?",
+	"io": "Montrar tabulo?",
+	"it": "Guarda la tabella?",
+	"nl": "Kijk naar de tabel?",
+}
+
+export const VIEW_MAP_FLAG = "VIEW_MAP";
+export const VIEW_MAP = {
+	"en": "Show map?",
+	"de": "Siehe Landkarte?",
+	"es": "Mira la mapa?",
+	"el": "Κοίτα τον χάρτη;",
+	"pdc": "Aaweise Landkaart?",
+	"io": "Montrar mapo?",
+	"it": "Hai guardato la mappa?",
+	"nl": "Kijk naar de kaart?",
+}
+
+export const VIEW_IMAGE_FLAG = "VIEW_IMAGE";
+export const VIEW_IMAGE = {
+	"en": "Show image?",
+	"de": "Siehe Bild?",
+	"es": "Mira la pictura?",
+	"el": "Κοίτα την εικόνα;",
+	"pdc": "Aaweise Bild?",
+	"io": "Monstrar imago?",
+	"it": "Guarda la foto?",
+	"nl": "Kijk naar de foto?",
+}
+
+export const VIEW_VIDEO_FLAG = "VIEW_VIDEO";
+export const VIEW_VIDEO = {
+	"en": "Show video?",
+	"de": "Siehe Film?",
+	"es": "Mira el video?",
+	"el": "Είδες το βίντεο;",
+	"pdc": "Aaweise Schpielbild?",
+	"io": "Montrar video?",
+	"it": "Hai visto il video?",
+	"nl": "Heb je de video bekeken?",
+}
+
 export const STORY = {}
 STORY[ASK_WIZARD_FLAG] = ASK_WIZARD;
 STORY[ASK_LANGUAGE_FLAG] = ASK_LANGUAGE;
 STORY[DEAD_END_FLAG] = DEAD_END;
+STORY[SIGN_READS_FLAG] = SIGN_READS;
 STORY[ASK_STORAGE_FLAG] = ASK_STORAGE;
 STORY[YES_FLAG] = YES;
 STORY[NO_FLAG] = NO;
 STORY[NO_STORAGE_FLAG] = NO_STORAGE;
+STORY[VIEW_TABLE_FLAG] = VIEW_TABLE;
+STORY[VIEW_MAP_FLAG] = VIEW_MAP;
+STORY[VIEW_IMAGE_FLAG] = VIEW_IMAGE;
+STORY[VIEW_VIDEO_FLAG] = VIEW_VIDEO;
