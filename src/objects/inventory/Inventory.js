@@ -7,9 +7,11 @@ import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {Typewriter} from '../../helpers/text/Typewriter.js';
+import {InventoryStorage} from './InventoryStorage.js';
 
 
 export class Inventory extends HudGameObject {
+	
 	items = [];
 
 	constructor() {
@@ -17,15 +19,11 @@ export class Inventory extends HudGameObject {
 			position: new Vector2(0, 1)
 		});
 		this.drawLayer = "HUD";
+		this.storage = new InventoryStorage();
 
 		this.nextId = 0;
-		this.items = [
-			{
-				id: -1,
-				image: resources.images.rod,
-				count: 1
-			}
-		];
+		this.items = this.storage.getItems();
+		// storage.get()
 		this.typewriter = new Typewriter({});
 
 		this.renderInventory();
@@ -33,46 +31,14 @@ export class Inventory extends HudGameObject {
 
 	ready() {
 		events.on("HERO_PICKS_UP_ITEM", this, data => {
-			const item = this.findItem(data);
-			if (item === undefined) {
-				this.nextId += 1;
-				this.items.push({
-					id: this.nextId,
-					image: data.image,
-					count: 1
-				});
-			} else {
-				this.incrementCount(item);
-			}
+			this.items = this.storage.addItem(data);
 			this.renderInventory();
 		});
 
 		events.on("HERO_LOSES_ITEM", this, data => {
-			const item = this.findItem(data);
-			this.removeFromInventory(item);
+			this.items = this.storage.removeItem(data);
 			this.renderInventory();
 		});
-	}
-
-	addNewItem(data) {
-		this.nextId += 1;
-		this.items.push({
-			id: this.nextId,
-			image: data.image,
-			count: 1
-		});
-	}
-
-	findItem(data) {
-		return this.items.find(item => data.image === item.image);
-	}
-
-	incrementCount(item) {
-		item.count ++;
-	}
-
-	decrementCount(item) {
-		item.count --;
 	}
 
 	renderInventory() {
@@ -120,14 +86,5 @@ export class Inventory extends HudGameObject {
 			// Move the cursor over
 			cursorX += 3;
 		});
-	}
-
-	removeFromInventory(item) {
-		if (item.count == 1) {
-			this.items = this.items.filter(it => it.id !== item.id);
-		} else {
-			this.decrementCount(item);
-		}
-		this.renderInventory();
 	}
 }
