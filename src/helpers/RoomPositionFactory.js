@@ -32,24 +32,77 @@ export class RoomPositionFactory {
 			const room = currentRooms[i];
 			const roomSize = sizes[room.index];
 
-			const accuValMinX = room.position.x;
-			const accuValMinY = room.position.y;
-			const accuValMaxX = roomSize.x + room.position.x;
-			const accuValMaxY = roomSize.y + room.position.y;
-
-
-			const valueMinX = position.x;
-			const valueMinY = position.y;
-			const valueMaxX = positionSize.x + position.x;
-			const valueMaxY = positionSize.y + position.y;
-
-			if ((position.x >= accuValMinX && position.y >= accuValMinY
-								&& position.x <= accuValMaxX && position.y <= accuValMaxY)
-				|| (room.position.x >= valueMinX && room.position.y >= valueMinY
-								&& room.position.x <= valueMaxX && room.position.y <= valueMaxY)) {
+			if (this.doesRoomOverlap(position, positionSize, room, roomSize)) {
 				return room;
 			}
 		}
 		return undefined;
 	}
+
+
+	/**
+	 * Checks if all the points of a position and its size are inside of a 
+	 * room.
+	 * 
+	 * 		*--------*
+	 * 		|		 |
+	 * 		|	*----|--* <- Point B
+	 * 		|	|	 |	|
+	 * 		|	|	 |	|
+	 * 		*--------* 	|
+	 * 			|		|
+	 * 			*-------* <- Point D
+	 */ 
+
+	doesRoomOverlap(position, positionSize, room, roomSize) {
+		const pointA = {x: position.x, y: position.y};
+		const pointB = {x: position.x + positionSize.x, y: position.y};
+		const pointC = {x: position.x, y: position.y + positionSize.y};
+		const pointD = {x: position.x + positionSize.x, y: position.y + positionSize.y};
+
+		return this.isPointInRoom(pointA, room, roomSize)
+			|| this.isPointInRoom(pointB, room, roomSize)
+			|| this.isPointInRoom(pointC, room, roomSize)
+			|| this.isPointInRoom(pointD, room, roomSize);
+	}
+
+	/**
+	 * Checks if the point is inside of the min and max positions of the
+	 * rooms boundaries.
+	 * 
+	 * 		*--------*
+	 * 		|		 |
+	 * 		|	*	 |
+	 * 		|		 |
+	 * 		|		 |
+	 * 		|		 |
+	 * 		*--------* 
+	 * 
+	 */ 
+	isPointInRoom(point, room, roomSize)  {
+		const accuValMinX = room.position.x;
+		const accuValMinY = room.position.y;
+		const accuValMaxX = roomSize.x + room.position.x;
+		const accuValMaxY = roomSize.y + room.position.y;
+
+		return point.x >= accuValMinX 
+			&& point.x <= accuValMaxX
+			&& point.y >= accuValMinY
+			&& point.y <= accuValMaxY;
+	}
 }
+
+const factory = new RoomPositionFactory();
+// room x 
+console.assert(factory.isPointInRoom(
+	{ x: 414, y: 777 + 15}, // point
+	{ position: { x: 413, y: 787 } }, // room
+	{ x: 4, y: 11 } //  roomSize
+), "The point should be in the room");
+
+console.assert(factory.doesRoomOverlap(
+	{ x: 414, y: 777 }, // position
+	{ x: 4, y: 15 }, // positionSize
+	{ position: { x: 413, y: 787 } }, // room
+	{ x: 4, y: 11 } //  roomSize
+), "The position and position size should create a point that is located in the room");
