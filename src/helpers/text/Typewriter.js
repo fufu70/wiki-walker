@@ -108,10 +108,14 @@ export class Typewriter {
 		}
 	}
 
+	requiresNewLine(drawPosX, cursorX, word) {
+		const spaceRemaining = drawPosX + this.LINE_WIDTH_MAX - cursorX;
+		return spaceRemaining < word.wordWidth;
+	}
+
 	drawWord(ctx, drawPosX, cursorX, cursorY, currentShowingIndex, word) {
 		// Decide if we can fit this next word on this next line
-		const spaceRemaining = drawPosX + this.LINE_WIDTH_MAX - cursorX;
-		if (spaceRemaining < word.wordWidth) {
+		if (this.requiresNewLine(drawPosX, cursorX, word)) {
 			cursorY += this.LINE_VERTICAL_HEIGHT;
 			cursorX = drawPosX + this.PADDING_LEFT;
 		}
