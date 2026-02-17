@@ -76,14 +76,20 @@ export class SelectInput extends UserInputBox {
 	}
 
 	changeVisibleSelection() {
-		if (this.selectedOptionIndex > this.visibleEndIndex) {
-			this.visibleStartIndex = this.selectedOptionIndex - this.maxVisibleOptions;
-			this.visibleEndIndex = this.selectedOptionIndex;
+		let selectedLine = 0;
+		if (this.optionIndexMap !== undefined) {
+			selectedLine = this.optionIndexMap[this.selectedOptionIndex].line;
+		}
+		
+		if (selectedLine >= this.visibleEndLine) {
+			const max = selectedLine + this.optionIndexMap[this.selectedOptionIndex].size;
+			this.visibleStartLine = max - this.maxVisibleLines;
+			this.visibleEndLine = max;
 		}
 
-		if (this.selectedOptionIndex < this.visibleStartIndex) {
-			this.visibleStartIndex = this.selectedOptionIndex;
-			this.visibleEndIndex = this.selectedOptionIndex + this.maxVisibleOptions;
+		if (selectedLine <= this.visibleStartLine) {
+			this.visibleStartLine = selectedLine;
+			this.visibleEndLine = selectedLine + this.maxVisibleLines;
 		}
 	}
 
@@ -99,30 +105,42 @@ export class SelectInput extends UserInputBox {
 
 	drawInput(ctx, drawPosX, drawPosY, cursorX, cursorY, currentShowingIndex) {
 		this.cursorPosition = 0;
-		this.updateIndexState(cursorY);
-		const offset = {x: 52, y: cursorY + this.LINE_HEIGHT};
+		this.updateIndexState(drawPosX, cursorY);
+		const offset = this.getOffset(cursorY);
 		let triangleY = 0;
-
+		let lineAdjust = 0;
 
 		this.options.forEach((option, index) => {
-			if (index < this.visibleStartIndex || index > this.visibleEndIndex) {
+			if (this.hiddenLine(this.optionIndexMap[index].line)) {
 				return;
 			}
 
-			const visibleIndex = this.shiftToVisibleIndex(index, this.visibleStartIndex);
-
+			const visibleIndex = this.shiftToVisibleLine(this.optionIndexMap[index].line, this.visibleStartLine);
+			// console.log(visibleIndex);
+			let line = visibleIndex;
 			cursorX = offset.x + 18;
-			cursorY = offset.y + (this.LINE_HEIGHT * visibleIndex);
+			cursorY = offset.y + ((this.LINE_HEIGHT * visibleIndex));
 			if (index === this.selectedOptionIndex) {
 				triangleY = cursorY;
 			}
+			
+			const words = this.typewriter.generateWords(option);
 
-			this.typewriter.generateWords(option).forEach(word => {
+			for (var i = 0; i < words.length; i++) {
+				const word = words[i]
+
+				// if the word requires a new line increment visible 
+				if (this.typewriter.requiresNewLine(drawPosX, cursorX, word)) {
+					line ++;
+				}
+				if (line > this.maxVisibleLines) {
+					break;
+				}
 				const cursorPosition = this.typewriter.drawWord(ctx, drawPosX, cursorX, cursorY, currentShowingIndex, word);
 				cursorX = cursorPosition.cursorX;
 				cursorY = cursorPosition.cursorY;
 				currentShowingIndex = cursorPosition.currentShowingIndex;
-			});
+			};
 		});
 
 		if (currentShowingIndex >= this.typewriter.finalIndex) {
@@ -130,40 +148,94 @@ export class SelectInput extends UserInputBox {
 		}
 	}
 
-	updateIndexState(cursorY) {
+	getOffset(cursorY) {
+		return {x: 52, y: cursorY + this.LINE_HEIGHT};
+	}
+
+	generateIndexes(drawPosX, cursorY) {
+		const dummyCtx = {
+			drawImage: (...args) => {}
+		}
+		const offset = this.getOffset(cursorY);
+		let cursorX = 0;
+
+		const optionIndexMap = {};
+		let lineAdjust = 0;
+
+		for (let index = 0; index < this.options.length; index ++) {
+			const option = this.options[index];
+			let size = 1;
+
+			optionIndexMap[index] = {
+				line: index + lineAdjust, 
+				size: size
+			};
+			cursorX = offset.x + 18;
+			cursorY = offset.y;
+			
+			const words = this.typewriter.generateWords(option);
+
+			for (var i = 0; i < words.length; i++) {
+				const word = words[i]
+
+				// if the word requires a new line and the 
+				if (this.typewriter.requiresNewLine(drawPosX, cursorX, word)) {
+					lineAdjust ++;
+					size ++;
+				}
+				const cursorPosition = this.typewriter.drawWord(dummyCtx, drawPosX, cursorX, cursorY, 0, word);
+				cursorX = cursorPosition.cursorX;
+				cursorY = cursorPosition.cursorY;
+			};
+
+			optionIndexMap[index].size = size;
+		}
+
+		return optionIndexMap;
+	}
+
+	updateIndexState(drawPosX, cursorY) {
 		if (cursorY === this.cursorY) {
 			return;
 		}
 		this.cursorY = cursorY;
-		this.visibleStartIndex = this.getVisibleStartIndex(this.selectedOptionIndex, cursorY);
-		this.visibleEndIndex = this.getVisibleEndIndex(this.selectedOptionIndex, cursorY);
-		this.maxVisibleOptions = this.getMaxVisibleOptions(cursorY);
+		this.maxVisibleLines = this.getMaxVisibleLines(cursorY);
+		this.optionIndexMap = this.generateIndexes(drawPosX, cursorY);
+		this.visibleStartLine = this.getVisibleStartLine(this.selectedOptionIndex, this.maxVisibleLines);
+		this.visibleEndLine = this.getVisibleEndLine(this.selectedOptionIndex, this.maxVisibleLines);
+		console.log(this.optionIndexMap);
 	}
 
 	drawTriangle(y) {
 		this.triangle.position = new Vector2(25, y - 32);
 	}
 
-	getMaxVisibleOptions(cursorY) {
+	getMaxVisibleLines(cursorY) {
 		let max = this.MAX_VISIBLE_OPTIONS;
 		max = Math.ceil(max - ((cursorY - this.PADDING_TOP) / this.LINE_HEIGHT));
 		max = Math.max(1, Math.min(max, this.options.length));
 		return max;
 	}
 
-	getVisibleStartIndex(selectedOptionIndex, cursorY) {
-		const maxVisibleOptions = this.getMaxVisibleOptions(cursorY);
-		if (selectedOptionIndex > this.options.length - maxVisibleOptions) {
-			return this.options.length - 1 - maxVisibleOptions;
+	getVisibleStartLine(selectedOptionIndex, maxVisibleLines) {
+		let selectedLine = this.optionIndexMap[selectedOptionIndex].line;
+		let maxLine = this.optionIndexMap[this.options.length - 1].line
+			+ this.optionIndexMap[this.options.length - 1].size;
+		if (selectedLine > maxLine - maxVisibleLines) {
+			return maxLine - 1 - maxVisibleLines;
 		}
-		return selectedOptionIndex;
+		return selectedLine;
 	}
 
-	getVisibleEndIndex(selectedOptionIndex, cursorY) {
-		return selectedOptionIndex + this.getMaxVisibleOptions(cursorY);
+	getVisibleEndLine(selectedOptionIndex, maxVisibleLines) {
+		return selectedOptionIndex + maxVisibleLines;
 	}
 
-	shiftToVisibleIndex(index, visibleStartIndex) {
-		return index - visibleStartIndex;
+	hiddenLine(line) {
+		return line < this.visibleStartLine || line > this.visibleEndLine;
+	}
+
+	shiftToVisibleLine(line, visibleStartLine) {
+		return line - visibleStartLine;
 	}
 }

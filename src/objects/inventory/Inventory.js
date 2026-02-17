@@ -21,7 +21,6 @@ export class Inventory extends HudGameObject {
 		this.drawLayer = "HUD";
 		this.storage = new InventoryStorage();
 
-		this.nextId = 0;
 		this.items = this.storage.getItems();
 		// storage.get()
 		this.typewriter = new Typewriter({});

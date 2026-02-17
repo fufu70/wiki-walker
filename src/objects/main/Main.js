@@ -111,6 +111,18 @@ export class Main extends GameObject {
 			window.TableViewer.view(content.table);
 		});
 
+		events.on("SHOW_MAP", this, (content) => {
+			console.log("TABLE CONTENT", content);
+			// Potentially add a story flag
+ 			if (window.TableViewer === undefined) {
+ 				events.emit("SHOW_TEXTBOX", {
+ 					string: "Looks like tables are not supported right now :("
+ 				});
+ 				return;
+ 			}
+			window.TableViewer.view(content.table);
+		});
+
 		events.on("CHANGE_LEVEL", this, newLevelInstance => {
 			this.setLevel(newLevelInstance);
 		});

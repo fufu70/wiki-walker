@@ -156,13 +156,6 @@ export class WikiLevelFactory {
 			};
 		});
 
-		const images = doc.images().map(image => {
-			return {
-				url: image.url(),
-				caption: image.caption()
-			}
-		});
-
 		return {
 			doc: doc,
 			uuid: crypto.randomUUID(),
