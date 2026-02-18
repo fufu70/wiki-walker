@@ -10,7 +10,7 @@ export class InventoryStorage extends Storage {
 	get(key) {
 		let value = super.get(key);
 		if (!value) {
-			value = [];
+			value = "[]";
 		}
 		return value;
 	}
