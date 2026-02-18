@@ -9,6 +9,9 @@ export class InventoryStorage extends Storage {
 
 	get(key) {
 		const value = super.get(key);
+		if (value == undefined) {
+			value = [];
+		}
 		return value;
 	}
 
