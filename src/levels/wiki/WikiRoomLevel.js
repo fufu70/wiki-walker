@@ -21,6 +21,7 @@ export class WikiRoomLevel extends DrunkRoomLevel {
 	constructor(wikiParams={}) {
 		try {
 			super(wikiParams);
+			this.levelType = null;
 		} catch (e) {
 			console.error(e);
 		}
@@ -61,13 +62,13 @@ export class WikiRoomLevel extends DrunkRoomLevel {
 		super.ready();
 
 		events.on("HERO_EXIT_UP", this, (exit) => {
-			events.emit("CHANGE_LEVEL", WikiLevelFactory.loadPop(
-				WikiLevelFactory.popLevel()
-			));
+			WikiLevelFactory.loadPop((level) => {
+				events.emit("CHANGE_LEVEL", level);	
+			})
 		});
 
 		events.on("HERO_POSITION", this, (position) => {
-			WikiLevelFactory.updateLastPosition(this.levelParams, position)
+			WikiLevelFactory.updateLastPosition(this.levelParams, position, this.levelType)
 		});
 
 		events.emit('END_LOADING', {});

@@ -35,6 +35,7 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 				},
 			});
 			this.updateLevelParams({...params});
+			this.levelType = "WikiDisambiguationLevel";
 		} catch (e) {
 			console.error(e);
 		}

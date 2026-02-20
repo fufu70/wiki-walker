@@ -4,6 +4,7 @@ import {WikiSearchLevel} from './WikiSearchLevel.js';
 import {ArrayFactory} from '../../helpers/ArrayFactory.js';
 import {WikiStorage} from './WikiStorage.js';
 import {LanguageFactory} from '../../stories/LanguageFactory.js';
+import {Vector2} from "../../Vector2.js";
 
 export class WikiLevelFactory {
 	static storage = new WikiStorage();
@@ -13,55 +14,134 @@ export class WikiLevelFactory {
 	 * SAVE PREVIOUS LEVEL INFO
 	 */
 	static stashPageLevel(heroPosition, levelParams) {
-		WikiLevelFactory.stashLevel(
+		let factory = new WikiLevelFactory();
+		const levelQuery = factory.getLevelQuery(
 			heroPosition,
 			"WikiPageLevel",
-			levelParams
+			{
+				title: levelParams.title,
+				language: LanguageFactory.getLanguage()
+			}
 		);
+		factory.stashLevel(levelQuery);
 	}
 
 	static stashDisambiguationLevel(heroPosition, levelParams) {
-		WikiLevelFactory.stashLevel(
+		let factory = new WikiLevelFactory();
+		const levelQuery = factory.getLevelQuery(
 			heroPosition,
 			"WikiDisambiguationLevel",
 			levelParams
 		);
+		factory.stashLevel(levelQuery);
 	}
 
 	static stashSearchLevel(heroPosition, levelParams) {
-		WikiLevelFactory.stashLevel(
+		let factory = new WikiLevelFactory();
+		const levelQuery = factory.getLevelQuery(
 			heroPosition,
 			"WikiSearchLevel",
 			levelParams
 		);
+		factory.stashLevel(levelQuery);
 	}
 
-	static stashLevel(heroPosition, type, levelParams) {
-		WikiLevelFactory.levelStack.push({
-			position: heroPosition,
-			type: type,
-			levelParams: levelParams
-		});
+	getLevelQuery(heroPosition, type, levelParams) {
+		switch(type) {
+			case "WikiDisambiguationLevel":
+				if (levelParams.doc.from) {
+					return {
+						position: heroPosition,
+						type: type,
+						levelParams: {
+							from: levelParams.doc.from,
+							seedNumber: levelParams.seedNumber
+						}
+					};
+				}
+			case "WikiSearchLevel":
+				return {
+					position: heroPosition,
+					type: type,
+					levelParams: levelParams
+				};
+			case "WikiPageLevel":
+				return {
+					position: heroPosition,
+					type: type,
+					levelParams: {
+						title: levelParams.title,
+						language: LanguageFactory.getLanguage()
+					}
+				};
+		}
 	}
+
+	stashLevel(levelQuery) {
+		WikiLevelFactory.levelStack.push(JSON.stringify(levelQuery));
+		WikiLevelFactory.storage.set("levelStack", WikiLevelFactory.levelStack);
+	}
+
+	static loadPop(callback) {
+		let level = undefined;
+		let levelQuery = WikiLevelFactory.popLevel();
+		WikiLevelFactory.loadLevelQuery(callback, () => {}, levelQuery);
+	}
+
+	static loadLevelQuery(callback, error, levelQuery) {
+		levelQuery.position = new Vector2(levelQuery.position.x, levelQuery.position.y);
+
+		if (levelQuery?.type == "WikiPageLevel") {
+			events.emit('SHOW_LOADING', {});
+			WikiLevelFactory.request(
+				levelQuery.levelParams.title, 
+				(level) => {
+					level.teleportHero(levelQuery.position);
+					callback(level);
+				},
+				error
+			);
+			return;
+		}
+
+		if (levelQuery?.type == "WikiDisambiguationLevel") {
+			if (levelQuery.levelParams.from) {
+				events.emit('SHOW_LOADING', {});
+				const factory = new WikiLevelFactory();
+				const from = levelQuery.levelParams.from;
+				factory.fetch(from.title, 
+					(doc) => {
+						const params = factory.getPageParams(doc);
+						const section = params.sections[from.roomIndex];
+
+						const levelParams = {
+							doc: {
+								...from
+							},
+							links: section.links,
+							seedNumber: levelQuery.levelParams.seedNumber
+						};
+						console.log("Params", levelParams);
+						callback(new WikiDisambiguationLevel(levelParams));
+					},
+					error
+				);
+				return;
+			} else {
+				level = new WikiDisambiguationLevel(levelQuery.levelParams);
+			}
+
+		}
+		if (levelQuery?.type == "WikiSearchLevel") {
+			level = new WikiSearchLevel(levelQuery.levelParams);
+		}
+		level.teleportHero(levelQuery.position);
+		callback(level);
+	}
+
 
 	static popLevel() {
-		return WikiLevelFactory.levelStack.pop();
-	}
-
-	static loadPop(popped) {
-		let level = undefined;
-		console.log(popped);
-		if (popped?.type == "WikiPageLevel") {
-			level = new WikiPageLevel(popped.levelParams);
-		}
-		if (popped?.type == "WikiDisambiguationLevel") {
-			level = new WikiDisambiguationLevel(popped.levelParams);
-		}
-		if (popped?.type == "WikiSearchLevel") {
-			level = new WikiSearchLevel(popped.levelParams);
-		}
-		level.teleportHero(popped.position);
-		return level;
+		return JSON.parse(WikiLevelFactory.levelStack.pop());
 	}
 
 	static storedLocation() {
@@ -69,16 +149,25 @@ export class WikiLevelFactory {
 			&& WikiLevelFactory.storage.get('lastPosition') != null;
 	}
 
-	static updateLastPosition(levelParams, position) {
-		WikiLevelFactory.storage.set('lastPosition', {
-			title: levelParams.title,
-			language: WikiLevelFactory.getLanguage(),
-			position: position
-		})
+	static updateLastPosition(levelParams, position, type) {
+		const factory = new WikiLevelFactory();
+		const levelQuery = factory.getLevelQuery(position, type, levelParams)
+		WikiLevelFactory.storage.set('lastPosition', levelQuery);
 	}
 
-	static loadLastLocation() {
-		return WikiLevelFactory.storage.get('lastPosition');
+	static loadLastLocation(callback, error) {
+		const levelQuery = WikiLevelFactory.storage.get('lastPosition');
+		WikiLevelFactory.loadLastLevelStack();
+		WikiLevelFactory.updateLanguage(levelQuery.language);
+		WikiLevelFactory.loadLevelQuery(callback, error, levelQuery);
+	}
+
+	static loadLastLevelStack() {
+		WikiLevelFactory.levelStack = WikiLevelFactory.storage.get("levelStack") ?? [];
+	}
+
+	static clearLevelStack() {
+		WikiLevelFactory.levelStack = [];
 	}
 
 	/**
@@ -87,14 +176,20 @@ export class WikiLevelFactory {
 
 	static request(text, callback, error) {
 		const factory = new WikiLevelFactory();
-		wtf.fetch(text, factory.getLang(), function(err, doc) {
+		factory.fetch(text, (doc) => {
+			callback(WikiLevelFactory.getLevel(doc))
+		}, error);
+	}
+
+	fetch(text, callback, error) {
+		wtf.fetch(text, this.getLang(), function(err, doc) {
 			if (err == null && doc == null) {
 				error(`Article for '${text}' does not exist. Sorry.`)
 			}
 			if (err !== null) {
 				error(err.message);
 			} else {
-				callback(WikiLevelFactory.getLevel(doc));
+				callback(doc);
 			}
 		})
 	}
@@ -119,6 +214,7 @@ export class WikiLevelFactory {
 	}
 
 	getDisambiguationLevel(doc) {
+		console.log("Dis Params", this.getDisambiguationParams(doc));
 		return new WikiDisambiguationLevel(this.getDisambiguationParams(doc));
 	}
 

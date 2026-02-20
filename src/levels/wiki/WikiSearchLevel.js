@@ -31,6 +31,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				showPreviousLevel: false,
 				showNextLevel: false,
 			});
+			this.levelType = "WikiSearchLevel";
 
 			setTimeout(() => {
 				this.placeQuestionRod();
@@ -225,6 +226,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				window.renderPosition.duplicate(),
 				this.params
 			);
+			WikiLevelFactory.clearLevelStack();
 			events.emit("CHANGE_LEVEL", level );
 		}, (err) => {
 			events.emit('END_LOADING', {});
@@ -243,16 +245,8 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 	loadLastLocation(text) {
 		if (Story.isConfirmation(text)) {
 			events.emit('SHOW_LOADING', {});
-			const lastLocation = WikiLevelFactory.loadLastLocation();
-			this.updateLanguage(lastLocation.language);
-			WikiLevelFactory.request(lastLocation.title, (level) => {
-				WikiLevelFactory.stashSearchLevel(
-					window.renderPosition.duplicate(),
-					this.params
-				);
+			WikiLevelFactory.loadLastLocation((level) => {
 				events.emit("CHANGE_LEVEL", level);
-				console.log(level, lastLocation, Vector2)
-				level.teleportHero(new Vector2(lastLocation.position.x, lastLocation.position.y));
 			}, (err) => {
 				events.emit('END_LOADING', {});
 				events.emit("SHOW_TEXTBOX", {

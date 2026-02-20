@@ -35,13 +35,16 @@ export class SelectInput extends UserInputBox {
 	}
 
 	getSelected(config) {
+		let selected = undefined;
 		if (config.selectedFunc) {
-			return config.selectedFunc();
+			selected = config.selectedFunc();
+		} else if (config.selected) {
+			selected = config.selected;
 		}
-		if (config.selected) {
-			return config.selected;
+		if (!selected) {
+			selected = this.options[0];
 		}
-		return this.options[0];
+		return selected;
 	}
 
 	step(delta, root) {

@@ -38,6 +38,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 				},
 			});
 			this.updateLevelParams({...wikiParams});
+			this.levelType = "WikiPageLevel";
 		} catch (e) {
 			console.error(e);
 		}
@@ -51,6 +52,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		this.roomExits = new Map();
 		this.rooms = params.sections;
+		this.title = params.title;
 
 		// if (params.infobox) {
 		// 	this.rooms = [params.infobox, ...this.rooms];
@@ -248,6 +250,10 @@ export class WikiPageLevel extends WikiRoomLevel {
 
 	getNextLevel(room) {
 		return (new WikiLevelFactory()).getDisambiguationLevel({
+			from: {
+				title: this.title,
+				roomIndex: this.rooms.indexOf(room)
+			},
 			links: room.links
 		})
 	}
