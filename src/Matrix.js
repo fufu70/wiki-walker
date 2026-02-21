@@ -135,12 +135,18 @@ export class Matrix {
 		return true;
 	}
 
-	traverse({callback, callbackEachRow, padding, extractionSize}) {
+	traverse({callback, callbackEachRow, padding, extractionSize, position, size}) {
 		if (padding === undefined) {
 			padding = 0;
 		}
-		for (let y = this.yStart() - padding; y < this.height() + padding; y ++) {
-			for (let x = this.xStart() - padding; x < this.width() + padding; x ++) {
+
+		let startY = position ? position.y : this.yStart();
+		let startX = position ? position.x : this.xStart();
+		let height = size ? size.height + startY : this.height();
+		let width = size ? size.width + startX : this.width();
+
+		for (let y = startY - padding; y < height + padding; y ++) {
+			for (let x = startX - padding; x < width + padding; x ++) {
 				callback(x, y, this.get(x, y));
 			}
 			if (callbackEachRow !== undefined) {
@@ -179,14 +185,14 @@ export class Matrix {
 	extract(x, y, width, height) {
 		let m = new Matrix({});
 
-		for (let i = 0; i < width; i ++) {
-			for (let j = 0; j < height; j ++) {
-				// console.log(i, j, x+i, y+j, "is " + this.get(x + i, y + j))
-				// console.log(i, j, x+i, y+j, "is " + this.get(y + j, x + i))
-				m.add(i, j, this.get(x + i, y + j));
-			}
-		}
-		// console.log(m.toString())
+		this.traverse({
+			callback: (i, j, matrixValue) => {
+				m.add(i - x, j - y, matrixValue);
+			},
+			position: {x: x, y: y},
+			size: {width: width, height: height}
+		});
+
 		return m;
 	}
 
@@ -307,8 +313,19 @@ console.assert(new Matrix([
 	[5, 5, 5],
 	[5, 4, 4],
 	[5, 4, 3]
-])), "An extraction at the root should match");
+])), "An extraction at the root should match the top half");
 
+console.assert(new Matrix([
+	[5, 5, 5, 5, 5],
+	[5, 4, 4, 4, 5],
+	[5, 4, 3, 4, 5],
+	[5, 4, 4, 4, 5],
+	[5, 5, 5, 5, 5],
+]).extract(2, 2, 3, 3).matches(new Matrix([
+	[3, 4, 5],
+	[4, 4, 5],
+	[5, 5, 5]
+])), "An extraction at the root should match the bottom half");
 
 console.assert(new Matrix([
 	[ 0, 1, 2, 3, 4],
@@ -320,7 +337,7 @@ console.assert(new Matrix([
 	[ 4, 3, 2],
 	[ 8, 9,12],
 	[74,53,21]
-])), "An extraction at the root should match");
+])), "An extraction at the root should match the center ");
 
 
 console.assert(new Matrix([

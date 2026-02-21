@@ -48,13 +48,21 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 
 
 	addWallSprites(floorPlan, params) {
-		const walls =  RoomWallFactory.generate({
-			floorPlan,
-			seed: params.seed
-		});
-		for (var i = walls.length - 1; i >= 0; i--) {
-			this.addWall(walls[i]);
-		}
+		
+		const fpHeroStart = new Vector2(this.heroStart.x / 16, this.heroStart.y / 16);
+		fpHeroStart.x -= 25;
+		fpHeroStart.y -= 25;
+		// console.log("Add wall sprites", fpHeroStart, floorPlan);
+		// const walls =  RoomWallFactory.generate({
+		// 	floorPlan: floorPlan.extract(fpHeroStart.x, fpHeroStart.y, 50, 50),
+		// 	seed: params.seed
+		// });
+		// for (var i = walls.length - 1; i >= 0; i--) {
+		// 	walls[i].x += this.heroStart.x;
+		// 	walls[i].y += this.heroStart.y;
+		// 	this.addWall(walls[i]);
+		// }
+		// console.log("Walls", walls);
 
 		// RoomWallFactory.generateParallel({
 		// 	floorPlan,
@@ -67,12 +75,12 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 	}
 
 	addTrimSprites(floorPlan) {
-		const trims =  TrimFactory.generate({
-			floorPlan
-		});
-		for (var i = trims.length - 1; i >= 0; i--) {
-			this.addChild(trims[i]);
-		}
+		// const trims =  TrimFactory.generate({
+		// 	floorPlan
+		// });
+		// for (var i = trims.length - 1; i >= 0; i--) {
+		// 	this.addChild(trims[i]);
+		// }
 		
 		// TrimFactory.generateParallel({
 		// 	floorPlan,

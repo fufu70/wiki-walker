@@ -45,6 +45,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 				// this.searchWiki("test")
 				// this.searchWiki("The Twilight Zone") // multiple rooms are being rendered on top of one another
 				// this.searchWiki("List of pending United States Supreme Court cases") // good test for viewing a large table.
+				this.searchWiki("List of The Ring pound for pound rankings") // extremely large wikipedia article
 			}, 300);
 		} catch (e) {
 			console.error(e);
