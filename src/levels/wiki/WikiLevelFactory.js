@@ -92,12 +92,13 @@ export class WikiLevelFactory {
 		levelQuery.position = new Vector2(levelQuery.position.x, levelQuery.position.y);
 
 		if (levelQuery?.type == "WikiPageLevel") {
-			events.emit('SHOW_LOADING', {});
+			// events.emit('SHOW_LOADING', {});
 			WikiLevelFactory.request(
 				levelQuery.levelParams.title, 
 				(level) => {
 					level.teleportHero(levelQuery.position);
 					callback(level);
+					events.emit('END_LOADING', {});
 				},
 				error
 			);
@@ -106,7 +107,7 @@ export class WikiLevelFactory {
 
 		if (levelQuery?.type == "WikiDisambiguationLevel") {
 			if (levelQuery.levelParams.from) {
-				events.emit('SHOW_LOADING', {});
+				// events.emit('SHOW_LOADING', {});
 				const factory = new WikiLevelFactory();
 				const from = levelQuery.levelParams.from;
 				factory.fetch(from.title, 
@@ -116,13 +117,16 @@ export class WikiLevelFactory {
 
 						const levelParams = {
 							doc: {
-								...from
+								from: from
 							},
 							links: section.links,
 							seedNumber: levelQuery.levelParams.seedNumber
 						};
 						console.log("Params", levelParams);
-						callback(new WikiDisambiguationLevel(levelParams));
+						const level = new WikiDisambiguationLevel(levelParams);
+						callback(level);
+						level.teleportHero(levelQuery.position);
+						events.emit('END_LOADING', {});
 					},
 					error
 				);

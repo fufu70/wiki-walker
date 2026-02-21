@@ -10,12 +10,12 @@ import {Storage} from '../../helpers/Storage.js';
 export class ForestWallStorage extends Map {}
 
 export class ForestWallFactory extends WallFactory {
-	cache = new ForestWallStorage();
+	// cache = new ForestWallStorage();
 
 	get(floorPlan, seed, style) {
 		let walls = [];
 		let wallSet = new Set();
-		console.log(floorPlan);
+		// console.log(floorPlan);
 		floorPlan.traverse({
 			callback: (x, y, matrixValue) => {
 				if (!this.isWall(x, y, matrixValue, floorPlan)) {

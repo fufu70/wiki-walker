@@ -12,7 +12,7 @@ export class LanguageFactory {
 	
 	static getLanguage() {
 		const factory = new LanguageFactory();
-		if (factory.getStorageLanguage() === undefined) {
+		if (!factory.getStorageLanguage()) {
 			LanguageFactory.updateLanguage(DEFAULT_LANGUAGE);
 		}
 		return Object.keys(languages).find(lang => languages[lang] == factory.getStorageLanguage())
@@ -29,7 +29,7 @@ export class LanguageFactory {
 
 	static getLang() {
 		const factory = new LanguageFactory();
-		if (factory.getStorageLanguage() === undefined) {
+		if (!factory.getStorageLanguage()) {
 			LanguageFactory.updateLanguage(DEFAULT_LANGUAGE);
 		}
 		return factory.getStorageLanguage();

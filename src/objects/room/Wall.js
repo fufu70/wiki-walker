@@ -75,7 +75,7 @@ export class RoomWallStorage extends Storage {
 
 export class WallFactory {
 
-	static generate(params) {
+	static generateCache(params) {
 		let {floorPlan, seed, style} = params;
 		let factory = new (this.prototype.constructor)();
 
@@ -85,6 +85,14 @@ export class WallFactory {
 		const walls = factory.get(floorPlan, seed, style);
 		factory.cache.set(floorPlan, walls);
 		return factory.cache.get(floorPlan);
+	}
+
+	static generate(params) {
+		let {floorPlan, seed, style} = params;
+		let factory = new (this.prototype.constructor)();
+
+		const walls = factory.get(floorPlan, seed, style);
+		return walls;
 	}
 
 	get(floorPlan, seed, style) {
@@ -113,7 +121,9 @@ export class WallFactory {
 			padding: 2
 		});
 
-		return walls;
+		return walls.map(val => {
+			return new Wall(gridCells(val.x), gridCells(val.y), val.style, val.orientation);
+		});
 	}
 
 

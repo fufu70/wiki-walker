@@ -149,7 +149,7 @@ export class TrimStorage extends Storage {
 export class TrimFactory {
 	static cache = new TrimStorage();
 
-	static generate(params) {
+	static generateCache(params) {
 		let {floorPlan} = params;
 		if (TrimFactory.cache.has(floorPlan)) {
 			return TrimFactory.cache.get(floorPlan);
@@ -158,6 +158,15 @@ export class TrimFactory {
 		let trim = new TrimFactory().get(floorPlan, walls)
 		TrimFactory.cache.set(floorPlan, trim);
 		return TrimFactory.cache.get(floorPlan);
+	}
+
+	static generate(params) {
+		let {floorPlan} = params;
+		let walls = RoomWallFactory.generate(params);
+		let trim = new TrimFactory().get(floorPlan, walls);
+		return trim.map(val => {
+			return new Trim(gridCells(val.x), gridCells(val.y), val.orientation);
+		});
 	}
 
 	get(floorPlan, walls) {
