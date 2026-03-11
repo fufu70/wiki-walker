@@ -22,6 +22,7 @@ export class WikiRoomLevel extends DrunkRoomLevel {
 		try {
 			super(wikiParams);
 			this.levelType = null;
+			console.log("ROOM", this);
 		} catch (e) {
 			console.error(e);
 		}

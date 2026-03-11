@@ -149,27 +149,27 @@ export class TrimStorage extends Storage {
 export class TrimFactory {
 	static cache = new TrimStorage();
 
-	static generateCache(params) {
-		let {floorPlan} = params;
-		if (TrimFactory.cache.has(floorPlan)) {
-			return TrimFactory.cache.get(floorPlan);
-		}
-		let walls = RoomWallFactory.generate(params);
-		let trim = new TrimFactory().get(floorPlan, walls)
-		TrimFactory.cache.set(floorPlan, trim);
-		return TrimFactory.cache.get(floorPlan);
-	}
+	// static generateCache(params) {
+	// 	let {floorPlan} = params;
+	// 	if (TrimFactory.cache.has(floorPlan)) {
+	// 		return TrimFactory.cache.get(floorPlan);
+	// 	}
+	// 	let walls = RoomWallFactory.generate(params);
+	// 	let trim = new TrimFactory().get(floorPlan, walls)
+	// 	TrimFactory.cache.set(floorPlan, trim);
+	// 	return TrimFactory.cache.get(floorPlan);
+	// }
 
 	static generate(params) {
-		let {floorPlan} = params;
+		let {floorPlan, position, size} = params;
 		let walls = RoomWallFactory.generate(params);
-		let trim = new TrimFactory().get(floorPlan, walls);
+		let trim = new TrimFactory().get(floorPlan, position, size, walls);
 		return trim.map(val => {
 			return new Trim(gridCells(val.x), gridCells(val.y), val.orientation);
 		});
 	}
 
-	get(floorPlan, walls) {
+	get(floorPlan, position, size, walls) {
 		const trims = [];
 		floorPlan.traverse({
 			callback: (x, y, positionValue) => {
@@ -188,7 +188,9 @@ export class TrimFactory {
 					trims.push({x, y, orientation: orientations[i]});
 				}
 			},
-			padding: 2
+			padding: 2,
+			position: position,
+			size: size
 		});
 
 		return trims;
@@ -197,75 +199,75 @@ export class TrimFactory {
 
 
 
-	static async generateParallel(params) {
-		if (TrimFactory.cache.has(JSON.stringify(params.floorPlan))) {
-			return TrimFactory.cache.get(JSON.stringify(params.floorPlan));
-		}
-		let {floorPlan} = params;
-		let walls = RoomWallFactory.generate(params);
-		TrimFactory.cache.set(JSON.stringify(params.floorPlan), walls);
-		return await (new (this.prototype.constructor)()).getParallel(floorPlan, walls);
-	}
+	// static async generateParallel(params) {
+	// 	if (TrimFactory.cache.has(JSON.stringify(params.floorPlan))) {
+	// 		return TrimFactory.cache.get(JSON.stringify(params.floorPlan));
+	// 	}
+	// 	let {floorPlan} = params;
+	// 	let walls = RoomWallFactory.generate(params);
+	// 	TrimFactory.cache.set(JSON.stringify(params.floorPlan), walls);
+	// 	return await (new (this.prototype.constructor)()).getParallel(floorPlan, walls);
+	// }
 
-	async getParallel(floorPlan, walls) {
-		let methodCall = (input) => {
-			let floorPlan = new Matrix(input.floorPlan);
-			let isWall = eval(input.isWallString)
-			const walls = input.walls;
+	// async getParallel(floorPlan, walls) {
+	// 	let methodCall = (input) => {
+	// 		let floorPlan = new Matrix(input.floorPlan);
+	// 		let isWall = eval(input.isWallString)
+	// 		const walls = input.walls;
 
-			const trims = [];
-			floorPlan.traverse({
-				callback: (x, y, positionValue) => {
-					if (
-						positionValue != 0 || this.isWall(x, y, walls)
-					) {
-						return;
-					}
+	// 		const trims = [];
+	// 		floorPlan.traverse({
+	// 			callback: (x, y, positionValue) => {
+	// 				if (
+	// 					positionValue != 0 || this.isWall(x, y, walls)
+	// 				) {
+	// 					return;
+	// 				}
 
-					// let orientations = OrientationFactory.getExtractedOrientations(floorPlan.neighborContrast(x, y));
-					let orientations = OrientationFactory.getOrientations(x, y, floorPlan);
-					if (orientations === undefined) {
-						return;
-					}
-					for (var i = 0; i < orientations.length; i++) {
-						trims.push({x, y, orientation: orientations[i]});
-					}
-				},
-				padding: 2
-			});
+	// 				// let orientations = OrientationFactory.getExtractedOrientations(floorPlan.neighborContrast(x, y));
+	// 				let orientations = OrientationFactory.getOrientations(x, y, floorPlan);
+	// 				if (orientations === undefined) {
+	// 					return;
+	// 				}
+	// 				for (var i = 0; i < orientations.length; i++) {
+	// 					trims.push({x, y, orientation: orientations[i]});
+	// 				}
+	// 			},
+	// 			padding: 2
+	// 		});
 
-			return trims;
-		}
+	// 		return trims;
+	// 	}
 
-		let lambda = `
-			${Matrix.toString()}
-			SKIP = ${SKIP}
-			EMPTY = ${EMPTY}
-			ORIENTATIONS = ${JSON.stringify(ORIENTATIONS)}
-			OUTLINES = ${JSON.stringify(OUTLINES)}
-			${OrientationFactory.toString()}
-			${methodCall.toString()}
-		`;
+	// 	let lambda = `
+	// 		${Matrix.toString()}
+	// 		SKIP = ${SKIP}
+	// 		EMPTY = ${EMPTY}
+	// 		ORIENTATIONS = ${JSON.stringify(ORIENTATIONS)}
+	// 		OUTLINES = ${JSON.stringify(OUTLINES)}
+	// 		${OrientationFactory.toString()}
+	// 		${methodCall.toString()}
+	// 	`;
 
 
-		console.log("LAMBDA", lambda.toString())
-		console.log("WALLS", walls);
-		const input = {
-			floorPlan: floorPlan,
-			walls: JSON.parse(JSON.stringify(walls)),
-			isWallString: `(function ${this.isWall.toString()})`
-		};
-		console.log("INPUT", JSON.parse(JSON.stringify(input)));
-		return new Promise((resolve, reject) => {
-			JobManager.runJob(lambda.toString(), JSON.parse(JSON.stringify(input)), (out) => {
-				console.log("JobManager", out)
-				const trim = out.map(trim => {
-					return new Trim(gridCells(trim.x), gridCells(trim.y), trim.orientation);
-				})
-				resolve(trim);
-			});
-	    });
-	}
+	// 	console.log("LAMBDA", lambda.toString())
+	// 	console.log("WALLS", walls);
+	// 	const input = {
+	// 		floorPlan: floorPlan,
+	// 		walls: JSON.parse(JSON.stringify(walls)),
+	// 		isWallString: `(function ${this.isWall.toString()})`
+	// 	};
+	// 	console.log("INPUT", JSON.parse(JSON.stringify(input)));
+	// 	return new Promise((resolve, reject) => {
+	// 		JobManager.runJob(lambda.toString(), JSON.parse(JSON.stringify(input)), (out) => {
+	// 			console.log("JobManager", out)
+	// 			const trim = out.map(trim => {
+	// 				return new Trim(gridCells(trim.x), gridCells(trim.y), trim.orientation);
+	// 			})
+	// 			resolve(trim);
+	// 		});
+	//     });
+	// }
 
 	isWall(x, y, walls) {
 		for (var i = walls.length - 1; i >= 0; i--) {

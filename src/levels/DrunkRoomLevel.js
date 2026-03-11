@@ -39,56 +39,55 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 	}
 
 	addWalls(floorPlan, params) {
+		if (window.renderIteratively) {
+			this.addWallsIteratively(floorPlan, params);
+		} else {
+			this.addWallsCompletely(floorPlan, params);
+		}
+	}
+
+	addWallsCompletely(floorPlan, params) {
 		// console.log("START this.addTrimSprites")
-		this.addTrimSprites(floorPlan, params);
+		this.addTrimSprites(floorPlan);
 		// console.log("END this.addTrimSprites")
 		// console.log("START this.addWallSprites")
 		this.addWallSprites(floorPlan, params);
 	}
 
-
-	addWallSprites(floorPlan, params) {
-		
-		const fpHeroStart = new Vector2(this.heroStart.x / 16, this.heroStart.y / 16);
-		fpHeroStart.x -= 25;
-		fpHeroStart.y -= 25;
-		// console.log("Add wall sprites", fpHeroStart, floorPlan);
-		// const walls =  RoomWallFactory.generate({
-		// 	floorPlan: floorPlan.extract(fpHeroStart.x, fpHeroStart.y, 50, 50),
-		// 	seed: params.seed
-		// });
-		// for (var i = walls.length - 1; i >= 0; i--) {
-		// 	walls[i].x += this.heroStart.x;
-		// 	walls[i].y += this.heroStart.y;
-		// 	this.addWall(walls[i]);
-		// }
-		// console.log("Walls", walls);
-
-		// RoomWallFactory.generateParallel({
-		// 	floorPlan,
-		// 	seed: params.seed
-		// }).then(walls => {
-		// 	for (var i = walls.length - 1; i >= 0; i--) {
-		// 		this.addWall(walls[i]);
-		// 	}	
-		// })
+	addWallsIteratively(floorPlan, params) {
+		const position = new Vector2(window.renderPosition.x / 16, window.renderPosition.y / 16);
+		position.x -= 10;
+		position.y -= 10;
+		const size = { width: 20, height: 20};
+		this.addTrimSprites(floorPlan, position, size);
+		// console.log("END this.addTrimSprites")
+		// console.log("START this.addWallSprites")
+		this.addWallSprites(floorPlan, params, position, size);
 	}
 
-	addTrimSprites(floorPlan) {
-		// const trims =  TrimFactory.generate({
-		// 	floorPlan
-		// });
-		// for (var i = trims.length - 1; i >= 0; i--) {
-		// 	this.addChild(trims[i]);
-		// }
-		
-		// TrimFactory.generateParallel({
-		// 	floorPlan,
-		// }).then(trims => {
-		// 	for (var i = trims.length - 1; i >= 0; i--) {
-		// 		this.addChild(trims[i]);
-		// 	}
-		// })
+
+	addWallSprites(floorPlan, params, position, size) {
+		let parm = {
+			floorPlan: floorPlan,
+			seed: params.seed,
+			position: position,
+			size: size
+		};
+		const walls =  RoomWallFactory.generate(parm);
+		for (var i = walls.length - 1; i >= 0; i--) {
+			this.addWall(walls[i]);
+		}
+	}
+
+	addTrimSprites(floorPlan, position, size) {
+		const trims =  TrimFactory.generate({
+			floorPlan: floorPlan,
+			position: position,
+			size: size
+		});
+		for (var i = trims.length - 1; i >= 0; i--) {
+			this.addChild(trims[i]);
+		}
 	}
 
 	addItems(floorPlan, params) {

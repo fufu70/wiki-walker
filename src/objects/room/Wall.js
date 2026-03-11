@@ -75,27 +75,27 @@ export class RoomWallStorage extends Storage {
 
 export class WallFactory {
 
-	static generateCache(params) {
-		let {floorPlan, seed, style} = params;
-		let factory = new (this.prototype.constructor)();
+	// static generateCache(params) {
+	// 	let {floorPlan, seed, style,} = params;
+	// 	let factory = new (this.prototype.constructor)();
 
-		if (factory.cache.has(floorPlan)) {
-			return factory.cache.get(floorPlan);
-		}
-		const walls = factory.get(floorPlan, seed, style);
-		factory.cache.set(floorPlan, walls);
-		return factory.cache.get(floorPlan);
-	}
+	// 	if (factory.cache.has(floorPlan)) {
+	// 		return factory.cache.get(floorPlan);
+	// 	}
+	// 	const walls = factory.get(floorPlan, seed, style);
+	// 	factory.cache.set(floorPlan, walls);
+	// 	return factory.cache.get(floorPlan);
+	// }
 
 	static generate(params) {
-		let {floorPlan, seed, style} = params;
+		let {floorPlan, seed, style, position, size} = params;
 		let factory = new (this.prototype.constructor)();
 
-		const walls = factory.get(floorPlan, seed, style);
+		const walls = factory.get(floorPlan, seed, style, position, size);
 		return walls;
 	}
 
-	get(floorPlan, seed, style) {
+	get(floorPlan, seed, style, position, size) {
 		if (!style && seed) {
 			style = this.seedStyle(seed);
 		}
@@ -118,7 +118,9 @@ export class WallFactory {
 				// console.log(fpMatrixExtract.toString());
 				walls.push({x, y, style, orientation});
 			},
-			padding: 2
+			padding: 2,
+			position: position,
+			size: size
 		});
 
 		return walls.map(val => {
