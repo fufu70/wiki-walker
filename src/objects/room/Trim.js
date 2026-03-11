@@ -65,6 +65,13 @@ export class Trim extends GameObject {
 		super({
 			position: new Vector2(x, y)
 		});
+		this.orientation = orientation;
+		this.formatOrientation(this.orientation);
+
+		this.drawLayer = "TRIM";
+	}
+
+	formatOrientation(orientation) {
 		if (orientation === NORTH_WEST) {
 			this.addMidTopTrim(WEST_TOP);
 		} else if (orientation === NORTH_EAST) {
@@ -74,8 +81,6 @@ export class Trim extends GameObject {
 		} else {
 			this.addTrim(orientation);
 		}
-
-		this.drawLayer = "TRIM";
 	}
 
 
@@ -125,6 +130,15 @@ export class Trim extends GameObject {
 			vFrames: 23,
 			frame: TRIM[orientation]
 		}));
+	}
+
+	clone(trim) {
+		
+		for (let i = 0; i < this.children.length; i ++) {
+			this.children[i].destroy();
+		}
+		this.position = trim.position;
+		this.formatOrientation(trim.orientation);
 	}
 }
 

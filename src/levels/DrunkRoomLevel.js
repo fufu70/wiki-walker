@@ -59,6 +59,7 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 		position.x -= 10;
 		position.y -= 10;
 		const size = { width: 20, height: 20};
+		this.trim
 		this.addTrimSprites(floorPlan, position, size);
 		// console.log("END this.addTrimSprites")
 		// console.log("START this.addWallSprites")
@@ -86,7 +87,7 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 			size: size
 		});
 		for (var i = trims.length - 1; i >= 0; i--) {
-			this.addChild(trims[i]);
+			this.addTrim(trims[i]);
 		}
 	}
 

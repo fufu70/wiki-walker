@@ -36,6 +36,7 @@ export class DrunkardWalkLevel extends Level {
 			this.gameObjects = [];
 			this.floors = [];
 			this.wallSprites = [];
+			this.trimSprites = [];
 			if (params.seedNumber !== undefined) {
 				params.seed = Math.seed(params.seedNumber);
 			}
@@ -56,6 +57,11 @@ export class DrunkardWalkLevel extends Level {
 			this.addHero(this.heroStart);
 			this.beforeGeneratingSprites();
 
+			this.wallIndex = 0;
+			this.wallMax = 40;
+			this.trimIndex = 0;
+			this.trimMax = 100;
+
 			this.addFloors(this.floorPlan, params);
 
 			this.addWalls(this.floorPlan, params);
@@ -64,6 +70,7 @@ export class DrunkardWalkLevel extends Level {
 
 			// console.log("START this.getWalls");
 			this.walls = this.getWalls(this.walls, this.floorPlan);
+
 			// console.log("END this.getWalls");
 		} catch (e) {
 			console.error(e);	
@@ -132,8 +139,35 @@ export class DrunkardWalkLevel extends Level {
 	}
 
 	addWall(wall) {
-		this.wallSprites.push(wall);
-		this.addChild(wall);
+		if (!window.renderIteratively || this.wallSprites.length < this.wallMax) {
+			this.wallSprites.push(wall);
+			this.addChild(wall);	
+			return;
+		}
+
+		if (this.wallIndex >= this.wallMax - 1) {
+			this.wallIndex = 0;
+		}
+		if (this.wallSprites[this.wallIndex].clone != undefined) {
+			this.wallSprites[this.wallIndex].clone(wall);	
+		}
+		this.wallIndex ++;
+	}
+
+	addTrim(trim) {
+		if (!window.renderIteratively || this.trimSprites.length < this.trimMax) {
+			this.trimSprites.push(trim);
+			this.addChild(trim);	
+			return;
+		}
+
+		if (this.trimIndex >= this.trimMax - 1) {
+			this.trimIndex = 0;
+		}
+		// if (this.trimSprites[this.trimIndex].clone != undefined) {
+			this.trimSprites[this.trimIndex].clone(trim);	
+		// }
+		this.trimIndex ++;
 	}
 
 	findSpotOnFloor(space) {
