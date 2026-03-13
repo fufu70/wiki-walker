@@ -137,42 +137,13 @@ export class Trim extends GameObject {
 		for (let i = 0; i < this.children.length; i ++) {
 			this.children[i].destroy();
 		}
+		this.children = [];
 		this.position = trim.position;
 		this.formatOrientation(trim.orientation);
 	}
 }
 
-export class TrimStorage extends Storage {
-
-	constructor() {
-		super("TRIM");
-	}
-
-	get(floorPlan) {
-		const value = super.get(JSON.stringify(floorPlan));
-		return value.map(val => {
-			return new Trim(gridCells(val.x), gridCells(val.y), val.orientation);
-		});
-	}
-
-	set(floorPlan, value) {
-		super.set(JSON.stringify(floorPlan), value);
-	}
-}
-
 export class TrimFactory {
-	static cache = new TrimStorage();
-
-	// static generateCache(params) {
-	// 	let {floorPlan} = params;
-	// 	if (TrimFactory.cache.has(floorPlan)) {
-	// 		return TrimFactory.cache.get(floorPlan);
-	// 	}
-	// 	let walls = RoomWallFactory.generate(params);
-	// 	let trim = new TrimFactory().get(floorPlan, walls)
-	// 	TrimFactory.cache.set(floorPlan, trim);
-	// 	return TrimFactory.cache.get(floorPlan);
-	// }
 
 	static generate(params) {
 		let {floorPlan, position, size} = params;
@@ -209,79 +180,6 @@ export class TrimFactory {
 
 		return trims;
 	}
-
-
-
-
-	// static async generateParallel(params) {
-	// 	if (TrimFactory.cache.has(JSON.stringify(params.floorPlan))) {
-	// 		return TrimFactory.cache.get(JSON.stringify(params.floorPlan));
-	// 	}
-	// 	let {floorPlan} = params;
-	// 	let walls = RoomWallFactory.generate(params);
-	// 	TrimFactory.cache.set(JSON.stringify(params.floorPlan), walls);
-	// 	return await (new (this.prototype.constructor)()).getParallel(floorPlan, walls);
-	// }
-
-	// async getParallel(floorPlan, walls) {
-	// 	let methodCall = (input) => {
-	// 		let floorPlan = new Matrix(input.floorPlan);
-	// 		let isWall = eval(input.isWallString)
-	// 		const walls = input.walls;
-
-	// 		const trims = [];
-	// 		floorPlan.traverse({
-	// 			callback: (x, y, positionValue) => {
-	// 				if (
-	// 					positionValue != 0 || this.isWall(x, y, walls)
-	// 				) {
-	// 					return;
-	// 				}
-
-	// 				// let orientations = OrientationFactory.getExtractedOrientations(floorPlan.neighborContrast(x, y));
-	// 				let orientations = OrientationFactory.getOrientations(x, y, floorPlan);
-	// 				if (orientations === undefined) {
-	// 					return;
-	// 				}
-	// 				for (var i = 0; i < orientations.length; i++) {
-	// 					trims.push({x, y, orientation: orientations[i]});
-	// 				}
-	// 			},
-	// 			padding: 2
-	// 		});
-
-	// 		return trims;
-	// 	}
-
-	// 	let lambda = `
-	// 		${Matrix.toString()}
-	// 		SKIP = ${SKIP}
-	// 		EMPTY = ${EMPTY}
-	// 		ORIENTATIONS = ${JSON.stringify(ORIENTATIONS)}
-	// 		OUTLINES = ${JSON.stringify(OUTLINES)}
-	// 		${OrientationFactory.toString()}
-	// 		${methodCall.toString()}
-	// 	`;
-
-
-	// 	console.log("LAMBDA", lambda.toString())
-	// 	console.log("WALLS", walls);
-	// 	const input = {
-	// 		floorPlan: floorPlan,
-	// 		walls: JSON.parse(JSON.stringify(walls)),
-	// 		isWallString: `(function ${this.isWall.toString()})`
-	// 	};
-	// 	console.log("INPUT", JSON.parse(JSON.stringify(input)));
-	// 	return new Promise((resolve, reject) => {
-	// 		JobManager.runJob(lambda.toString(), JSON.parse(JSON.stringify(input)), (out) => {
-	// 			console.log("JobManager", out)
-	// 			const trim = out.map(trim => {
-	// 				return new Trim(gridCells(trim.x), gridCells(trim.y), trim.orientation);
-	// 			})
-	// 			resolve(trim);
-	// 		});
-	//     });
-	// }
 
 	isWall(x, y, walls) {
 		for (var i = walls.length - 1; i >= 0; i--) {

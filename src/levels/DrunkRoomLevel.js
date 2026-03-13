@@ -15,11 +15,11 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 
 	addFloors(floorPlan, params) {
 		// console.log("START this.addFloorSprites");
-		this.addFloorSprites(floorPlan, params);
+		this.addFloorCompletely(floorPlan, params);
 		// console.log("END this.addFloorSprites");
 	}
 
-	addFloorSprites(floorPlan, params) {
+	addFloorCompletely(floorPlan, params) {
 		const floors = RoomFloorFactory.generate({
 			floorPlan,
 			seed: params.seed
@@ -36,6 +36,23 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 		// 		this.addFloor(floors[i]);
 		// 	}	
 		// })
+	}
+
+	addFloorIteratively(floorPlan, params) {
+		const position = new Vector2(window.renderPosition.x / 16, window.renderPosition.y / 16);
+		position.x -= 10;
+		position.y -= 10;
+		const size = { width: 20, height: 20};
+		let param = {
+			floorPlan: floorPlan,
+			seed: params.seed,
+			position: position,
+			size: size
+		};
+		const walls =  RoomFloorFactory.generate(param);
+		for (var i = floors.length - 1; i >= 0; i--) {
+			this.addFloor(floors[i]);
+		}
 	}
 
 	addWalls(floorPlan, params) {
