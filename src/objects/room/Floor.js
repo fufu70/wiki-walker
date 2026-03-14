@@ -1,4 +1,4 @@
-import {GameObject} from "../../GameObject.js";
+import {CloneObject} from "../CloneObject.js";
 import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
@@ -107,7 +107,7 @@ FLOORS[CARPET_DUNNO][CENTER_NORTH_WEST] = 201;
 FLOORS[CARPET_DUNNO][CENTER_WEST] = 218;
 FLOORS[CARPET_DUNNO][CENTER_NORTH_EAST] = 220;
 
-export class Floor extends GameObject {
+export class Floor extends CloneObject {
 	constructor(x, y, style = BRICK, orientation = CENTER) {
 		super({
 			position: new Vector2(x, y)
@@ -126,11 +126,11 @@ export class Floor extends GameObject {
 
 export class FloorFactory {
 	static generate(params) {
-		let {floorPlan, seed, style} = params;
-		return new (this.prototype.constructor)().get(floorPlan, seed, style);
+		let {floorPlan, seed, style, position, size} = params;
+		return new (this.prototype.constructor)().get(floorPlan, seed, style, position, size);
 	}
 
-	get(floorPlan, seed, style) {
+	get(floorPlan, seed, style, position, size) {
 		if (!style && seed) {
 			style = this.seedStyle(seed);
 		}
@@ -145,7 +145,9 @@ export class FloorFactory {
 					floors.push(this.getFloorSprite(x, y, style, orientation));
 				}
 			},
-			padding: 2
+			padding: 2,
+			position: position,
+			size: size
 		});
 
 		return floors;

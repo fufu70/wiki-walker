@@ -1,4 +1,4 @@
-import {GameObject} from "../../GameObject.js";
+import {CloneObject} from "../CloneObject.js";
 import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
@@ -25,7 +25,7 @@ import {OrientationFactory} from '../../helpers/orientation/OrientationFactory.j
 import {JobManager} from '../../helpers/JobManager.js';
 
 
-export class Wall extends GameObject {
+export class Wall extends CloneObject {
 	constructor(x, y, style = RED_PATTERN, orientation = NORTH) {
 		super({
 			position: new Vector2(x, y)
@@ -52,35 +52,6 @@ export class Wall extends GameObject {
 			frame: WALLS[style][orientation]["BottomWall"]
 		});
 		this.addChild(bottomWall);
-	}
-
-	clone(wall) {
-		this.position = wall.position;
-		for (let i = 0; i < this.children.length; i ++) {
-			this.children[i].destroy();
-		}
-
-		for (let i = 0; i < wall.children.length; i ++) {
-			this.addChild(wall.children[i]);
-		}
-	}
-}
-
-
-export class RoomWallStorage extends Storage {
-	constructor() {
-		super("WALL");
-	}
-
-	get(floorPlan) {
-		const value = super.get(JSON.stringify(floorPlan));
-		return value.map(val => {
-			return new Wall(gridCells(val.x), gridCells(val.y), val.style, val.orientation);
-		});
-	}
-
-	set(floorPlan, value) {
-		super.set(JSON.stringify(floorPlan), value);
 	}
 }
 
@@ -138,83 +109,6 @@ export class WallFactory {
 			return new Wall(gridCells(val.x), gridCells(val.y), val.style, val.orientation);
 		});
 	}
-
-
-	static async generateParallel(params) {
-		if (WallFactory.cache.has(JSON.stringify(params.floorPlan))) {
-			return WallFactory.cache.get(JSON.stringify(params.floorPlan));
-		}
-		let {floorPlan, seed, style} = params;
-		return await (new (this.prototype.constructor)()).getParallel(floorPlan, seed, style);
-	}
-
-	async getParallel(floorPlan, seed, style) {
-		if (!style && seed) {
-			style = this.seedStyle(seed);
-		}
-
-
-		let methodCall = (input) => {
-			let floorPlan = new Matrix(input.floorPlan);
-			let seed = input.seed;
-			let style = input.style;
-			let isWall = eval(input.isWallString)
-			const walls = [];
-
-			floorPlan.traverse({
-				callback: (x, y, matrixValue) => {
-					if (!isWall(x, y, matrixValue, floorPlan)) {
-						return;
-					}
-					
-					let orientation = OrientationFactory.getOrientation(x, y, floorPlan);
-					// let orientation = OrientationFactory.getExtractedOrientation(floorPlan.neighborContrast(x, y));
-					if (orientation === undefined) {
-						return;
-					}
-					// console.log("orientation", orientation);
-					// const fpMatrixExtract = floorPlan.extract(x - 1, y - 1, 3, 3).compare(0);
-
-					// console.log(fpMatrixExtract.toString());
-					walls.push({x, y, orientation, style});
-				},
-				padding: 2
-			});
-
-			return walls;
-		}
-
-		let lambda = `
-			${Matrix.toString()}
-			SKIP = ${SKIP}
-			EMPTY = ${EMPTY}
-			ORIENTATIONS = ${JSON.stringify(ORIENTATIONS)}
-			OUTLINES = ${JSON.stringify(OUTLINES)}
-			${OrientationFactory.toString()}
-			${methodCall.toString()}
-		`;
-
-
-		console.log("LAMBDA", lambda.toString())
-		const input = {
-			floorPlan: floorPlan,
-			seed: seed,
-			style: style,
-			isWallString: `(function ${this.isWall.toString()})`
-		};
-		console.log("INPUT", JSON.parse(JSON.stringify(input)));
-		return new Promise((resolve, reject) => {
-			JobManager.runJob(lambda.toString(), JSON.parse(JSON.stringify(input)), (out) => {
-				console.log("JobManager", out)
-				const walls = out.map(wall => {
-					return this.getWallSprite(wall.x, wall.y, wall.style, wall.orientation);
-				});
-
-				WallFactory.cache.set(JSON.stringify(floorPlan), walls);
-				resolve(walls);
-			});
-	    });
-	}
 	
 	isWall(x, y, matrixValue, floorPlan) {
 		// not defined
@@ -230,7 +124,6 @@ export class WallFactory {
 }
 
 export class RoomWallFactory extends WallFactory {
-	cache = new RoomWallStorage();
 
 	isWall(x, y, matrixValue, floorPlan) {
 		return floorPlan.get(x, y + 1) > 0 && matrixValue == 0

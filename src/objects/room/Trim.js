@@ -1,4 +1,4 @@
-import {GameObject} from "../../GameObject.js";
+import {CloneObject} from "../CloneObject.js";
 import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
@@ -60,7 +60,7 @@ TRIM[EAST_TOP] = 30;
 TRIM[NORTH_EAST] = 29;
 TRIM[NORTH_EAST_CORNER] = 29;
 
-export class Trim extends GameObject {
+export class Trim extends CloneObject {
 	constructor(x, y, orientation = NORTH) {
 		super({
 			position: new Vector2(x, y)
@@ -132,13 +132,8 @@ export class Trim extends GameObject {
 		}));
 	}
 
-	clone(trim) {
-		
-		for (let i = 0; i < this.children.length; i ++) {
-			this.children[i].destroy();
-		}
-		this.children = [];
-		this.position = trim.position;
+	reflect(trim) {
+		this.orientation = trim.orientation;
 		this.formatOrientation(trim.orientation);
 	}
 }

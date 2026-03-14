@@ -13,10 +13,17 @@ import {gridCells, GRID_SIZE, isSpaceFree} from '../helpers/Grid.js';
 
 export class DrunkRoomLevel extends DrunkardWalkLevel {
 
+	iterativeRender() {
+		this.addFloors(this.floorPlan, this.params);
+		this.addWalls(this.floorPlan, this.params);
+	}
+
 	addFloors(floorPlan, params) {
-		// console.log("START this.addFloorSprites");
-		this.addFloorCompletely(floorPlan, params);
-		// console.log("END this.addFloorSprites");
+		if (window.renderIteratively) {
+			this.addFloorIteratively(floorPlan, params);
+		} else {
+			this.addFloorCompletely(floorPlan, params);
+		}
 	}
 
 	addFloorCompletely(floorPlan, params) {
@@ -27,15 +34,6 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 		for (var i = floors.length - 1; i >= 0; i--) {
 			this.addFloor(floors[i]);
 		}
-
-		// RoomFloorFactory.generateParallel({
-		// 	floorPlan,
-		// 	seed: params.seed
-		// }).then(floors => {
-		// 	for (var i = floors.length - 1; i >= 0; i--) {
-		// 		this.addFloor(floors[i]);
-		// 	}	
-		// })
 	}
 
 	addFloorIteratively(floorPlan, params) {
@@ -49,7 +47,7 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 			position: position,
 			size: size
 		};
-		const walls =  RoomFloorFactory.generate(param);
+		const floors = RoomFloorFactory.generate(param);
 		for (var i = floors.length - 1; i >= 0; i--) {
 			this.addFloor(floors[i]);
 		}
@@ -173,5 +171,11 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 		spot.x += gridCells(1);
 		spot.y += gridCells(1);
 		this.addGameObject(new Drawer(spot.x, spot.y, undefined, params.seed));
+	}
+
+	ready() {
+		events.on("HERO_POSITION", this, heroPosition => {
+			this.iterativeRender();
+		});
 	}
 }
