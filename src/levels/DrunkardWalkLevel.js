@@ -24,7 +24,6 @@ export class DrunkardWalkLevel extends Level {
 
 	constructor(params={}) {
 		super();
-		// console.log("PARAMS: ", params);
 		try {
 			this.params = params;
 			this.background = params.background ?? new Sprite({
@@ -57,21 +56,17 @@ export class DrunkardWalkLevel extends Level {
 			this.addHero(this.heroStart);
 			this.beforeGeneratingSprites();
 
+			this.floorMax = 510;
+			this.floorIndex = 0;
 			this.wallIndex = 0;
-			this.wallMax = 40;
+			this.wallMax = 120;
 			this.trimIndex = 0;
-			this.trimMax = 100;
+			this.trimMax = 150;
 
 			this.addFloors(this.floorPlan, params);
-
 			this.addWalls(this.floorPlan, params);
 
-			// this.addItems(this.floorPlan, params);
-
-			// console.log("START this.getWalls");
 			this.walls = this.getWalls(this.walls, this.floorPlan);
-
-			// console.log("END this.getWalls");
 		} catch (e) {
 			console.error(e);	
 		}
@@ -133,41 +128,50 @@ export class DrunkardWalkLevel extends Level {
 		this.addChild(gameObject);
 	}
 
+	addCloneObject(obj, objs, index, max) {
+		if (!window.renderIteratively || objs.length < max) {
+			objs.push(obj);
+			this.addChild(obj);	
+			return index;
+		}
+
+		if (index >= max - 1) {
+			index = 0;
+		}
+
+		if (objs[index].clone != undefined) {
+			objs[index].clone(obj);	
+		}
+
+		index ++;
+		return index;
+	}
+
 	addFloor(floor) {
-		this.floors.push(floor);
-		this.addChild(floor);
+		this.floorIndex = this.addCloneObject(
+			floor, 
+			this.floors, 
+			this.floorIndex, 
+			this.floorMax
+		);
 	}
 
 	addWall(wall) {
-		if (!window.renderIteratively || this.wallSprites.length < this.wallMax) {
-			this.wallSprites.push(wall);
-			this.addChild(wall);	
-			return;
-		}
-
-		if (this.wallIndex >= this.wallMax - 1) {
-			this.wallIndex = 0;
-		}
-		if (this.wallSprites[this.wallIndex].clone != undefined) {
-			this.wallSprites[this.wallIndex].clone(wall);	
-		}
-		this.wallIndex ++;
+		this.wallIndex = this.addCloneObject(
+			wall, 
+			this.wallSprites, 
+			this.wallIndex, 
+			this.wallMax
+		);
 	}
 
 	addTrim(trim) {
-		if (!window.renderIteratively || this.trimSprites.length < this.trimMax) {
-			this.trimSprites.push(trim);
-			this.addChild(trim);	
-			return;
-		}
-
-		if (this.trimIndex >= this.trimMax - 1) {
-			this.trimIndex = 0;
-		}
-		// if (this.trimSprites[this.trimIndex].clone != undefined) {
-			this.trimSprites[this.trimIndex].clone(trim);	
-		// }
-		this.trimIndex ++;
+		this.trimIndex = this.addCloneObject(
+			trim, 
+			this.trimSprites, 
+			this.trimIndex, 
+			this.trimMax
+		);
 	}
 
 	findSpotOnFloor(space) {

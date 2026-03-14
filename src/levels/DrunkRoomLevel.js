@@ -13,10 +13,6 @@ import {gridCells, GRID_SIZE, isSpaceFree} from '../helpers/Grid.js';
 
 export class DrunkRoomLevel extends DrunkardWalkLevel {
 
-	iterativeRender() {
-		this.addFloors(this.floorPlan, this.params);
-		this.addWalls(this.floorPlan, this.params);
-	}
 
 	addFloors(floorPlan, params) {
 		if (window.renderIteratively) {
@@ -31,23 +27,6 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 			floorPlan,
 			seed: params.seed
 		})
-		for (var i = floors.length - 1; i >= 0; i--) {
-			this.addFloor(floors[i]);
-		}
-	}
-
-	addFloorIteratively(floorPlan, params) {
-		const position = new Vector2(window.renderPosition.x / 16, window.renderPosition.y / 16);
-		position.x -= 10;
-		position.y -= 10;
-		const size = { width: 20, height: 20};
-		let param = {
-			floorPlan: floorPlan,
-			seed: params.seed,
-			position: position,
-			size: size
-		};
-		const floors = RoomFloorFactory.generate(param);
 		for (var i = floors.length - 1; i >= 0; i--) {
 			this.addFloor(floors[i]);
 		}
@@ -69,25 +48,42 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 		this.addWallSprites(floorPlan, params);
 	}
 
+	addFloorIteratively(floorPlan, params) {
+		if (!this.floorStyle) {
+			this.floorStyle = new RoomFloorFactory().seedStyle(params.seed);
+		}
+		const iterativeParams = this.getIterativeParams();
+		let param = {
+			floorPlan: floorPlan,
+			seed: params.seed,
+			position: iterativeParams.position,
+			size: iterativeParams.size,
+			style: this.floorStyle
+		};
+		const floors = RoomFloorFactory.generate(param);
+		for (var i = floors.length - 1; i >= 0; i--) {
+			this.addFloor(floors[i]);
+		}
+	}
+
 	addWallsIteratively(floorPlan, params) {
-		const position = new Vector2(window.renderPosition.x / 16, window.renderPosition.y / 16);
-		position.x -= 10;
-		position.y -= 10;
-		const size = { width: 20, height: 20};
-		this.trim
-		this.addTrimSprites(floorPlan, position, size);
-		// console.log("END this.addTrimSprites")
-		// console.log("START this.addWallSprites")
-		this.addWallSprites(floorPlan, params, position, size);
+		const iterativeParams = this.getIterativeParams();
+		this.addTrimSprites(floorPlan, iterativeParams.position, iterativeParams.size);
+		
+		this.addWallSprites(floorPlan, params, iterativeParams.position, iterativeParams.size);
 	}
 
 
 	addWallSprites(floorPlan, params, position, size) {
+		if (!this.wallStyle) {
+			this.wallStyle = new RoomWallFactory().seedStyle(params.seed);
+		}
 		let parm = {
 			floorPlan: floorPlan,
 			seed: params.seed,
 			position: position,
-			size: size
+			size: size,
+			style: this.wallStyle
 		};
 		const walls =  RoomWallFactory.generate(parm);
 		for (var i = walls.length - 1; i >= 0; i--) {
@@ -175,7 +171,54 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 
 	ready() {
 		events.on("HERO_POSITION", this, heroPosition => {
-			this.iterativeRender();
+			this.iterativeRender(heroPosition);
 		});
+		this.addFloors(this.floorPlan, this.params);
+		this.addWalls(this.floorPlan, this.params);	
+	}
+
+	getIterativeParams() {
+		const position = new Vector2(
+			Math.round(window.renderPosition.x / GRID_SIZE),
+			Math.round(window.renderPosition.y / GRID_SIZE)
+		);
+		const size = { 
+			width: Math.round(320 / GRID_SIZE * 1.7), 
+			height: Math.round(180 / GRID_SIZE * 1.7)
+		};
+		position.x -= Math.floor(size.width / 2);
+		position.y -= Math.floor(size.height / 2);
+		return {
+			position: position,
+			size: size
+		};
+	}
+
+	iterativeRender(position) {
+		if (!window.renderIteratively) {
+			return;
+		}
+
+		if (!this.renderPosition) {
+			this.renderPosition = position;
+		}
+
+		const rPos = new Vector2(
+			Math.round(this.renderPosition.x / GRID_SIZE),
+			Math.round(this.renderPosition.y / GRID_SIZE)
+		);
+		const pos = new Vector2(
+			Math.round(position.x / GRID_SIZE),
+			Math.round(position.y / GRID_SIZE)
+		);
+		const params = this.getIterativeParams();
+
+		// only update when the render position is great enough
+		if (Math.abs(rPos.x - pos.x) > params.size.width / 4
+			||Math.abs(rPos.y - pos.y) > params.size.height / 4) { 
+			this.addFloors(this.floorPlan, this.params);
+			this.addWalls(this.floorPlan, this.params);	
+			this.renderPosition = position;
+		}
 	}
 }
