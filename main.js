@@ -41,7 +41,7 @@ import {TableViewer} from './src/viewers/TableViewer.js';
 import * as wtfPluginApi from 'wtf-plugin-api';
 
 wtf.extend(wtfPluginApi.default);
-window.renderIteratively = false;
+window.renderIteratively = true;
 window.wtf = wtf;
 window.JobManager = JobManager;
 window.events = events;

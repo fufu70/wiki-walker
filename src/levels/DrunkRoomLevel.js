@@ -183,8 +183,8 @@ export class DrunkRoomLevel extends DrunkardWalkLevel {
 			Math.round(window.renderPosition.y / GRID_SIZE)
 		);
 		const size = { 
-			width: Math.round(320 / GRID_SIZE * 1.7), 
-			height: Math.round(180 / GRID_SIZE * 1.7)
+			width: Math.round(320 / GRID_SIZE * 1.5), 
+			height: Math.round(180 / GRID_SIZE * 1.5)
 		};
 		position.x -= Math.floor(size.width / 2);
 		position.y -= Math.floor(size.height / 2);
