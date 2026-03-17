@@ -164,8 +164,8 @@ export class GameObject {
 		// }
 
 		const personHalf = 8;
-		const canvasWidth = 320 + 64;
-		const canvasHeight = 180 + 64;
+		const canvasWidth = 320 + 96;
+		const canvasHeight = 180 + 96;
 		const halfWidth = -personHalf + canvasWidth / 2;
 		const halfHeight = -personHalf + canvasHeight / 2;
 		// console.log(pos, halfWidth, x, this);

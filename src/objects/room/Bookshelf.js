@@ -18,6 +18,18 @@ export const ANTIUQUE_EMPTY = 'ANTIUQUE_EMPTY';
 export const CART = 'CART';
 export const LIBRARY_SINGLE = 'LIBRARY_SINGLE';
 export const LIBRARY_DOUBLE = 'LIBRARY_DOUBLE';
+export const SCHOOL_PINE_A = 'SCHOOL_PINE_A';
+export const SCHOOL_PINE_B = 'SCHOOL_PINE_B';
+export const SCHOOL_PINE_C = 'SCHOOL_PINE_C';
+export const SCHOOL_PINE_D = 'SCHOOL_PINE_D';
+export const SCHOOL_PINE_E = 'SCHOOL_PINE_E';
+export const SCHOOL_PINE_F = 'SCHOOL_PINE_F';
+export const SCHOOL_POPLAR_A = 'SCHOOL_POPLAR_A';
+export const SCHOOL_POPLAR_B = 'SCHOOL_POPLAR_B';
+export const SCHOOL_POPLAR_C = 'SCHOOL_POPLAR_C';
+export const SCHOOL_POPLAR_D = 'SCHOOL_POPLAR_D';
+export const SCHOOL_POPLAR_E = 'SCHOOL_POPLAR_E';
+export const SCHOOL_POPLAR_F = 'SCHOOL_POPLAR_F';
 
 export const BOOKSHELF_STYLES = [
 	LIGHT_BROWN_FULL,
@@ -30,7 +42,19 @@ export const BOOKSHELF_STYLES = [
 	ANTIUQUE_EMPTY,
 	CART,
 	LIBRARY_SINGLE,
-	LIBRARY_DOUBLE
+	LIBRARY_DOUBLE,
+	SCHOOL_PINE_A,
+	SCHOOL_PINE_B,
+	SCHOOL_PINE_C,
+	SCHOOL_PINE_D,
+	SCHOOL_PINE_E,
+	SCHOOL_PINE_F,
+	SCHOOL_POPLAR_A,
+	SCHOOL_POPLAR_B,
+	SCHOOL_POPLAR_C,
+	SCHOOL_POPLAR_D,
+	SCHOOL_POPLAR_E,
+	SCHOOL_POPLAR_F,
 ]
 
 const BOOKSHELF = {};
@@ -45,6 +69,18 @@ BOOKSHELF[ANTIUQUE_EMPTY] = 7;
 BOOKSHELF[CART] = 8;
 BOOKSHELF[LIBRARY_SINGLE] = 9;
 BOOKSHELF[LIBRARY_DOUBLE] = 10;
+BOOKSHELF[SCHOOL_PINE_A] = 11;
+BOOKSHELF[SCHOOL_PINE_B] = 12;
+BOOKSHELF[SCHOOL_PINE_C] = 13;
+BOOKSHELF[SCHOOL_PINE_D] = 14;
+BOOKSHELF[SCHOOL_PINE_E] = 15;
+BOOKSHELF[SCHOOL_PINE_F] = 16;
+BOOKSHELF[SCHOOL_POPLAR_A] = 17;
+BOOKSHELF[SCHOOL_POPLAR_B] = 18;
+BOOKSHELF[SCHOOL_POPLAR_C] = 19;
+BOOKSHELF[SCHOOL_POPLAR_D] = 20;
+BOOKSHELF[SCHOOL_POPLAR_E] = 21;
+BOOKSHELF[SCHOOL_POPLAR_F] = 22;
 
 export class Bookshelf extends GameObject {
 	constructor(x, y, style = LIGHT_BROWN_FULL, seed = undefined, params = undefined) {
@@ -62,9 +98,9 @@ export class Bookshelf extends GameObject {
 
 		this.addChild(new Sprite({
 			resource: resources.images.bookshelf,
-			frameSize: new Vector2(32, 32),
-			position: new Vector2(0, -16),
-			hFrames: 3,
+			frameSize: new Vector2(32, 48),
+			position: new Vector2(0, -32),
+			hFrames: 6,
 			vFrames: 4,
 			frame: BOOKSHELF[style]
 		}));
