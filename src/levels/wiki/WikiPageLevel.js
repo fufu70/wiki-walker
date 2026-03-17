@@ -70,6 +70,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 			this.placeRoom(params, this.rooms[index], position);
 		});
 
+
 		const loc = this.floorQuery.startingPosition.duplicate();
 		loc.x += gridCells(2);
 		loc.y += gridCells(-2);
@@ -136,6 +137,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 		}, this.seed);
 		this.addGameObject(sign);
 
+		let shelfCount = 0;
 		room.paragraphs.filter(paragraph => {
 			return paragraph.length > 0;
 		}).forEach(paragraph => {
