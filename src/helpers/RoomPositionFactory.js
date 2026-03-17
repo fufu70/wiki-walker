@@ -32,11 +32,28 @@ export class RoomPositionFactory {
 			const room = currentRooms[i];
 			const roomSize = sizes[room.index];
 
-			if (this.doesRoomOverlap(position, positionSize, room, roomSize)) {
+			if (this.doRoomsOverlap(position, positionSize, room.position, roomSize)) {
 				return room;
 			}
 		}
 		return undefined;
+	}
+
+	/**
+	 * Checks if room A overlaps room B or room B overlaps room A.
+	 * 
+	 * 		*------* <- Room A
+	 * 		|*----*| <- Room B
+	 * 		||	  ||
+	 * 		||	  ||
+	 * 		|*----*|
+	 * 		*------*
+	 * 
+	 */ 
+
+	doRoomsOverlap(aPosition, aSize, bPosition, bSize) {
+		return this.doesRoomOverlap(aPosition, aSize, {position: bPosition}, bSize)
+			|| this.doesRoomOverlap(bPosition, bSize, {position: aPosition}, aSize);
 	}
 
 
@@ -85,6 +102,7 @@ export class RoomPositionFactory {
 		const accuValMaxX = roomSize.x + room.position.x;
 		const accuValMaxY = roomSize.y + room.position.y;
 
+
 		return point.x >= accuValMinX 
 			&& point.x <= accuValMaxX
 			&& point.y >= accuValMinY
@@ -106,3 +124,18 @@ console.assert(factory.doesRoomOverlap(
 	{ position: { x: 413, y: 787 } }, // room
 	{ x: 4, y: 11 } //  roomSize
 ), "The position and position size should create a point that is located in the room");
+
+// France, Colonial Empire and Architecture rooms overlap
+console.assert(!factory.doesRoomOverlap(
+	{ x: 762, y: 942 }, // room
+	{ x: 4, y: 13 }, //  roomSize
+	{ position: { x: 762, y: 945 } }, // position
+	{ x: 4, y: 5 }, // positionSize
+), "Colonial Empire and Architecture overlap");
+
+console.assert(factory.doRoomsOverlap(
+	{ x: 762, y: 942 }, // room
+	{ x: 4, y: 13 }, //  roomSize
+	{ x: 762, y: 945 }, // position
+	{ x: 4, y: 5 }, // positionSize
+), "Colonial Empire and Architecture rooms overlap");

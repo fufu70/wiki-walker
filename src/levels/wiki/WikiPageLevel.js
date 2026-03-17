@@ -57,7 +57,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 		// if (params.infobox) {
 		// 	this.rooms = [params.infobox, ...this.rooms];
 		// }
-		const roomPositions = this.getRoomPositions(this.rooms, this.floorQuery.roomPositions);
+		this.roomPositions = this.getRoomPositions(this.rooms, this.floorQuery.roomPositions);
 		// console.log("ROOMS", params.sections);
 		// console.log("FLOOR QUERY ROOM POSITIONS", JSON.stringify(this.floorQuery.roomPositions));
 		// console.log("ROOM POSITIONS", JSON.stringify(roomPositions));
@@ -65,7 +65,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 		// console.log("LEVEL", this);
 
 
-		roomPositions.forEach((position, index) => {
+		this.roomPositions.forEach((position, index) => {
 			position = new Vector2(gridCells(position.x), gridCells(position.y));
 			this.placeRoom(params, this.rooms[index], position);
 		});
@@ -138,6 +138,10 @@ export class WikiPageLevel extends WikiRoomLevel {
 		this.addGameObject(sign);
 
 		let shelfCount = 0;
+		if (room.title == 'Architecture') {
+			this.bookshelf = [];
+			console.log("HERE!")
+		}
 		room.paragraphs.filter(paragraph => {
 			return paragraph.length > 0;
 		}).forEach(paragraph => {
@@ -153,6 +157,10 @@ export class WikiPageLevel extends WikiRoomLevel {
 					}
 				]
 			});
+
+			if (room.title == 'Architecture') {
+				this.bookshelf.push(bookshelf);
+			}
 			this.addGameObject(bookshelf);
 			shelfCount ++;
 		});
