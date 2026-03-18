@@ -56,13 +56,6 @@ export class DrunkardWalkLevel extends Level {
 			this.addHero(this.heroStart);
 			this.beforeGeneratingSprites();
 
-			this.floorMax = 510;
-			this.floorIndex = 0;
-			this.wallIndex = 0;
-			this.wallMax = 120;
-			this.trimIndex = 0;
-			this.trimMax = 150;
-
 			this.addFloors(this.floorPlan, params);
 			this.addWalls(this.floorPlan, params);
 
@@ -128,50 +121,19 @@ export class DrunkardWalkLevel extends Level {
 		this.addChild(gameObject);
 	}
 
-	addCloneObject(obj, objs, index, max) {
-		if (!window.renderIteratively || objs.length < max) {
-			objs.push(obj);
-			this.addChild(obj);	
-			return index;
-		}
-
-		if (index >= max - 1) {
-			index = 0;
-		}
-
-		if (objs[index].clone != undefined) {
-			objs[index].clone(obj);	
-		}
-
-		index ++;
-		return index;
+	addFloor(obj) {
+		this.floors.push(obj);
+		this.addChild(obj);
 	}
 
-	addFloor(floor) {
-		this.floorIndex = this.addCloneObject(
-			floor, 
-			this.floors, 
-			this.floorIndex, 
-			this.floorMax
-		);
+	addWall(obj) {
+		this.wallSprites.push(obj);
+		this.addChild(obj);
 	}
 
-	addWall(wall) {
-		this.wallIndex = this.addCloneObject(
-			wall, 
-			this.wallSprites, 
-			this.wallIndex, 
-			this.wallMax
-		);
-	}
-
-	addTrim(trim) {
-		this.trimIndex = this.addCloneObject(
-			trim, 
-			this.trimSprites, 
-			this.trimIndex, 
-			this.trimMax
-		);
+	addTrim(obj) {
+		this.trimSprites.push(obj);
+		this.addChild(obj);
 	}
 
 	findSpotOnFloor(space) {

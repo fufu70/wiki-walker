@@ -13,6 +13,7 @@ export class DrunkOutdoorLevel extends DrunkardWalkLevel {
 		try {
 			super({
 				...params,
+				wallMax: 8000,
 				width: 10,
 				height: 10,
 				maxSteps: (800),

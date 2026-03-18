@@ -1,4 +1,4 @@
-import {IterativeWalkLevel} from './IterativeWalkLevel.js';
+import {DrunkardWalkLevel} from './DrunkardWalkLevel.js';
 import {Floor, RoomFloorFactory} from '../objects/room/Floor.js';
 import {Wall, RoomWallFactory} from '../objects/room/Wall.js';
 import {Trim, TrimFactory} from '../objects/room/Trim.js';
@@ -11,7 +11,66 @@ import {Vector2} from "../Vector2.js";
 import {gridCells, GRID_SIZE, isSpaceFree} from '../helpers/Grid.js';
 
 
-export class DrunkRoomLevel extends IterativeWalkLevel {
+export class IterativeWalkLevel extends DrunkardWalkLevel {
+
+	constructor(params) {
+		super(params);
+	}
+
+	beforeGeneratingSprites() {
+		this.floorMax = 510;
+		this.floorIndex = 0;
+		this.wallIndex = 0;
+		this.wallMax = 120;
+		this.trimIndex = 0;
+		this.trimMax = 150;
+	}
+
+	addCloneObject(obj, objs, index, max) {
+		if (!window.renderIteratively || objs.length < max) {
+			objs.push(obj);
+			this.addChild(obj);	
+			return index;
+		}
+
+		if (index >= max - 1) {
+			index = 0;
+		}
+
+		if (objs[index].clone != undefined) {
+			objs[index].clone(obj);	
+		}
+
+		index ++;
+		return index;
+	}
+
+	addFloor(floor) {
+		this.floorIndex = this.addCloneObject(
+			floor, 
+			this.floors, 
+			this.floorIndex, 
+			this.floorMax
+		);
+	}
+
+	addWall(wall) {
+		this.wallIndex = this.addCloneObject(
+			wall, 
+			this.wallSprites, 
+			this.wallIndex, 
+			this.wallMax
+		);
+	}
+
+	addTrim(trim) {
+		this.trimIndex = this.addCloneObject(
+			trim, 
+			this.trimSprites, 
+			this.trimIndex, 
+			this.trimMax
+		);
+	}
 
 
 	addFloors(floorPlan, params) {
@@ -40,6 +99,14 @@ export class DrunkRoomLevel extends IterativeWalkLevel {
 		}
 	}
 
+	addWallsCompletely(floorPlan, params) {
+		// console.log("START this.addTrimSprites")
+		this.addTrimSprites(floorPlan);
+		// console.log("END this.addTrimSprites")
+		// console.log("START this.addWallSprites")
+		this.addWallSprites(floorPlan, params);
+	}
+
 	addFloorIteratively(floorPlan, params) {
 		if (!this.floorStyle) {
 			this.floorStyle = new RoomFloorFactory().seedStyle(params.seed);
@@ -56,14 +123,6 @@ export class DrunkRoomLevel extends IterativeWalkLevel {
 		for (var i = floors.length - 1; i >= 0; i--) {
 			this.addFloor(floors[i]);
 		}
-	}
-
-	addWallsCompletely(floorPlan, params) {
-		// console.log("START this.addTrimSprites")
-		this.addTrimSprites(floorPlan);
-		// console.log("END this.addTrimSprites")
-		// console.log("START this.addWallSprites")
-		this.addWallSprites(floorPlan, params);
 	}
 
 	addWallsIteratively(floorPlan, params) {
@@ -100,73 +159,6 @@ export class DrunkRoomLevel extends IterativeWalkLevel {
 		for (var i = trims.length - 1; i >= 0; i--) {
 			this.addTrim(trims[i]);
 		}
-	}
-
-	addItems(floorPlan, params) {
-		for (var i = 0; i < Math.max(params.rooms ?? 0, 1); i++) {
-			// console.log("START this.addVases");
-			this.addVases(floorPlan, params);
-			// console.log("END this.addVases");
-			// console.log("START this.addPictures");
-			this.addPictures(params);
-			// console.log("END this.addPictures");
-
-			// console.log("START this.addTelevisions");
-			this.addTelevisions(params);
-			// console.log("END this.addTelevisions");
-			// console.log("START this.addBookshelves");
-			this.addBookshelves(params);
-			// console.log("END this.addBookshelves");
-			// console.log("START this.addDrawers");
-			this.addDrawers(params);
-			// console.log("END this.addDrawers");
-		}
-	}
-
-	addVases(floorPlan, params) {
-		const spaceAround = new Vector2(gridCells(3), gridCells(3));
-		const spot = this.findSpotOnFloor(spaceAround);
-		if (spot === undefined) return;
-		spot.x += gridCells(1);
-		spot.y += gridCells(1);
-		this.addGameObject(new Vase(spot.x, spot.y, {
-			seed: params.seed
-		}));
-	}
-
-	addPictures(params) {
-		const spot = this.findRandomWallSpot(this.seed, this.wallSprites, this.gameObjects);
-		if (spot === undefined) return;
-		this.addGameObject(new Picture(spot.x, spot.y, undefined, params.seed, {
-			url: "https://wikipedia.org/wiki/Special:Redirect/file/Adam-Olearius.jpg",
-			caption: "Rock blasting at the large open-pit Twin Creeks gold mine in Nevada, United States. Note the size of the excavators for scale (foreground, left), and that the bottom of the mine is not visible."
-		}));
-	}
-
-	addTelevisions(params) {
-		const spaceAround = new Vector2(gridCells(2), gridCells(1));
-		const spot = this.findRandomWallSpot(this.seed, this.wallSprites, this.gameObjects, spaceAround);
-		if (spot === undefined) return;
-		this.addGameObject(new Television(spot.x, spot.y, undefined, params.seed));
-	}
-
-	addBookshelves(params) {
-		const spaceAround = new Vector2(gridCells(4), gridCells(3));
-		const spot = this.findSpotOnFloor(spaceAround);
-		if (spot === undefined) return;
-		spot.x += gridCells(1);
-		spot.y += gridCells(1);
-		this.addGameObject(new Bookshelf(spot.x, spot.y, undefined, params.seed));
-	}
-
-	addDrawers(params) {
-		// console.log(this, this.seed, this.floors, this.gameObjects, gridCells(3));
-		const spaceAround = new Vector2(gridCells(4), gridCells(3));
-		const spot = this.findSpotOnFloor(spaceAround);
-		if (spot === undefined) return;
-		spot.x += gridCells(1);
-		spot.y += gridCells(1);
-		this.addGameObject(new Drawer(spot.x, spot.y, undefined, params.seed));
 	}
 
 	ready() {

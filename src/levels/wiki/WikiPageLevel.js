@@ -45,6 +45,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 	}
 
 	beforeGeneratingSprites() {
+		super.beforeGeneratingSprites();
 		this.placeRooms(this.params);
 	}
 

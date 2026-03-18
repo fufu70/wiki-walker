@@ -53,6 +53,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 	}
 
 	beforeGeneratingSprites() {
+		super.beforeGeneratingSprites();
 		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		this.placeNpc(this.params);
 		this.placeRandom(this.params);

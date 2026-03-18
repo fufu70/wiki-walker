@@ -42,6 +42,7 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 	}
 
 	beforeGeneratingSprites() {
+		super.beforeGeneratingSprites();
 		this.links = this.params.links;
 		this.linkMap = new Map();
 		this.roomExits = this.links.reduce((acc, curr) => {
