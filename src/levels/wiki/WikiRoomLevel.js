@@ -1,6 +1,6 @@
 import {Hero} from '../../objects/hero/Hero.js';
 import {default as wtf} from 'wtf_wikipedia';
-import {DrunkRoomLevel} from '../DrunkRoomLevel.js';
+import {RoomLevel} from '../RoomLevel.js';
 import {NpcFactory} from '../../objects/npc/NpcFactory.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js';
 import {Vector2} from "../../Vector2.js";
@@ -16,7 +16,7 @@ import {Sign} from '../../objects/outdoors/Sign.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
 
-export class WikiRoomLevel extends DrunkRoomLevel {
+export class WikiRoomLevel extends RoomLevel {
 
 	constructor(wikiParams={}) {
 		try {

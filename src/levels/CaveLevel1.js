@@ -18,7 +18,7 @@ import {Wizard} from '../objects/npc/Wizard.js';
 import {Bob} from '../objects/npc/Bob.js';
 import {Knight} from '../objects/npc/Knight.js';
 import {OutdoorLevel1} from './OutdoorLevel1.js';
-import {DrunkRoomLevel} from './DrunkRoomLevel.js';
+import {RoomLevel} from './RoomLevel.js';
 import {TALKED_TO_A, TALKED_TO_B} from '../StoryFlags.js';
 
 const DEFAULT_HERO_POSITION = new Vector2(gridCells(3), gridCells(3));
@@ -105,7 +105,7 @@ export class CaveLevel1 extends Level {
 				}));	
 			}
 			if (exit.position.matches(DRUNKWALK_EXIT)) {
-				events.emit("CHANGE_LEVEL", new DrunkRoomLevel({
+				events.emit("CHANGE_LEVEL", new RoomLevel({
 					seed: Math.seed(Math.random()),
 					// maxSteps: 10
 				}));	

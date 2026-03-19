@@ -24,10 +24,14 @@ export class IterativeWalkLevel extends DrunkardWalkLevel {
 		this.wallMax = 120;
 		this.trimIndex = 0;
 		this.trimMax = 150;
+		this.renderSize = { 
+			width: Math.round(320 / GRID_SIZE * 1.5), 
+			height: Math.round(180 / GRID_SIZE * 1.5)
+		};
 	}
 
 	addCloneObject(obj, objs, index, max) {
-		if (!window.renderIteratively || objs.length < max) {
+		if (objs.length < max) {
 			objs.push(obj);
 			this.addChild(obj);	
 			return index;
@@ -72,42 +76,7 @@ export class IterativeWalkLevel extends DrunkardWalkLevel {
 		);
 	}
 
-
 	addFloors(floorPlan, params) {
-		if (window.renderIteratively) {
-			this.addFloorIteratively(floorPlan, params);
-		} else {
-			this.addFloorCompletely(floorPlan, params);
-		}
-	}
-
-	addFloorCompletely(floorPlan, params) {
-		const floors = RoomFloorFactory.generate({
-			floorPlan,
-			seed: params.seed
-		})
-		for (var i = floors.length - 1; i >= 0; i--) {
-			this.addFloor(floors[i]);
-		}
-	}
-
-	addWalls(floorPlan, params) {
-		if (window.renderIteratively) {
-			this.addWallsIteratively(floorPlan, params);
-		} else {
-			this.addWallsCompletely(floorPlan, params);
-		}
-	}
-
-	addWallsCompletely(floorPlan, params) {
-		// console.log("START this.addTrimSprites")
-		this.addTrimSprites(floorPlan);
-		// console.log("END this.addTrimSprites")
-		// console.log("START this.addWallSprites")
-		this.addWallSprites(floorPlan, params);
-	}
-
-	addFloorIteratively(floorPlan, params) {
 		if (!this.floorStyle) {
 			this.floorStyle = new RoomFloorFactory().seedStyle(params.seed);
 		}
@@ -125,10 +94,9 @@ export class IterativeWalkLevel extends DrunkardWalkLevel {
 		}
 	}
 
-	addWallsIteratively(floorPlan, params) {
+	addWalls(floorPlan, params) {
 		const iterativeParams = this.getIterativeParams();
 		this.addTrimSprites(floorPlan, iterativeParams.position, iterativeParams.size);
-		
 		this.addWallSprites(floorPlan, params, iterativeParams.position, iterativeParams.size);
 	}
 
@@ -174,23 +142,15 @@ export class IterativeWalkLevel extends DrunkardWalkLevel {
 			Math.round(window.renderPosition.x / GRID_SIZE),
 			Math.round(window.renderPosition.y / GRID_SIZE)
 		);
-		const size = { 
-			width: Math.round(320 / GRID_SIZE * 1.5), 
-			height: Math.round(180 / GRID_SIZE * 1.5)
-		};
-		position.x -= Math.floor(size.width / 2);
-		position.y -= Math.floor(size.height / 2);
+		position.x -= Math.floor(this.renderSize.width / 2);
+		position.y -= Math.floor(this.renderSize.height / 2);
 		return {
 			position: position,
-			size: size
+			size: this.renderSize
 		};
 	}
 
 	iterativeRender(position) {
-		if (!window.renderIteratively) {
-			return;
-		}
-
 		if (!this.renderPosition) {
 			this.renderPosition = position;
 		}
