@@ -57,23 +57,13 @@ export class Wall extends CloneObject {
 
 export class WallFactory {
 
-	// static generateCache(params) {
-	// 	let {floorPlan, seed, style,} = params;
-	// 	let factory = new (this.prototype.constructor)();
-
-	// 	if (factory.cache.has(floorPlan)) {
-	// 		return factory.cache.get(floorPlan);
-	// 	}
-	// 	const walls = factory.get(floorPlan, seed, style);
-	// 	factory.cache.set(floorPlan, walls);
-	// 	return factory.cache.get(floorPlan);
-	// }
-
 	static generate(params) {
-		let {floorPlan, seed, style, position, size} = params;
-		let factory = new (this.prototype.constructor)();
+		return new (this.prototype.constructor)().create(params);
+	}
 
-		const walls = factory.get(floorPlan, seed, style, position, size);
+	create(params) {
+		let {floorPlan, seed, style, position, size} = params;
+		const walls = this.get(floorPlan, seed, style, position, size);
 		return walls;
 	}
 

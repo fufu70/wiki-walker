@@ -126,8 +126,12 @@ export class Floor extends CloneObject {
 
 export class FloorFactory {
 	static generate(params) {
+		return new (this.prototype.constructor)().create(params);
+	}
+
+	create(params) {
 		let {floorPlan, seed, style, position, size} = params;
-		return new (this.prototype.constructor)().get(floorPlan, seed, style, position, size);
+		return this.get(floorPlan, seed, style, position, size);
 	}
 
 	get(floorPlan, seed, style, position, size) {

@@ -141,9 +141,13 @@ export class Trim extends CloneObject {
 export class TrimFactory {
 
 	static generate(params) {
+		return this.create(params);
+	}
+
+	create(params) {
 		let {floorPlan, position, size} = params;
 		let walls = RoomWallFactory.generate(params);
-		let trim = new TrimFactory().get(floorPlan, position, size, walls);
+		let trim = this.get(floorPlan, position, size, walls);
 		return trim.map(val => {
 			return new Trim(gridCells(val.x), gridCells(val.y), val.orientation);
 		});

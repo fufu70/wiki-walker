@@ -39,6 +39,7 @@ export class Hero extends GameObject {
 		this.addChild(this.body);
 		this.drawLayer = "HERO";
 
+		window.renderPosition = this.position.duplicate();
 	}
 
 	ready() {

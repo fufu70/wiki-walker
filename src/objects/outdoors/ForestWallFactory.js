@@ -5,14 +5,10 @@ import {Tree} from './Tree.js';
 import {Rock} from './Rock.js';
 import {Bush} from './Bush.js';
 import {Platform} from './Platform.js';
-import {Storage} from '../../helpers/Storage.js';
-
-export class ForestWallStorage extends Map {}
 
 export class ForestWallFactory extends WallFactory {
-	// cache = new ForestWallStorage();
 
-	get(floorPlan, seed, style) {
+	get(floorPlan, seed, style, position, size) {
 		let walls = [];
 		let wallSet = new Set();
 		// console.log(floorPlan);
@@ -34,7 +30,9 @@ export class ForestWallFactory extends WallFactory {
 					walls.push(this.getWallSprite(x, y));
 				}
 			},
-			padding: 10
+			padding: 0,
+			position: position,
+			size: size
 		});
 
 		return walls;
@@ -42,7 +40,7 @@ export class ForestWallFactory extends WallFactory {
 
 	binPackForest(x, y, walls, wallSet, floorPlan) {
 		let addedForest = false;
-		for (let size = 20; size >= 3; size --) {
+		for (let size = 10; size >= 3; size --) {
 			if (this.isForest(x, y, floorPlan, size)) {
 				const sprites = this.getForestSprites(x, y, size);
 				sprites.map(sprite => {
@@ -109,7 +107,7 @@ export class ForestWallFactory extends WallFactory {
 	getForestSprites(x, y, size) {
 		const fromPosition = new Vector2(gridCells(x), gridCells(y));
 		const toPosition = new Vector2(gridCells(x + size - 1), gridCells(y + size - 1));
-		return this.forestSprites(fromPosition, toPosition, Math.pow(size, 2) * 3);
+		return this.forestSprites(fromPosition, toPosition, Math.pow(size, 1.7));
 	}
 
 	forestSprites(fromPosition, toPosition, trees) {

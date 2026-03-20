@@ -1,11 +1,11 @@
 class Events {
-	callbacks = new Map();
+	callbacks = {};
 	nextId = 0;
 
 	// emit events 
 	emit(eventName, value) {
 		// console.log(eventName, value);
-		this.callbacks.get(eventName).forEach((stored) => {
+		this.callbacks[eventName].forEach((stored) => {
 			if (stored.eventName === eventName) {
 				stored.callback(value);
 			}
@@ -15,11 +15,11 @@ class Events {
 	// subscribe to something happening
 	on(eventName, caller, callback) {
 		this.nextId += 1;
-		if (!this.callbacks.get(eventName)) {
-			this.callbacks.set(eventName, [])
+		if (!this.callbacks[eventName]) {
+			this.callbacks[eventName] = [];
 		}
 
-		this.callbacks.get(eventName).push({
+		this.callbacks[eventName].push({
 			id: this.nextId,
 			eventName,
 			caller,
@@ -30,23 +30,24 @@ class Events {
 
 	// remove the subscription
 	off(id) {
-		this.callbacks = this.callbacks.keys().reduce((map, currKey) => {
+		this.callbacks = Object.keys(this.callbacks).reduce((map, currKey) => {
+			// console.log(currKey);
 			const filtered = this.callbacks
-				.get(currKey)
+				[currKey]
 				.filter((stored) => stored.id !== id);
-			map.set(currKey, filtered);
+			map[currKey] = filtered;
 			return map;
-		}, new Map());
+		}, {});
 	}
 
 	unsubscribe(caller) {
-		this.callbacks = this.callbacks.keys().reduce((map, currKey) => {
+		this.callbacks = Object.keys(this.callbacks).reduce((map, currKey) => {
 			const filtered = this.callbacks
-				.get(currKey)
+				[currKey]
 				.filter((stored) => stored.caller !== caller);
-			map.set(currKey, filtered);
+			map[currKey] = filtered;
 			return map;
-		}, new Map());
+		}, {});
 	}
 }
 

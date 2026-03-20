@@ -28,6 +28,10 @@ export class IterativeWalkLevel extends DrunkardWalkLevel {
 			width: Math.round(320 / GRID_SIZE * 1.5), 
 			height: Math.round(180 / GRID_SIZE * 1.5)
 		};
+
+		this.floorFactory = new RoomFloorFactory();
+		this.wallFactory = new RoomWallFactory();
+		this.trimFactory = new TrimFactory();
 	}
 
 	addCloneObject(obj, objs, index, max) {
@@ -78,7 +82,7 @@ export class IterativeWalkLevel extends DrunkardWalkLevel {
 
 	addFloors(floorPlan, params) {
 		if (!this.floorStyle) {
-			this.floorStyle = new RoomFloorFactory().seedStyle(params.seed);
+			this.floorStyle = this.floorFactory.seedStyle(params.seed);
 		}
 		const iterativeParams = this.getIterativeParams();
 		let param = {
@@ -88,7 +92,7 @@ export class IterativeWalkLevel extends DrunkardWalkLevel {
 			size: iterativeParams.size,
 			style: this.floorStyle
 		};
-		const floors = RoomFloorFactory.generate(param);
+		const floors = this.floorFactory.create(param);
 		for (var i = floors.length - 1; i >= 0; i--) {
 			this.addFloor(floors[i]);
 		}
@@ -103,7 +107,7 @@ export class IterativeWalkLevel extends DrunkardWalkLevel {
 
 	addWallSprites(floorPlan, params, position, size) {
 		if (!this.wallStyle) {
-			this.wallStyle = new RoomWallFactory().seedStyle(params.seed);
+			this.wallStyle = this.wallFactory.seedStyle(params.seed);
 		}
 		let parm = {
 			floorPlan: floorPlan,
@@ -112,14 +116,17 @@ export class IterativeWalkLevel extends DrunkardWalkLevel {
 			size: size,
 			style: this.wallStyle
 		};
-		const walls =  RoomWallFactory.generate(parm);
+		const walls =  this.wallFactory.create(parm);
 		for (var i = walls.length - 1; i >= 0; i--) {
 			this.addWall(walls[i]);
 		}
 	}
 
 	addTrimSprites(floorPlan, position, size) {
-		const trims =  TrimFactory.generate({
+		if (!this.trimFactory) {
+			return;
+		}
+		const trims = this.trimFactory.create({
 			floorPlan: floorPlan,
 			position: position,
 			size: size
