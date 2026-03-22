@@ -73,7 +73,8 @@ export class WikiQuestFactory {
 		}
 
 		return {
-			section: randomSection.title(),
+			section: randomSection.title().length > 1 ?
+				randomSection.title() : doc.title(),
 			link: randomLink.page()
 		};
 	}
