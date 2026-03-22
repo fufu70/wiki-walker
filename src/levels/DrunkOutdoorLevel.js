@@ -41,10 +41,10 @@ export class DrunkOutdoorLevel extends DrunkardWalkLevel {
 	beforeGeneratingSprites() {
 		// console.log("FLOOR", this.floorPlan.toString().replaceAll("0", " "));
 		super.beforeGeneratingSprites();
-		this.wallMax = 3000;
-		this.floorFactory = new OutdoorFloorFactory();
-		this.wallFactory = new ForestWallFactory();
-		this.trimFactory = null;
+		this.wallMax = 20000;
+		// this.floorFactory = new OutdoorFloorFactory();
+		// this.wallFactory = new ForestWallFactory();
+		// this.trimFactory = null;
 	}
 
 	addFloors(floorPlan, params) {

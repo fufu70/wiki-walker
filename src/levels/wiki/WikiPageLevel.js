@@ -268,4 +268,14 @@ export class WikiPageLevel extends WikiRoomLevel {
 		}
 		return 
 	}
+
+	getQuest(difficulty) {
+		WikiLevelFactory.getQuest(
+			this.levelParams.doc, 
+			(questInput) => {
+				console.log(questInput.quest);
+			},
+			difficulty
+		)
+	}
 }

@@ -1,5 +1,6 @@
 import {WikiDisambiguationLevel} from './WikiDisambiguationLevel.js';
 import {WikiPageLevel} from './WikiPageLevel.js';
+import {WikiQuestFactory} from './WikiQuestFactory.js';
 import {WikiSearchLevel} from './WikiSearchLevel.js';
 import {ArrayFactory} from '../../helpers/ArrayFactory.js';
 import {WikiStorage} from './WikiStorage.js';
@@ -387,5 +388,12 @@ export class WikiLevelFactory {
 
 	getLang() {
 		return LanguageFactory.getLang();
+	}
+
+	/**
+	 *	QUEST 
+	 */
+	static getQuest(doc, callback, difficulty = 1) {
+		WikiQuestFactory.generate(doc, callback, difficulty);
 	}
 }
