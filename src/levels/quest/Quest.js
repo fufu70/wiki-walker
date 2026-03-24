@@ -4,9 +4,26 @@ export class Quest {
 		this.levelMap = new Map();
 
 		const keys = Object.keys(this.path);
+		let maxDifficulty = 0;
 		for (let i = 0; i < keys.length; i ++) {
 			this.levelMap.set(this.path[keys[i]].level, this.path[keys[i]]);
+			if (this.path[keys[i]].difficulty > maxDifficulty) {
+				maxDifficulty = this.path[keys[i]].difficulty;
+			}
 		}
+
+		this.rootLevel = this.path[maxDifficulty].level;
+	}
+
+	getConfirmationStory() {
+		return `Wanna help me find my friend at ${this.getDestination()}`;
+	}
+
+	getAcceptanceStory() {
+		return `Thank you for helping me find ${this.getDestination()}. It'll ` +
+			`be a journey but if you go down ${this.getRoom()} and find ` +
+			`${this.getStairs} you may get someone to help you out. ` +
+			`They're always very helpful down there`;
 	}
 
 	getLevelStory(level) {
@@ -27,6 +44,9 @@ export class Quest {
 	}
 
 	getRoom(level) {
+		if (!level) {
+			level = this.path
+		}
 		return this.levelMap.get(level).room;
 	}
 

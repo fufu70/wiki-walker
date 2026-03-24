@@ -51,6 +51,7 @@ export class Npc extends GameObject {
 			string: match.stringFunc ? match.stringFunc() : match.string,
 			addFlags: match.addsFlag ?? null,
 			eventType: match.eventType ?? null,
+			options: match.options ?? null
 		}
 	}
 }

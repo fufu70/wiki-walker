@@ -18,6 +18,7 @@ import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
 import {WikiRoomLevel} from './WikiRoomLevel.js';
 import {Npc} from '../../objects/npc/Npc.js';
+import {Story} from '../../stories/Story.js';
 
 export class WikiPageLevel extends WikiRoomLevel {
 	constructor(wikiParams={}) {
@@ -39,6 +40,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 			});
 			this.updateLevelParams({...wikiParams});
 			this.levelType = "WikiPageLevel";
+			this.getQuest(1);
 		} catch (e) {
 			console.error(e);
 		}
@@ -58,9 +60,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 		heroStart = this.floorQuery.startingPosition.duplicate();
 		const loc = new Vector2(gridCells(heroStart.x + 1), gridCells(heroStart.y - 1));
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
-		this.npc = NpcFactory.getRandom(loc, {
-			// content: this.getContent(params, this.questionsList)
-		}, this.seed);
+		this.npc = NpcFactory.getRandom(loc, {}, this.seed);
 		this.addGameObject(this.npc);
 	}
 
@@ -284,11 +284,40 @@ export class WikiPageLevel extends WikiRoomLevel {
 		return 
 	}
 
+	addQuestToNpc(quest) {
+		this.npc.content = [
+			{
+				eventType: "SELECT_INPUT",
+				stringFunc: () => {
+					return quest.getConfirmationStory();
+				},
+				uuid: this.uuid,
+				options: Story.getConfirmationOptions(),
+				addFlag: "ASKED"
+			},
+			{
+				stringFunc: () => {
+					return quest.getAcceptanceStory();
+				},
+				addFlag: "INTRODUCED_QUEST",
+				requires: ["ASKED"]
+			},
+			{
+				stringFunc: () => {
+					return quest.getLevelStory(this.title);
+				},
+				requires: ["INTRODUCED_QUEST"]
+			},
+		];
+	}
+
 	getQuest(difficulty = 1) {
 		WikiLevelFactory.getQuest(
 			this.levelParams.doc, 
 			(quest) => {
 				console.log(quest);
+				this.quest = quest;
+				this.addQuestToNpc(quest);
 			},
 			difficulty
 		)

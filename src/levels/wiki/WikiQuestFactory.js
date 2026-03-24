@@ -68,10 +68,10 @@ export class WikiQuestFactory {
 		}
 
 		return {
-			page: doc.title(),
-			section: randomSection.title().length > 1 ?
+			level: doc.title(),
+			room: randomSection.title().length > 1 ?
 				randomSection.title() : doc.title(),
-			link: randomLink.page()
+			exit: randomLink.page()
 		};
 	}
 
