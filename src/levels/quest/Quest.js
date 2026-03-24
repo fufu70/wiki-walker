@@ -11,6 +11,11 @@ export class Quest {
 
 	getLevelStory(level) {
 
+		if (!this.levelMap.get(level)) {
+			return `I'm sorry, I don't know where ${this.getDestination()} ` +
+				`is ... I think you might need to backtrack a bit`;
+		}
+
 		return `Ah! It looks like your looking for my friend at ${this.getDestination()}! ` +
 			`I can't go there myself but I know the path you'll need to take. ` +
 			`Go to room ${this.getRoom(level)} and find the stairs ` +
@@ -30,21 +35,6 @@ export class Quest {
 	}
 }
 
-console.log(new Quest({
-		2: {
-			level: "A",
-			room: "B",
-			exit: "C",
-			difficulty: 2,
-		},
-		1: {
-			level: "D",
-			room: "E",
-			exit: "F",
-			difficulty: 1
-		}
-	}).getLevelStory("A"));
-
 console.assert(
 	new Quest({
 		2: {
@@ -62,3 +52,21 @@ console.assert(
 	}).getLevelStory("A")
 		== "Ah! It looks like your looking for my friend at F! I can't go there myself but I know the path you'll need to take. Go to room B and find the stairs with the name C. Fly you fool!",
 	"Story should match");
+
+console.assert(
+	new Quest({
+		2: {
+			level: "A",
+			room: "B",
+			exit: "C",
+			difficulty: 2,
+		},
+		1: {
+			level: "D",
+			room: "E",
+			exit: "F",
+			difficulty: 1
+		}
+	}).getLevelStory("Y")
+		== "I'm sorry, I don't know where F is ... I think you might need to backtrack a bit",
+	"A non existent level should tell you your lost.")
