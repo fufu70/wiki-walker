@@ -1,17 +1,12 @@
 import {WikiLevelFactory} from "./WikiLevelFactory.js";
+import {QuestInput} from "../quest/QuestInput.js";
+import {Quest} from "../quest/Quest.js";
 
-export class QuestInput {
-	constructor(doc, callback, difficulty = 1, quest = {}) {
+export class WikiQuestInput extends QuestInput {
+	constructor(doc, callback, difficulty) {
+		super(callback, difficulty);
 		this.levelFactory = new WikiLevelFactory();
 		this.doc = doc;
-		this.callback = callback;
-		this.difficulty = difficulty;
-		this.quest = quest;
-	}
-
-	addPath(path) {
-		this.quest[this.difficulty] = path;
-		this.difficulty -= 1;
 	}
 
 	getLevelFactory() {
@@ -31,7 +26,7 @@ export class WikiQuestFactory {
 	 * 		from the current page to the end of the quest.
 	 */ 
 	static generate(doc, callback, difficulty = 1) {
-		const questInput = new QuestInput(doc, callback, difficulty);
+		const questInput = new WikiQuestInput(doc, callback, difficulty);
 		(new WikiQuestFactory()).getQuest(questInput);
 	}
 
@@ -43,7 +38,7 @@ export class WikiQuestFactory {
 		
 		questInput.addPath(path);
 		if (questInput.difficulty <= 0)  {
-			questInput.callback(questInput);
+			questInput.callback(new Quest(questInput.path));
 			return;
 		}
 
@@ -73,6 +68,7 @@ export class WikiQuestFactory {
 		}
 
 		return {
+			page: doc.title(),
 			section: randomSection.title().length > 1 ?
 				randomSection.title() : doc.title(),
 			link: randomLink.page()
