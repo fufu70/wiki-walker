@@ -13,6 +13,7 @@ export class Quest {
 		}
 
 		this.rootLevel = this.path[maxDifficulty].level;
+		this.name = this.rootLevel;
 	}
 
 	getConfirmationStory() {
@@ -22,7 +23,7 @@ export class Quest {
 	getAcceptanceStory() {
 		return `Thank you for helping me find ${this.getDestination()}. It'll ` +
 			`be a journey but if you go down ${this.getRoom()} and find ` +
-			`${this.getStairs} you may get someone to help you out. ` +
+			`${this.getStairs()} you may get someone to help you out. ` +
 			`They're always very helpful down there`;
 	}
 
@@ -45,12 +46,15 @@ export class Quest {
 
 	getRoom(level) {
 		if (!level) {
-			level = this.path
+			level = this.rootLevel
 		}
 		return this.levelMap.get(level).room;
 	}
 
 	getStairs(level) {
+		if (!level) {
+			level = this.rootLevel
+		}
 		return this.levelMap.get(level).exit;
 	}
 }

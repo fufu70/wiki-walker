@@ -19,6 +19,7 @@ import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
 import {WikiRoomLevel} from './WikiRoomLevel.js';
 import {Npc} from '../../objects/npc/Npc.js';
 import {Story} from '../../stories/Story.js';
+import {storyFlags} from '../../StoryFlags.js';
 
 export class WikiPageLevel extends WikiRoomLevel {
 	constructor(wikiParams={}) {
@@ -41,6 +42,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 			this.updateLevelParams({...wikiParams});
 			this.levelType = "WikiPageLevel";
 			this.getQuest(1);
+			console.log(storyFlags);
 		} catch (e) {
 			console.error(e);
 		}
@@ -255,6 +257,12 @@ export class WikiPageLevel extends WikiRoomLevel {
 				events.emit('END_LOADING', {});	
 			}
 		});
+
+		events.on("SUBMIT_INPUT_TEXT", this, ({config, text}) => {
+			if (config.string === this.quest.getConfirmationStory()) {
+				storyFlags.add(`ACCEPTED_QUEST_${this.quest.name}`)
+			}
+		});
 	}
 
 	stashLevel(exitPosition) {
@@ -293,20 +301,22 @@ export class WikiPageLevel extends WikiRoomLevel {
 				},
 				uuid: this.uuid,
 				options: Story.getConfirmationOptions(),
-				addFlag: "ASKED"
+				bypass: [`ACCEPTED_QUEST_${quest.name}`],
+				addFlag: `ACCEPTED_QUEST_${quest.name}`
 			},
 			{
 				stringFunc: () => {
 					return quest.getAcceptanceStory();
 				},
-				addFlag: "INTRODUCED_QUEST",
-				requires: ["ASKED"]
+				bypass: [`INTRODUCED_QUEST_${quest.name}`],
+				addFlag: `INTRODUCED_QUEST_${quest.name}`,
+				requires: [`ACCEPTED_QUEST_${quest.name}`]
 			},
 			{
 				stringFunc: () => {
 					return quest.getLevelStory(this.title);
 				},
-				requires: ["INTRODUCED_QUEST"]
+				requires: [`INTRODUCED_QUEST_${quest.name}`]
 			},
 		];
 	}
