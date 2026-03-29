@@ -63,7 +63,7 @@ export class WikiQuestFactory {
 	getRandomPath(doc) {
 		const randomSection = this.getRandomElement(doc, "sections");
 		const randomLink = this.getRandomElement(randomSection, "links");
-		if (!randomLink) {
+		if (!randomLink || !randomLink.page()) {
 			return this.getRandomPath(doc);
 		}
 
