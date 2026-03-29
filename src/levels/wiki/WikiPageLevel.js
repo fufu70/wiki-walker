@@ -41,7 +41,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 			});
 			this.updateLevelParams({...wikiParams});
 			this.levelType = "WikiPageLevel";
-			this.getQuest(1);
+			this.getQuest(2);
 			console.log(storyFlags);
 		} catch (e) {
 			console.error(e);
@@ -260,7 +260,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 
 		events.on("SUBMIT_INPUT_TEXT", this, ({config, text}) => {
 			if (config.string === this.quest.getConfirmationStory()) {
-				storyFlags.add(`ACCEPTED_QUEST_${this.quest.name}`)
+				this.quest.acceptQuest();
 			}
 		});
 	}
@@ -293,35 +293,10 @@ export class WikiPageLevel extends WikiRoomLevel {
 	}
 
 	addQuestToNpc(quest) {
-		this.npc.content = [
-			{
-				eventType: "SELECT_INPUT",
-				stringFunc: () => {
-					return quest.getConfirmationStory();
-				},
-				uuid: this.uuid,
-				options: Story.getConfirmationOptions(),
-				bypass: [`ACCEPTED_QUEST_${quest.name}`],
-				addFlag: `ACCEPTED_QUEST_${quest.name}`
-			},
-			{
-				stringFunc: () => {
-					return quest.getAcceptanceStory();
-				},
-				bypass: [`INTRODUCED_QUEST_${quest.name}`],
-				addFlag: `INTRODUCED_QUEST_${quest.name}`,
-				requires: [`ACCEPTED_QUEST_${quest.name}`]
-			},
-			{
-				stringFunc: () => {
-					return quest.getLevelStory(this.title);
-				},
-				requires: [`INTRODUCED_QUEST_${quest.name}`]
-			},
-		];
+		this.npc.content = this.quest.getNpcContent(this.title, this.uuid);
 	}
 
-	getQuest(difficulty = 1) {
+	getQuest(difficulty = 2) {
 		WikiLevelFactory.getQuest(
 			this.levelParams.doc, 
 			(quest) => {

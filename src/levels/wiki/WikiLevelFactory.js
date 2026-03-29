@@ -393,7 +393,12 @@ export class WikiLevelFactory {
 	/**
 	 *	QUEST 
 	 */
-	static getQuest(doc, callback, difficulty = 1) {
-		WikiQuestFactory.generate(doc, callback, difficulty);
+	static getQuest(doc, callback, difficulty = 2) {
+		let quest = WikiQuestFactory.findQuest(doc);
+		if (quest) {
+			callback(quest);
+		} else {
+			WikiQuestFactory.generate(doc, callback, difficulty);
+		}
 	}
 }
