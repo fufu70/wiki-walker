@@ -45,13 +45,12 @@ export class Quest {
 		}
 
 		if (level != this.rootLevel) {
-
+			return `Ah! It looks like your looking for someone at ${this.getDestination()}! ` +
+				`It's nice of you to help out ${this.rootLevel}. ` +
+				`I know the path you'll need to take. ` +
+				`Go to room ${this.getRoom(level)} and find the stairs ` +
+				`with the name ${this.getStairs(level)}. Fly you fool!`;
 		}
-		return `Ah! It looks like your looking for someone at ${this.getDestination()}! ` +
-			`It's nice of you to help out ${this.rootLevel}. ` +
-			`I know the path you'll need to take. ` +
-			`Go to room ${this.getRoom(level)} and find the stairs ` +
-			`with the name ${this.getStairs(level)}. Fly you fool!`;
 
 		return `Ah! It looks like your looking for my friend at ${this.getDestination()}! ` +
 			`I can't go there myself but I know the path you'll need to take. ` +

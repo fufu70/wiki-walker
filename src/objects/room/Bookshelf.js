@@ -54,7 +54,6 @@ export const BOOKSHELF_STYLES = [
 	SCHOOL_POPLAR_C,
 	SCHOOL_POPLAR_D,
 	SCHOOL_POPLAR_E,
-	SCHOOL_POPLAR_F,
 ]
 
 const BOOKSHELF = {};
@@ -80,7 +79,6 @@ BOOKSHELF[SCHOOL_POPLAR_B] = 18;
 BOOKSHELF[SCHOOL_POPLAR_C] = 19;
 BOOKSHELF[SCHOOL_POPLAR_D] = 20;
 BOOKSHELF[SCHOOL_POPLAR_E] = 21;
-BOOKSHELF[SCHOOL_POPLAR_F] = 22;
 
 export class Bookshelf extends GameObject {
 	constructor(x, y, style = LIGHT_BROWN_FULL, seed = undefined, params = undefined) {
