@@ -102,13 +102,20 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 		const exit = new Exit(loc.x, loc.y);
 		this.roomExits.set(room.page, exit);
 		this.addGameObject(exit);
+
+		const space = signLoc.duplicate();
+		space.x += gridCells(1);
+		space.y += gridCells(1);
+		this.floorPlan = this.addFloorAroundPosition(space, this.floorPlan);
 		
+		loc.x -= gridCells(1);
+		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 		loc.x -= gridCells(1);
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 		loc.x += gridCells(2);
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 
-		loc.y -= gridCells(1)
+		loc.y -= gridCells(1);
 		loc.x -= gridCells(3);
 		this.floorPlan = this.addFloorAroundPosition(loc, this.floorPlan);
 		loc.x += gridCells(2);

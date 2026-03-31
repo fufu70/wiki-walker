@@ -25,21 +25,29 @@ export class WikiQuestFactory {
 	 * callback is the function to call after the quest has been generated.
 	 */
 	static findQuest(doc) {
+		const factory = new WikiQuestFactory();
+		return factory.acceptedQuest(doc.title());
+	}
+
+	acceptedQuest(title) {
 		const storage = new QuestStorage();
 		const accepted = storage.get("accepted");
-		const title = doc.title();
 		for (let i = 0; i < accepted.length; i ++) {
 			const keys = Object.keys(accepted[i])
 			for (let keyI = 0; keyI < keys.length; keyI ++) {
 				let j = keys[keyI];
 				if (
-					title == accepted[i][j].level
-					|| title == accepted[i][j].exit
+					this.doesTitleMatch(title, accepted[i][j])
 				) {
 					return new Quest(accepted[i]);
 				}
 			}
 		}
+	}
+
+	doesTitleMatch(title, pathStep) {
+		return title.toUpperCase() == pathStep.level.toUpperCase()
+			|| title.toUpperCase() == pathStep.exit.toUpperCase();
 	}
 
 
@@ -51,6 +59,7 @@ export class WikiQuestFactory {
 	 */ 
 	static generate(doc, callback, difficulty = 1) {
 		const questInput = new WikiQuestInput(doc, callback, difficulty);
+		console.log("quest input", questInput, new WikiQuestFactory());
 		(new WikiQuestFactory()).getQuest(questInput);
 	}
 
@@ -93,7 +102,7 @@ export class WikiQuestFactory {
 
 		return {
 			level: doc.title(),
-			room: randomSection.title().length > 1 ?
+			room: randomSection.title().length >= 1 ?
 				randomSection.title() : doc.title(),
 			exit: randomLink.page()
 		};

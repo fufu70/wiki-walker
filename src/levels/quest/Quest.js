@@ -11,7 +11,10 @@ export class Quest {
 		const keys = Object.keys(this.path);
 		let maxDifficulty = 0;
 		for (let i = 0; i < keys.length; i ++) {
-			this.levelMap.set(this.path[keys[i]].level, this.path[keys[i]]);
+			this.levelMap.set(
+				this.path[keys[i]].level,
+				this.path[keys[i]]
+			);
 			if (this.path[keys[i]].difficulty > maxDifficulty) {
 				maxDifficulty = this.path[keys[i]].difficulty;
 			}
@@ -22,7 +25,7 @@ export class Quest {
 	}
 
 	getConfirmationStory() {
-		return `Wanna help me find my friend at ${this.getDestination()}`;
+		return `I'm really worried about my friend ${this.getDestination()}. I hope he's okay. He hasn't talked to me, ${this.rootLevel}, in a while. Can you go to him and say Hi for me?`;
 	}
 
 	getAcceptanceStory() {
@@ -34,7 +37,7 @@ export class Quest {
 
 	getLevelStory(level) {
 
-		if (level == this.path[1].exit) {
+		if (level.toUpperCase() == this.path[1].exit.toUpperCase()) {
 			return `You found me! I really appreciate ${this.rootLevel} asking about me.` +
 				`It's always good to have friends that look out for each other.`;
 		}
@@ -77,6 +80,8 @@ export class Quest {
 	}
 
 	getNpcContent(title, uuid) {
+		title = title;
+
 		if (title != this.name) {
 			return [
 				{
