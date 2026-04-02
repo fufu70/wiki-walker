@@ -2,7 +2,7 @@ import {DrunkardWalkLevel} from './DrunkardWalkLevel.js';
 import {OutdoorFloor, OutdoorFloorFactory} from '../objects/outdoors/Floor.js';
 import {ForestWallFactory} from '../objects/outdoors/ForestWallFactory.js';
 import {Sprite} from '../Sprite.js';
-import {resources} from '../Resources.js';
+import {resources} from '../resources/SpriteResources.js';
 import {Vector2} from "../Vector2.js";
 import {gridCells, GRID_SIZE, isSpaceFree} from '../helpers/Grid.js'
 

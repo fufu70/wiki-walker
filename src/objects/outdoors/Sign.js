@@ -1,7 +1,7 @@
 import {GameObject} from "../../GameObject.js";
 import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
-import {resources} from '../../Resources.js';
+import {resources} from '../../resources/SpriteResources.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js';
 import {storyFlags} from '../../StoryFlags.js';
 

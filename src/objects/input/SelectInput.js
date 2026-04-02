@@ -2,14 +2,14 @@ import {GameObject} from "../../GameObject.js";
 import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
-import {resources} from '../../Resources.js';
+import {resources} from '../../resources/SpriteResources.js';
 import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {getCharacterAnimations} from './Animations.js';
 import {SUPPORTED_CHARACTERS} from '../textbox/spriteFontMap.js';
 import {UserInputBox} from './UserInputBox.js';
-
+import {audioResources} from '../../resources/AudioResources.js';
 
 export class SelectInput extends UserInputBox {
 	MAX_VISIBLE_OPTIONS = 7 - 1;
@@ -62,6 +62,7 @@ export class SelectInput extends UserInputBox {
 		}
 
 		if (this.input.direction === UP) {
+			audioResources.audio.change.play();
 			this.selectedOptionIndex --;
 			if (this.selectedOptionIndex <= 0) {
 				this.selectedOptionIndex = 0;
@@ -70,6 +71,7 @@ export class SelectInput extends UserInputBox {
 		}
 
 		if (this.input.direction === DOWN) {
+			audioResources.audio.change.play();
 			this.selectedOptionIndex ++;
 			if (this.selectedOptionIndex >= this.options.length - 1) {
 				this.selectedOptionIndex = this.options.length - 1;

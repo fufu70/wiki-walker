@@ -2,7 +2,7 @@ import {GameObject} from "../../GameObject.js";
 import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
-import {resources} from '../../Resources.js';
+import {resources} from '../../resources/SpriteResources.js';
 import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
@@ -13,6 +13,7 @@ import {storyFlags} from '../../StoryFlags.js';
 import {TextInput} from '../input/TextInput.js';
 import {SelectInput} from '../input/SelectInput.js';
 import {LoadingScreen} from '../loading/LoadingScreen.js';
+import {audioResources} from '../../resources/AudioResources.js';
 import * as test from './TestMain.js';
 
 export class Main extends GameObject {
@@ -35,7 +36,6 @@ export class Main extends GameObject {
 
 			const content = withObject.getContent();
 
-			console.log(content);
 			if (!content) {
 				return;
 			}
@@ -100,7 +100,6 @@ export class Main extends GameObject {
 
 
 		events.on("SHOW_TABLE", this, (content) => {
-			console.log("TABLE CONTENT", content);
 			// Potentially add a story flag
  			if (window.TableViewer === undefined) {
  				events.emit("SHOW_TEXTBOX", {
@@ -128,7 +127,12 @@ export class Main extends GameObject {
 		});
 
 		events.on("TEXT_INPUT", this, config => {
-			// const textInput = new SelectInput(config);
+			if (config.audio) {
+				config.audio.play();
+			} else {
+				audioResources.audio.textInput.play();
+			}
+
 			let textInput = new TextInput(config);
 			this.addChild(textInput);
 
@@ -144,6 +148,7 @@ export class Main extends GameObject {
 			});
 
 			const endingCancelSub = events.on("CANCEL_INPUT_TEXT", this, () => {
+				audioResources.audio.cancel.play();
 				textInput.destroy();
 				textInput = null;
 				events.off(endingDecideSub);
@@ -169,6 +174,12 @@ export class Main extends GameObject {
 
 
 		events.on("SELECT_INPUT", this, config => {
+			if (config.audio) {
+				config.audio.play();
+			} else {
+				audioResources.audio.selectInput.play();	
+			}
+
 			let textInput = new SelectInput(config);
 			this.addChild(textInput);
 
@@ -184,6 +195,7 @@ export class Main extends GameObject {
 			});
 
 			const endingCancelSub = events.on("CANCEL_INPUT_TEXT", this, () => {
+				audioResources.audio.cancel.play();
 				textInput.destroy();
 				textInput = null;
 				events.off(endingDecideSub);

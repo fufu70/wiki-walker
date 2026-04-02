@@ -4,7 +4,7 @@ import {Sprite} from '../../Sprite.js';
 import {Animations} from "../../Animations.js";
 import {FrameIndexPattern} from "../../FrameIndexPattern.js";
 import {moveTowards} from '../../helpers/Move.js';
-import {resources} from '../../Resources.js';
+import {resources} from '../../resources/SpriteResources.js';
 import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';

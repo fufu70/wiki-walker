@@ -6,7 +6,7 @@ import {NpcFactory} from '../../objects/npc/NpcFactory.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js';
 import {Vector2} from "../../Vector2.js";
 import {events} from '../../Events.js';
-import {resources} from '../../Resources.js';
+import {resources} from '../../resources/SpriteResources.js';
 import {Exit} from '../../objects/exit/Exit.js';
 import {Vase} from '../../objects/room/Vase.js';
 import {Sign} from '../../objects/outdoors/Sign.js';

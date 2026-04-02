@@ -1,6 +1,6 @@
 import {Vector2} from "../../Vector2.js";
 import {Sprite} from '../../Sprite.js';
-import {resources} from '../../Resources.js';
+import {resources} from '../../resources/SpriteResources.js';
 import {Npc} from './Npc.js';
 
 export class Bob extends Npc {

@@ -6,7 +6,7 @@ import {Vector2} from "../Vector2.js";
 import {QUESTIONS} from './constants/CivicsQuestions.js';
 import {OutdoorLevel1} from './OutdoorLevel1.js';
 import {events} from '../Events.js';
-import {resources} from '../Resources.js';
+import {resources} from '../resources/SpriteResources.js';
 
 export class QuestionsLevel extends RoomLevel {
 	constructor(params={}) {
