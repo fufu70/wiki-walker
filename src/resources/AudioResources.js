@@ -4,11 +4,30 @@ class AudioResources {
 	constructor() {
 		// Everything we plan to downlaod
 		this.toLoad = {
-			selectInput: "/sounds/events/Retro10.mp3",
-			textInput: "/sounds/events/Retro6.mp3",
-			select: "/sounds/events/Retro5.mp3",
-			change: "/sounds/events/Retro3.mp3",
-			cancel: "/sounds/events/Retro4.mp3",
+			selectInput: {
+				file: "/sounds/events/Retro10.mp3",
+				start: 0.05,
+			},
+			textInput: {
+				file: "/sounds/events/Retro6.mp3",
+				start: 0.005,
+			},
+			select: {
+				file: "/sounds/events/Retro5.mp3",
+				start: 0.005,
+			},
+			change: {
+				file: "/sounds/events/Retro3.mp3",
+				start: 0.005,
+			},
+			cancel: {
+				file: "/sounds/events/Retro4.mp3",
+				start: 0.005,
+			},
+			song: {
+				file: "/sounds/loop.mp3",
+				start: 0.0,
+			},
 		}
 
 		// a bucket to keep all of our images
@@ -16,7 +35,10 @@ class AudioResources {
 
 		// Load each image
 		Object.keys(this.toLoad).forEach(key => {
-			this.audio[key] = new AudioFile(this.toLoad[key])
+			this.audio[key] = new AudioFile(
+				this.toLoad[key].file,
+				this.toLoad[key].start
+			)
 		})
 	}
 }

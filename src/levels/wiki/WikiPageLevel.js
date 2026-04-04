@@ -6,6 +6,7 @@ import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js';
 import {Vector2} from "../../Vector2.js";
 import {events} from '../../Events.js';
 import {resources} from '../../resources/SpriteResources.js';
+import {audioResources} from '../../resources/AudioResources.js';
 import {Exit} from '../../objects/exit/Exit.js';
 import {Vase} from '../../objects/room/Vase.js';
 import {Bookshelf} from '../../objects/room/Bookshelf.js';

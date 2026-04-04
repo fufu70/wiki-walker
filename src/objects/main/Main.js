@@ -25,8 +25,11 @@ export class Main extends GameObject {
 	}
 
 	ready() {
-		const inventory = new Inventory();		
+		const inventory = new Inventory();
 		this.addChild(inventory);
+		setTimeout(() => {
+			audioResources.audio.song.loop();
+		}, 5000)
 
 		events.on("HERO_REQUESTS_ACTION", this, (withObject) => {
 
@@ -137,6 +140,7 @@ export class Main extends GameObject {
 			this.addChild(textInput);
 
 			const endingDecideSub = events.on("DECIDE_INPUT_TEXT", this, (text) => {
+				audioResources.audio.select.play();
 				events.emit("SUBMIT_INPUT_TEXT", {
 					config: config,
 					text: text
@@ -184,6 +188,7 @@ export class Main extends GameObject {
 			this.addChild(textInput);
 
 			const endingDecideSub = events.on("DECIDE_INPUT_TEXT", this, (text) => {
+				audioResources.audio.select.play();
 				events.emit("SUBMIT_INPUT_TEXT", {
 					config: config,
 					text: text
