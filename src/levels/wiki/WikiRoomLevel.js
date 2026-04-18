@@ -63,8 +63,9 @@ export class WikiRoomLevel extends RoomLevel {
 		super.ready();
 
 		events.on("HERO_EXIT_UP", this, (exit) => {
+			events.emit("SHOW_LOADING", {direction: "UP"});
 			WikiLevelFactory.loadPop((level) => {
-				events.emit("CHANGE_LEVEL", level);	
+				events.emit("CHANGE_LEVEL", level);
 			})
 		});
 

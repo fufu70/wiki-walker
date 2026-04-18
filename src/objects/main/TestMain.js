@@ -71,6 +71,11 @@ import {SUPPORTED_CHARACTERS} from '../textbox/spriteFontMap.js';
 // 	events.emit('SHOW_LOADING', {});
 // });
 
+
+// setTimeout(() => {
+// 	events.emit('SHOW_LOADING', {direction: "UP"});
+// });
+
 // setTimeout(() => {
 // 	events.emit('END_LOADING', {});
 // }, 300);

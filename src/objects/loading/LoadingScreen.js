@@ -25,7 +25,9 @@ export class LoadingScreen extends HudGameObject {
 		// });
 		// this.addChild(this.background);
 		this.stairs = new Sprite({
-			resource: resources.images.loadingScreen,
+			resource: config?.direction == "UP" ?
+				resources.images.loadingUpScreen 
+					: resources.images.loadingDownScreen,
 			frameSize: new Vector2(320, 180),
 			hFrames: 3,
 			vFrames: 5,
