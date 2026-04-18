@@ -213,6 +213,9 @@ document.addEventListener('keyup', function(event) {
 });
 
 var updateConsole = function(type, args, trace) {
+  if (capturedConsole.length >= 10) {
+    capturedConsole.pop();
+  }
   capturedConsole.push({
     time: new Date().valueOf(),
     type: type, 
