@@ -24,8 +24,16 @@ class AudioResources {
 				file: "/sounds/events/Retro4.mp3",
 				start: 0.005,
 			},
-			song: {
-				file: "/sounds/loop.mp3",
+			typing: {
+				file: "/sounds/events/dragon-studio-keyboard-typing-effect-free-393912.mp3",
+			},
+			// music
+			track1: {
+				file: "/sounds/music/loop.mp3",
+				start: 0.0,
+			},
+			track2: {
+				file: "/sounds/music/freesound_community-sunset-walk-54956.mp3",
 				start: 0.0,
 			},
 		}

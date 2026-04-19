@@ -28,8 +28,8 @@ export class Main extends GameObject {
 		const inventory = new Inventory();
 		this.addChild(inventory);
 		setTimeout(() => {
-			audioResources.audio.song.loop();
-		}, 5000)
+			audioResources.audio.track1.loop();
+		}, 300);
 
 		events.on("HERO_REQUESTS_ACTION", this, (withObject) => {
 

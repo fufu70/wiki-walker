@@ -12,6 +12,7 @@ import {
 	CHARACTER_ROWS,
 	CHARACTER_COLUMNS
 } from './spriteFontMap.js';
+import {audioResources} from '../../resources/AudioResources.js';
 
 const FINAL_INDEX_STEP = 200;
 // Configuration options
@@ -113,9 +114,20 @@ export class SpriteTextString extends HudGameObject {
 					this.showingIndex += 1;	
 					this.timeUntilNextShow = this.textSpeed;
 				}
-			}	
+			}
+
+			this.stepAudio();
+
 		} catch(e) {
 			console.error(e);
+		}
+	}
+
+	stepAudio() {
+		if (this.showingIndex >= this.currentFinalIndex) {
+			audioResources.audio.typing.stop();
+		} else {
+			audioResources.audio.typing.loop();
 		}
 	}
 
