@@ -18,17 +18,20 @@ export class AudioFile {
 		if (this.playing) {
 			return;
 		}
+		this.audioObj.addEventListener('ended', this.loopHandler);
+		this.play();
+	}
 
-		this.playing = true;
-		this.audioObj.addEventListener('ended', () => {
-			this.play();
-		});
+	loopHandler() {
+		console.log("ended");
 		this.play();
 	}
 
 	stop() {
 		this.audioObj.pause();
+		this.audioObj.removeEventListener('ended', this.loopHandler);
 		this.playing = false;
+		this.audioObj.remo
 		this.audioObj.currentTime = this.startTime;
 	}
 }
