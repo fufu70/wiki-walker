@@ -10,7 +10,7 @@ export class AudioFile {
 		this.volumeInterval = undefined;
 	}
 
-	play() {
+	play(callback) {
 		if (!this.volumeInterval) {
 			this.volumeInterval = setInterval(() => {
 				this.fader();
@@ -22,6 +22,14 @@ export class AudioFile {
 		if (!this.audioObj.paused) {
 			obj = new Audio(this.resource);
 		}
+
+
+		if (callback) {
+			obj.addEventListener('ended', () => {
+				callback();
+			});
+		}
+
 		obj.currentTime = this.startTime;
 		obj.play();
 	}
@@ -57,18 +65,21 @@ export class AudioFile {
 		if (!this.audioObj) {
 			return;
 		}
-	    var now= Date.now() ;
-	    var dt = now - this.lastTime ;
+	    let now= Date.now() ;
+	    let dt = now - this.lastTime ;
 	    this.lastTime = now;
-	    var diff = this.targetVolume - this.audioObj.volume ;
+	    let diff = this.targetVolume - this.audioObj.volume ;
 	    if (diff == 0 ) return;
 	    if (Math.abs ( diff )  < 5* this.volumeIncrease*dt ) {
 	        this.audioObj.volume = this.targetVolume ;
+	        if (this.audioObj.volume == 0) {
+	        	this.audioObj.pause();
+	        }
 	        return ;
 	    }
-	    var chg = (diff > 0) ?  this.volumeIncrease : - this.volumeIncrease ;
+	    let chg = (diff > 0) ?  this.volumeIncrease : - this.volumeIncrease ;
 	    chg *=  dt ;
-	    var newTestVolume = this.audioObj.volume + chg;    
+	    let newTestVolume = this.audioObj.volume + chg;    
 	    this.audioObj.volume = newTestVolume ;
 	}
 }

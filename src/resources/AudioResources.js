@@ -29,12 +29,24 @@ class AudioResources {
 				start: 0.5
 			},
 			// music
-			track1: {
-				file: "/sounds/music/loop.mp3",
+			track3: {
+				file: "sounds/music/Symphony No. 3 in F Major, Op. 90 - III. Poco allegretto.mp3",
 				start: 0.0,
 			},
-			track2: {
-				file: "/sounds/music/freesound_community-sunset-walk-54956.mp3",
+			track4: {
+				file: "sounds/music/Beethoven - Symphony No.6 in F major Op.68 - II. Andante molto mosso.mp3",
+				start: 0.0,
+			},
+			track5: {
+				file: "sounds/music/Brandenburg Concerto no. 1 in F major, BWV. 1046 - II. Adagio - III. Allegro.mp3",
+				start: 0.0,
+			},
+			track6: {
+				file: "sounds/music/Joseph Haydn - Symphony No.49 in F minor - I. Adagio.mp3",
+				start: 0.0,
+			},
+			track7: {
+				file: "sounds/music/Peer Gynt Suite no. 1, Op. 46 - II. Aase's Death.mp3",
 				start: 0.0,
 			},
 		}
