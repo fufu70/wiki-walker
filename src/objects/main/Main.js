@@ -27,9 +27,6 @@ export class Main extends GameObject {
 	ready() {
 		const inventory = new Inventory();
 		this.addChild(inventory);
-		setTimeout(() => {
-			audioResources.audio.track1.loop();
-		}, 300);
 
 		events.on("HERO_REQUESTS_ACTION", this, (withObject) => {
 

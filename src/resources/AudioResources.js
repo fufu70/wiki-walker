@@ -26,6 +26,7 @@ class AudioResources {
 			},
 			typing: {
 				file: "/sounds/events/dragon-studio-keyboard-typing-effect-free-393912.mp3",
+				start: 0.5
 			},
 			// music
 			track1: {

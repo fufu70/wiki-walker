@@ -8,7 +8,7 @@ import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {SUPPORTED_CHARACTERS} from '../textbox/spriteFontMap.js';
 import {Typewriter} from '../../helpers/text/Typewriter.js';
-
+import {audioResources} from '../../resources/AudioResources.js';
 
 export class UserInputBox extends HudGameObject {
 	PADDING_LEFT = 27;
@@ -59,6 +59,7 @@ export class UserInputBox extends HudGameObject {
 	step(delta, root) {
 		this.handleDecisionInputs();
 		this.typewriter.type(delta);
+		this.handleAudio();
 	}
 
 	handleDecisionInputs() {
@@ -76,6 +77,18 @@ export class UserInputBox extends HudGameObject {
 		if (this.input.getActionJustPressed("Escape")) {
 			// Done with the textbox
 			events.emit("CANCEL_INPUT_TEXT");
+			this.destroying = true;
+		}
+	}
+
+	handleAudio() {
+		if (
+			this.typewriter.showingIndex >= this.typewriter.finalIndex
+			|| this.destroying
+		) {
+			audioResources.audio.typing.stop();
+		} else {
+			audioResources.audio.typing.loop();
 		}
 	}
 
@@ -101,6 +114,7 @@ export class UserInputBox extends HudGameObject {
 	drawInput(ctx, drawPosX, drawPosY, cursorX, cursorY, currentShowingIndex) {
 		// do nothing
 	}
+
 
 	drawFooter(ctx, drawPosX, drawPosY) {
 
@@ -134,5 +148,10 @@ export class UserInputBox extends HudGameObject {
 			// Move the cursor over
 			cursorX += 3;
 		});
+	}
+
+	destroy() {
+		audioResources.audio.typing.stop();
+		super.destroy();
 	}
 }
