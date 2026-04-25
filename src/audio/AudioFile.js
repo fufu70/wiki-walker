@@ -60,8 +60,12 @@ export class AudioFile {
 	}
 
 	fade(dest) {
+		if (this.targetVolume == 0 && dest > 0) {
+			this.audioObj.play();
+		}
+		
 		this.targetVolume = dest;
-		if (!this.volumeInterval) {
+		// if (!this.volumeInterval) {
 			this.volumeInterval = setInterval(() => {
 				this.fader();
 			    let diff = this.targetVolume - this.audioObj.volume ;
@@ -69,7 +73,7 @@ export class AudioFile {
 					clearInterval(this.volumeInterval);
 				}
 			}, 20);
-		}
+		// }
 	}
 
 	fader() {

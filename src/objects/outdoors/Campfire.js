@@ -6,6 +6,7 @@ import {Animations} from "../../Animations.js";
 import {FrameIndexPattern} from "../../FrameIndexPattern.js";
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js';
 import {storyFlags} from '../../StoryFlags.js';
+import {audioResources} from '../../resources/AudioResources.js';
 
 export class Campfire extends GameObject {
 	constructor(x, y, params) {
@@ -61,7 +62,8 @@ export class Campfire extends GameObject {
 		});
 		
 		if (params.isBurning) {
-			campfire.animations.play("BURN");	
+			campfire.animations.play("BURN");
+			audioResources.audio.campfire.loop();
 		}
 		this.addChild(campfire);
 	}
@@ -78,5 +80,37 @@ export class Campfire extends GameObject {
 			string: match.stringFunc ? match.stringFunc() : match.string,
 			...match
 		}
+	}
+	
+	ready() {
+		super.ready();
+
+		events.on("HERO_POSITION", this, (position) => {
+			console.log("CAMPFIRE", audioResources.audio.campfire);
+			audioResources.audio.campfire.fade(
+				this.getVolume(this.position, position)
+			);
+		});
+	}
+
+	distance(campfirePosition, heroPosition) {
+		const a = Math.pow(campfirePosition.x - heroPosition.x, 2);
+		const b = Math.pow(campfirePosition.y - heroPosition.y, 2);
+		return Math.sqrt(a + b);
+	}
+
+	getVolume(campfirePosition, heroPosition) {
+		let volume = Math.abs(16 / this.distance(campfirePosition, heroPosition));
+		if (volume < 0.25) {
+			volume = 0;
+		}
+		console.log("VOLUMNE", volume);
+		return volume;
+	}
+
+
+	destroy() {
+		audioResources.audio.campfire.stop();
+		super.destroy();
 	}
 }

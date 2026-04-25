@@ -17,14 +17,14 @@ import {SUPPORTED_CHARACTERS} from '../textbox/spriteFontMap.js';
 // 	});
 // }, 1000);
 
-setTimeout(() => {
-	events.emit("SELECT_INPUT", {
-		string: "Rock blasting at the large open-pit Twin Creeks gold mine in Nevada, United States. View image?",
-		options: ["Steve tes tes tes test test test tes test  test tes t estes ", "john", "Red", "Bob", "Matt", "Jerry", "Terry",
-			"Lteve", "Eohn", "Ted", "Uob", "Hatt", "Ferry", "ATerry 1 2 3 6 4 5 7 8 9 6 5 4 1 2 3 6 5 4 7 8 9 6 5 4"],
-		selected: "Bob"
-	});
-})
+// setTimeout(() => {
+// 	events.emit("SELECT_INPUT", {
+// 		string: "Rock blasting at the large open-pit Twin Creeks gold mine in Nevada, United States. View image?",
+// 		options: ["Steve tes tes tes test test test tes test  test tes t estes ", "john", "Red", "Bob", "Matt", "Jerry", "Terry",
+// 			"Lteve", "Eohn", "Ted", "Uob", "Hatt", "Ferry", "ATerry 1 2 3 6 4 5 7 8 9 6 5 4 1 2 3 6 5 4 7 8 9 6 5 4"],
+// 		selected: "Bob"
+// 	});
+// })
 
 // setTimeout(() => {
 // 	events.emit("SELECT_INPUT", {

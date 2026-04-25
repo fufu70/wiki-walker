@@ -28,6 +28,18 @@ class AudioResources {
 				file: "/sounds/events/dragon-studio-keyboard-typing-effect-free-393912.mp3",
 				start: 0.5
 			},
+			step1: {
+				file: "/sounds/events/Wood Block1.mp3",
+				start: 0.5
+			},
+			step2: {
+				file: "/sounds/events/Wood Block3.mp3",
+				start: 0.5
+			},
+			campfire: {
+				file: "/sounds/events/soundsforyou-campfire-crackling-fireplace-sound-119594.mp3",
+				volume: 0.5
+			},
 			// music
 			track3: {
 				file: "sounds/music/Symphony No. 3 in F Major, Op. 90 - III. Poco allegretto.mp3",
