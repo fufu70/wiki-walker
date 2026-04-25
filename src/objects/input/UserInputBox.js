@@ -74,6 +74,13 @@ export class UserInputBox extends HudGameObject {
 			events.emit("DECIDE_INPUT_TEXT", this.userInput);
 		}
 
+		if (this.input.getActionJustPressed("Space")) {
+			if (this.typewriter.showingIndex < this.typewriter.finalIndex) {
+				// Skip
+				this.typewriter.showingIndex = this.typewriter.finalIndex;
+			}
+		}
+
 		if (this.input.getActionJustPressed("Escape")) {
 			// Done with the textbox
 			events.emit("CANCEL_INPUT_TEXT");
