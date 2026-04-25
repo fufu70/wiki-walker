@@ -1,21 +1,17 @@
 export class AudioFile {
-	constructor(resource, startTime) {
+	constructor(resource, startTime, volume) {
 		this.resource = resource;
 		this.startTime = startTime ?? 0;
 		this.audioObj = new Audio(this.resource);
 		this.audioObj.currentTime = this.startTime;
 		this.playing = false;
-		this.targetVolume = 1;
+		this.targetVolume = volume ?? 1;
 		this.volumeIncrease = 0.0023 ; // in percent per millisecond
 		this.volumeInterval = undefined;
 	}
 
 	play(callback) {
-		if (!this.volumeInterval) {
-			this.volumeInterval = setInterval(() => {
-				this.fader();
-			}, 20);
-		}
+		
 
 		this.playing = true;
 		let obj = this.audioObj;
@@ -23,14 +19,20 @@ export class AudioFile {
 			obj = new Audio(this.resource);
 		}
 
-
-		if (callback) {
-			obj.addEventListener('ended', () => {
-				callback();
-			});
-		}
+		console.log("Playing", this.resource);
 
 		obj.currentTime = this.startTime;
+		if (callback) {
+			this.eventFunc = undefined;
+			this.timeHandler = () => {
+				if (obj.currentTime > obj.duration - 1) {
+					callback();
+					obj.removeEventListener('timeupdate', this.timeHandler);
+				}
+			};
+			obj.addEventListener('timeupdate', this.timeHandler);
+		}
+
 		obj.play();
 	}
 
@@ -52,10 +54,22 @@ export class AudioFile {
 		this.audioObj.pause();
 		this.audioObj.currentTime = this.startTime;
 		clearInterval(this.volumeInterval);
+		if (this.timeHandler) {
+			this.audioObj.removeEventListener('timeupdate', this.timeHandler);	
+		}
 	}
 
 	fade(dest) {
 		this.targetVolume = dest;
+		if (!this.volumeInterval) {
+			this.volumeInterval = setInterval(() => {
+				this.fader();
+			    let diff = this.targetVolume - this.audioObj.volume ;
+			    if (diff == 0) {
+					clearInterval(this.volumeInterval);
+				}
+			}, 20);
+		}
 	}
 
 	fader() {

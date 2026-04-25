@@ -13,6 +13,7 @@ export class Playlist {
 		this.tracks[this.index].play(() => {
 			this.next();
 		});
+		this.tracks[this.index].fade(1);
 	}
 
 	playing() {
@@ -28,6 +29,7 @@ export class Playlist {
 		}
 
 		setTimeout(() => {
+			this.tracks[trackIndex].stop();
 			this.play();
 		}, 20);
 	}
@@ -40,6 +42,7 @@ export class Playlist {
 			this.index = 0;
 		}
 		setTimeout(() => {
+			this.tracks[trackIndex].stop();
 			this.play();
 		}, 20);
 	}
