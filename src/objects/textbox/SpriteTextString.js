@@ -107,6 +107,10 @@ export class SpriteTextString extends HudGameObject {
 				// Done with the textbox
 				events.emit("END_TEXT_BOX");
 			}
+			
+			if (input?.getActionJustPressed("Escape")) {
+				events.emit("END_TEXT_BOX");
+			}
 
 			this.timeUntilNextShow -= delta;
 			if (this.timeUntilNextShow <= 0) {

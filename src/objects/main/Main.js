@@ -34,7 +34,7 @@ export class Main extends GameObject {
 			audioResources.audio.track5,
 			audioResources.audio.track6,
 			audioResources.audio.track7,
-		]);
+		], undefined, 0.05);
 		p.play();
 
 		events.on("HERO_REQUESTS_ACTION", this, (withObject) => {

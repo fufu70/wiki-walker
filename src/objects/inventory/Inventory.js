@@ -8,6 +8,7 @@ import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {Typewriter} from '../../helpers/text/Typewriter.js';
 import {InventoryStorage} from './InventoryStorage.js';
+import {audioResources} from '../../resources/audioResources.js';
 
 
 export class Inventory extends HudGameObject {
@@ -31,11 +32,13 @@ export class Inventory extends HudGameObject {
 	ready() {
 		events.on("HERO_PICKS_UP_ITEM", this, data => {
 			this.items = this.storage.addItem(data);
+			audioResources.audio.pickupItem.play();
 			this.renderInventory();
 		});
 
 		events.on("HERO_LOSES_ITEM", this, data => {
 			this.items = this.storage.removeItem(data);
+			audioResources.audio.loseItem.play();
 			this.renderInventory();
 		});
 	}

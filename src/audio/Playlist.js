@@ -1,19 +1,25 @@
 export class Playlist {
-	constructor(tracks, index) {
+	constructor(tracks, index, volume) {
 
 		this.tracks = tracks;
 		if (!index) {
 			index = Math.floor(Math.random() * this.tracks.length);
 		}
 		this.index = index;
+		this.volume = volume ?? 1;
 		console.log("Playlist", this);
+	}
+
+	setVolume(volume) {
+		this.volume = volume;
+		this.tracks[this.index].fade(this.volume);
 	}
 
 	play() {
 		this.tracks[this.index].play(() => {
 			this.next();
 		});
-		this.tracks[this.index].fade(1);
+		this.tracks[this.index].fade(this.volume);
 	}
 
 	playing() {

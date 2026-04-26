@@ -40,6 +40,14 @@ class AudioResources {
 				file: "/sounds/events/soundsforyou-campfire-crackling-fireplace-sound-119594.mp3",
 				volume: 0.5
 			},
+			pickupItem: {
+				file: "sounds/events/Modern13.mp3",
+				volume: 1
+			},
+			loseItem: {
+				file: "sounds/events/Modern14.mp3",
+				volume: 1
+			},
 			// music
 			track3: {
 				file: "sounds/music/Symphony No. 3 in F Major, Op. 90 - III. Poco allegretto.mp3",
