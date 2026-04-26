@@ -107,9 +107,10 @@ export class SpriteTextString extends HudGameObject {
 				// Done with the textbox
 				events.emit("END_TEXT_BOX");
 			}
-			
+
 			if (input?.getActionJustPressed("Escape")) {
 				events.emit("END_TEXT_BOX");
+				this.showingIndex = this.currentFinalIndex;
 			}
 
 			this.timeUntilNextShow -= delta;
@@ -263,4 +264,5 @@ export class SpriteTextString extends HudGameObject {
 		this.cache.set(startIndex, obj);
 		return obj;
 	}
+
 }
