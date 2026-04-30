@@ -129,6 +129,7 @@ export class WikiDisambiguationLevel extends WikiRoomLevel {
 			if (!page) {
 				return;
 			}
+			this.stopMusic();
 
 			events.emit('SHOW_LOADING', {});
 			WikiLevelFactory.request(page, (level) => {

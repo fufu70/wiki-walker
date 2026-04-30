@@ -14,7 +14,6 @@ import {TextInput} from '../input/TextInput.js';
 import {SelectInput} from '../input/SelectInput.js';
 import {LoadingScreen} from '../loading/LoadingScreen.js';
 import {audioResources} from '../../resources/AudioResources.js';
-import {Playlist} from '../../audio/Playlist.js';
 import * as test from './TestMain.js';
 
 export class Main extends GameObject {
@@ -28,14 +27,6 @@ export class Main extends GameObject {
 	ready() {
 		const inventory = new Inventory();
 		this.addChild(inventory);
-		const p = new Playlist([
-			audioResources.audio.track3,
-			audioResources.audio.track4,
-			audioResources.audio.track5,
-			audioResources.audio.track6,
-			audioResources.audio.track7,
-		], undefined, 0.05);
-		p.play();
 
 		events.on("HERO_REQUESTS_ACTION", this, (withObject) => {
 

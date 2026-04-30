@@ -248,6 +248,7 @@ export class WikiPageLevel extends WikiRoomLevel {
 	ready() {
 		super.ready();
 		events.on("HERO_EXIT", this, (exit) => {
+			this.stopMusic();
 			events.emit('SHOW_LOADING', {});
 			let room = this.findRoomExit(exit);
 			if (room) {
@@ -262,6 +263,8 @@ export class WikiPageLevel extends WikiRoomLevel {
 		events.on("SUBMIT_INPUT_TEXT", this, ({config, text}) => {
 			if (config.string === this.quest.getConfirmationStory()) {
 				this.quest.acceptQuest();
+				// force the NPC to talk
+				events.emit("HERO_REQUESTS_ACTION", this.npc);
 			}
 		});
 	}

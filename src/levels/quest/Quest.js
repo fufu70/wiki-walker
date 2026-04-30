@@ -25,14 +25,14 @@ export class Quest {
 	}
 
 	getConfirmationStory() {
-		return `I'm really worried about my friend ${this.getDestination()}. I hope he's okay. He hasn't talked to me, ${this.rootLevel}, in a while. Can you go to him and say Hi for me?`;
+		return `I'm really worried about my friend ${this.getDestination()}. I hope they're okay. He hasn't talked to me, ${this.rootLevel}, in a while. Can you go to him and say Hi for me?`;
 	}
 
 	getAcceptanceStory() {
-		return `Thank you for helping me find my friend at ${this.getDestination()}. It'll ` +
+		return `Thank you for helping me find my friend ${this.getDestination()}. It'll ` +
 			`be a journey but if you go down ${this.getRoom()} and find ` +
 			`${this.getStairs()} you may get someone to help you out. ` +
-			`They're always very helpful down there`;
+			`They're always very helpful down there.`;
 	}
 
 	getLevelStory(level) {
@@ -44,7 +44,7 @@ export class Quest {
 
 		if (!this.levelMap.get(level)) {
 			return `I'm sorry, I don't know where ${this.getDestination()} ` +
-				`is ... I think you might need to backtrack a bit`;
+				`is ... I think you might need to backtrack a bit.`;
 		}
 
 		if (level != this.rootLevel) {

@@ -5,7 +5,7 @@ export class AudioUtil {
 
 	getDistanceVolume(a, b) {
 		let volume = Math.abs(16 / this.distance(a, b));
-		if (volume < 0.25) {
+		if (volume < 0.15) {
 			volume = 0;
 		}
 		return volume;

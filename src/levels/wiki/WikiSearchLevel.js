@@ -21,6 +21,7 @@ import {
 	NO_STORAGE_FLAG,
 	YES_FLAG
 } from '../../stories/constants.js';
+import {PlaylistFactory} from '../../audio/PlaylistFactory.js';
 
 export class WikiSearchLevel extends DrunkOutdoorLevel {
 	constructor(params={}) {
@@ -184,6 +185,7 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 
 		events.on("HERO_EXIT", this, (exit) => {
 			events.emit('SHOW_LOADING', {});
+			this.stopMusic();
 			WikiLevelFactory.random((level) => {
 				WikiLevelFactory.stashSearchLevel(
 					window.renderPosition.duplicate(),
@@ -209,8 +211,18 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 			});
 			this.placeQuestionRod();
 		});
+
+		this.playMusic();
 	}
 
+	playMusic() {
+		this.music = PlaylistFactory.get();
+		this.music.play();
+	}
+
+	stopMusic() {
+		this.music.stop();
+	}
 
 	placeQuestionRod() {
 		const vector = this.findRandomSpot(this.seed, this.floors, this.gameObjects);

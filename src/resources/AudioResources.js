@@ -49,21 +49,16 @@ class AudioResources {
 				volume: 1
 			},
 			// music
-			track3: {
-				file: "sounds/music/Symphony No. 3 in F Major, Op. 90 - III. Poco allegretto.mp3",
-			},
-			track4: {
-				file: "sounds/music/Beethoven - Symphony No.6 in F major Op.68 - II. Andante molto mosso.mp3",
-			},
-			track5: {
-				file: "sounds/music/Brandenburg Concerto no. 1 in F major, BWV. 1046 - II. Adagio - III. Allegro.mp3",
-			},
-			track6: {
-				file: "sounds/music/Joseph Haydn - Symphony No.49 in F minor - I. Adagio.mp3",
-			},
-			track7: {
-				file: "sounds/music/Peer Gynt Suite no. 1, Op. 46 - II. Aase's Death.mp3",
-			},
+			track3: { file: "sounds/music/symphony/Symphony No. 3 in F Major, Op. 90 - III. Poco allegretto.mp3", },
+			track4: { file: "sounds/music/symphony/Beethoven - Symphony No.6 in F major Op.68 - II. Andante molto mosso.mp3", },
+			track5: { file: "sounds/music/symphony/Brandenburg Concerto no. 1 in F major, BWV. 1046 - II. Adagio - III. Allegro.mp3", },
+			track6: { file: "sounds/music/symphony/Joseph Haydn - Symphony No.49 in F minor - I. Adagio.mp3", },
+			track7: { file: "sounds/music/symphony/Peer Gynt Suite no. 1, Op. 46 - II. Aase's Death.mp3", },
+			goldberg1: {file: "sounds/music/goldberg-variations/Goldberg Variations, BWV. 988 - Variation 3. Canon on the unison.mp3",},
+			goldberg2: {file: "sounds/music/goldberg-variations/Goldberg Variations, BWV. 988 - Variation 25.mp3",},
+			goldberg3: {file: "sounds/music/goldberg-variations/Goldberg Variations, BWV. 988 - Variation 15. Canon on the fifth.mp3",},
+			goldberg4: {file: "sounds/music/goldberg-variations/Goldberg Variations, BWV. 988 - Variation 12. Canon on the fourth.mp3",},
+			goldberg5: {file: "sounds/music/goldberg-variations/Goldberg Variations, BWV. 988 - Variation 22.mp3",},
 		}
 
 		// a bucket to keep all of our images

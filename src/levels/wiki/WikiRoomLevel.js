@@ -15,6 +15,7 @@ import {Television} from '../../objects/room/Television.js';
 import {Sign} from '../../objects/outdoors/Sign.js';
 import {WikiLevelFactory} from './WikiLevelFactory.js';
 import {RoomPositionFactory} from '../../helpers/RoomPositionFactory.js';
+import {PlaylistFactory} from '../../audio/PlaylistFactory.js';
 
 export class WikiRoomLevel extends RoomLevel {
 
@@ -59,10 +60,20 @@ export class WikiRoomLevel extends RoomLevel {
 		return new Vector2(1, 1);
 	}
 
+	playMusic() {
+		this.music = PlaylistFactory.get();
+		this.music.play();
+	}
+
+	stopMusic() {
+		this.music.stop();
+	}
+
 	ready() {
 		super.ready();
 
 		events.on("HERO_EXIT_UP", this, (exit) => {
+			this.stopMusic();
 			events.emit("SHOW_LOADING", {direction: "UP"});
 			WikiLevelFactory.loadPop((level) => {
 				events.emit("CHANGE_LEVEL", level);
@@ -74,5 +85,7 @@ export class WikiRoomLevel extends RoomLevel {
 		});
 
 		events.emit('END_LOADING', {});
+
+		this.playMusic();
 	}
 }

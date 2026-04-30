@@ -22,6 +22,14 @@ export class Playlist {
 		this.tracks[this.index].fade(this.volume);
 	}
 
+	stop() {
+		this.tracks[this.index].fade(0);
+
+		setTimeout(() => {
+			this.tracks[this.index].stop();
+		}, 20);
+	}
+
 	playing() {
 		return this.tracks[this.index];
 	}
