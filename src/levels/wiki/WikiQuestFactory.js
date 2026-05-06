@@ -31,7 +31,7 @@ export class WikiQuestFactory {
 
 	acceptedQuest(title) {
 		const storage = new QuestStorage();
-		const accepted = storage.get("accepted");
+		const accepted = storage.get("accepted") || [];
 		for (let i = 0; i < accepted.length; i ++) {
 			const keys = Object.keys(accepted[i])
 			for (let keyI = 0; keyI < keys.length; keyI ++) {

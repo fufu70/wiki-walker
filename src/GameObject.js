@@ -1,10 +1,11 @@
 import {Vector2} from './Vector2.js';
 import {events} from './Events.js';
 import {GRID_SIZE} from './helpers/Grid.js'
+import {uuidv4} from './uuid.js';
 
 export class GameObject {
 	constructor({position, size, isSolid, alwaysRender}) {
-		this.uuid = crypto.randomUUID();
+		this.uuid = uuidv4();
 		this.position = position ?? new Vector2(0, 0);
 		this.children = [];
 		this.parent = null;

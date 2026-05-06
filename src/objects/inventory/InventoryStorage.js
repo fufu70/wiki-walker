@@ -1,4 +1,5 @@
 import {Storage} from '../../helpers/Storage.js';
+import {uuidv4} from '../../uuid.js';
 
 export class InventoryStorage extends Storage {
 
@@ -43,7 +44,7 @@ export class InventoryStorage extends Storage {
 		const item = this.findItem(data);
 		if (item === undefined) {
 			this.items.push({
-				id: crypto.randomUUID(),
+				id: uuidv4(),
 				src: data.image.image.src,
 				count: 1
 			});

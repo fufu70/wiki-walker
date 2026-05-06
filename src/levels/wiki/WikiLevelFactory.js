@@ -6,6 +6,7 @@ import {ArrayFactory} from '../../helpers/ArrayFactory.js';
 import {WikiStorage} from './WikiStorage.js';
 import {LanguageFactory} from '../../stories/LanguageFactory.js';
 import {Vector2} from "../../Vector2.js";
+import {uuidv4} from '../../uuid.js';
 
 export class WikiLevelFactory {
 	static storage = new WikiStorage();
@@ -248,7 +249,7 @@ export class WikiLevelFactory {
 	getPageParams(doc) {
 		const sections = doc.sections().map(section => {
 			return {
-				uuid: crypto.randomUUID(),
+				uuid: uuidv4(),
 				title: section.title(),
 				paragraphs: section.paragraphs().map(paragraph => paragraph.text()),
 				links: this.getLinks(section),
@@ -259,7 +260,7 @@ export class WikiLevelFactory {
 
 		return {
 			doc: doc,
-			uuid: crypto.randomUUID(),
+			uuid: uuidv4(),
 			title: doc.title(),
 			infobox: this.getInfoBox(doc),
 			sections: sections,
