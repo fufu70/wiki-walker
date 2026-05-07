@@ -285,4 +285,9 @@ export class WikiSearchLevel extends DrunkOutdoorLevel {
 	getHome() {
 		return undefined;
 	}
+
+	destroy() {
+		super.destroy();
+		this.stopMusic();
+	}
 }
