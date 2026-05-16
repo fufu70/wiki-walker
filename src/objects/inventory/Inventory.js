@@ -8,7 +8,7 @@ import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {Typewriter} from '../../helpers/text/Typewriter.js';
 import {InventoryStorage} from './InventoryStorage.js';
-import {audioResources} from '../../resources/audioResources.js';
+import {audioResources} from '../../resources/AudioResources.js';
 
 
 export class Inventory extends HudGameObject {
