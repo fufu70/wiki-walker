@@ -18,7 +18,7 @@ html, body {
   position: fixed;
   z-index: 2;
 /*  background: #000000aa;*/
-  height: 100vh;
+  height: calc(100vh - 50% + 100px); //100vh;
   width: 100vw;
   left: 0;
   bottom: 0;
@@ -26,7 +26,7 @@ html, body {
 
 .mobile-controller-arrow-pad {
   position: absolute;
-  left: 30px;
+  left: 0px;
 /*  background: #ff0000aa;*/
   height: 350px;
   width: 350px;
@@ -61,9 +61,9 @@ html, body {
 
 .mobile-controller-arrow {
   background: white;
-  border-top: 5px solid black;
+  border-top:    5px solid black;
   border-bottom: 5px solid black;
-  border-right: 5px solid black;
+  border-right:  5px solid black;
   width: 100px; /* 350px */
   height: 60px; /* 350px */
   position: relative;
@@ -95,7 +95,7 @@ html, body {
 
 .mobile-controller-action-pad {
   position: absolute;
-  right: 30px;
+  right: 0px;
 /*  background: #00ff00aa;        */
   height: 350px;
   width: 350px;
