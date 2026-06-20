@@ -4,6 +4,7 @@ import {Sprite} from '../../Sprite.js';
 import {moveTowards} from '../../helpers/Move.js';
 import {resources} from '../../resources/SpriteResources.js';
 import {Input, LEFT, RIGHT, UP, DOWN} from '../../input/Input.js';
+import {InputFactory} from '../../input/InputFactory.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from '../../helpers/Grid.js'
 import {events} from '../../Events.js';
 import {Inventory} from '../inventory/Inventory.js';
@@ -20,8 +21,12 @@ export class Main extends GameObject {
 	constructor() {
 		super({});
 		this.level = null;
-		this.input = new Input();
+		//this.input = new Input();
+		this.input = InputFactory.getInput();
+		this.mobileInput = InputFactory.getMobileInput(this.input);
 		this.camera = new Camera();
+		
+		window.main = this;
 	}
 
 	ready() {

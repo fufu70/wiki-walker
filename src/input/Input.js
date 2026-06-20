@@ -1,4 +1,4 @@
- export const LEFT = "LEFT";
+export const LEFT = "LEFT";
 export const RIGHT = "RIGHT";
 export const UP = "UP";
 export const DOWN = "DOWN";
@@ -7,13 +7,12 @@ import {MobileInput} from './MobileInput.js';
 
 
 export class Input {
-	static mobileInput = undefined;
 
 	constructor(SUPPORTED_CHARACTERS = "") {
 		this.heldDirections = [];
 		this.keys = {};
 		this.lastKeys = {};
-
+		this.supportingCharacters = SUPPORTED_CHARACTERS;
 		this.lastTextKeys = [];
 
 		document.addEventListener("keydown", (e) => {
@@ -23,7 +22,7 @@ export class Input {
 			}
 
 			this.keys[e.code] = true;
-			if (SUPPORTED_CHARACTERS.indexOf(e.key) > -1) {
+			if (this.supportingCharacters.indexOf(e.key) > -1) {
 				this.lastTextKeys.push(e.key);
 			}
 
@@ -62,70 +61,8 @@ export class Input {
 			}
 		});
 		this.isFullscreen = false;
-
-		const mobileParams = {
-			leftPressed: () => {
-				this.onArrowPressed(LEFT)
-			},
-			rightPressed: () => {
-				this.onArrowPressed(RIGHT)
-			},
-			upPressed: () => {
-				this.onArrowPressed(UP)
-			},
-			downPressed: () => {
-				this.onArrowPressed(DOWN)
-			},
-			leftReleased: () => {
-				this.onArrowReleased(LEFT)
-			},
-			rightReleased: () => {
-				this.onArrowReleased(RIGHT)
-			},
-			upReleased: () => {
-				this.onArrowReleased(UP)
-			},
-			downReleased: () => {
-				this.onArrowReleased(DOWN)
-			},
-			aPressed: () => {
-				this.keys['Space'] = true;
-				this.lastTextKeys.push('Space');
-			},
-			bPressed: () => {
-				this.keys['Enter'] = true;
-				this.lastTextKeys.push('Enter');
-			},
-			xPressed: () => {
-				this.keys['Escape'] = true;
-				this.lastTextKeys.push('Escape');
-				// this.
-			},
-			yPressed: () => {
-				this.keys['ShiftLeft'] = true;
-				this.lastTextKeys.push('ShiftLeft');
-				// this.
-			},
-			aReleased: () => {
-				this.keys['Space'] = false;
-			},
-			bReleased: () => {
-				this.keys['Enter'] = false;
-			},
-			xReleased: () => {
-				this.keys['Escape'] = false;
-			},
-			yReleased: () => {
-				this.keys['ShiftLeft'] = false;
-				// this.
-			},
-		};
-
-		if (this.showTouchpad() && Input.mobileInput === undefined) {
-			Input.mobileInput = new MobileInput(mobileParams);
-		} else if (this.showTouchpad() && Input.mobileInput !== undefined) {
-			Input.mobileInput.applyParams(mobileParams);
-		}
+		
+	//	this.addMobileInput();
 	}
 
 	get direction() {
@@ -208,6 +145,77 @@ export class Input {
 
 	showTouchpad() {
 		return this.isMobile() || this.isTablet();
+	}
+
+	addMobileInput() {
+		const mobileParams = {
+			leftPressed: () => {
+				this.onArrowPressed(LEFT)
+			},
+			rightPressed: () => {
+				this.onArrowPressed(RIGHT)
+			},
+			upPressed: () => {
+				this.onArrowPressed(UP)
+			},
+			downPressed: () => {
+				this.onArrowPressed(DOWN)
+			},
+			leftReleased: () => {
+				this.onArrowReleased(LEFT)
+			},
+			rightReleased: () => {
+				this.onArrowReleased(RIGHT)
+			},
+			upReleased: () => {
+				this.onArrowReleased(UP)
+			},
+			downReleased: () => {
+				this.onArrowReleased(DOWN)
+			},
+			aPressed: () => {
+				this.keys['Space'] = true;
+				this.lastTextKeys.push('Space');
+			},
+			bPressed: () => {
+				this.keys['Enter'] = true;
+				this.lastTextKeys.push('Enter');
+			},
+			xPressed: () => {
+				this.keys['Escape'] = true;
+				this.lastTextKeys.push('Escape');
+			},
+			yPressed: () => {
+				this.keys['ShiftLeft'] = true;
+				this.lastTextKeys.push('ShiftLeft');
+			},
+			aReleased: () => {
+				this.keys['Space'] = false;
+			},
+			bReleased: () => {
+				this.keys['Enter'] = false;
+			},
+			xReleased: () => {
+				this.keys['Escape'] = false;
+			},
+			yReleased: () => {
+				this.keys['ShiftLeft'] = false;
+			},
+		};
+
+		if (this.showTouchpad() && Input.mobileInput === undefined) {
+			Input.mobileInput = new MobileInput(mobileParams);
+		} else if (this.showTouchpad() && Input.mobileInput !== undefined) {
+			Input.mobileInput.applyParams(mobileParams);
+		}
+	}
+
+	removeMobileInput() {
+		if (!Input.mobileInput) {
+			return;
+		}
+		Input.mobileInput.remove();
+		delete Input.mobileInput;	
 	}
 
 	isMobile() {

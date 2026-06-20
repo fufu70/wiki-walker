@@ -3,7 +3,6 @@ import {resources} from './src/resources/SpriteResources.js';
 import {Sprite} from './src/Sprite.js';
 import {Vector2} from './src/Vector2.js';
 import {GameLoop} from './src/GameLoop.js';
-import {Input, LEFT, RIGHT, UP, DOWN} from './src/input/Input.js';
 import {gridCells, GRID_SIZE, isSpaceFree} from './src/helpers/Grid.js'
 import {moveTowards} from './src/helpers/Move.js';
 import {OutdoorLevel1} from './src/levels/OutdoorLevel1.js';

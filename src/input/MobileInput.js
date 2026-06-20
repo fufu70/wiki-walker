@@ -205,6 +205,7 @@ export class MobileInput {
 
 	addStyle() {
 		var styleElem = document.createElement('style');
+		styleElem.id = "mobile-controller-style";
 		styleElem.type = "text/css";
 		styleElem.innerHTML = style;
 		document.body.appendChild(styleElem);
@@ -212,6 +213,7 @@ export class MobileInput {
 
 	addTemplate() {
 		var templateElem = document.createElement('div');
+		templateElem.id = "mobile-controller-template";
 		templateElem.innerHTML = template;
 		document.body.appendChild(templateElem);
 	}
@@ -429,5 +431,13 @@ export class MobileInput {
 				e.preventDefault();
 			}
 		}
+	}
+
+	remove() {
+		window.alert("remove");
+		document.getElementById("mobile-controller-style").remove();
+		document.getElementById('mobile-controller-template').remove();
+		//styleElem = "mobile-controller-style";
+		//templateElem.id = "mobile-controller-template";
 	}
 }
