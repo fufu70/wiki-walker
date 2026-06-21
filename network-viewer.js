@@ -43,18 +43,37 @@ var style = `
 	min-width: 100%;
 }
 
+.network-viewer-output table th {
+	border: 0px;
+	text-align: center;
+	position: sticky;
+	top: 0;
+}
 .network-viewer-output-log {
   padding: 10px;
   width: calc(100% - 20px);
   overflow-wrap: break-word;
 }
 
-.network-viewer-output-log span {
+.network-viewer-output th,
+.network-viewer-output-log td {
   background: rgba(0, 0, 0, 0.4);
 }
 
 .network-viewer-output-log {
   color: #eeeeee;
+}
+
+.network-viewer-output-error {
+  color: #ff8080;
+}
+
+.network-viewer-output-warn {
+  color: #ffe65e;
+}
+
+.network-viewer-output-info {
+  color: #71f2ff;
 }
 `;
 var networkViewerStyle = document.createElement('style');
@@ -161,12 +180,33 @@ document.addEventListener('keyup', function(event) {
   pressedKeys[event.code] = false; // Remove the released key
 });
 
+var getEncodedSize = (size) => {
+	if (size < 1000)
+		return size + " B";
+	if (size < (1000 * 1000))
+		return (size/(1000)).toFixed(2) + " KB";
+	if (size < (1000 * 1000 * 1000))
+		return (size/(1000 * 1000)).toFixed(2) + " MB";
+	if (size < (1000 * 1000 * 1000 * 1000))
+		return (size/(1000 * 1000 * 1000)).toFixed(2) + " GB";
+}
+
 var renderNetworkOutputRow = (entry) => {
-	var l = '<tr class="network-viewer-output-log">';
-	l += '<td>' + entry.nextHopProtocol + '</td>';
+	let c = 'network-viewer-output-log';
+	
+	if (entry.responseStatus == 0) {
+		c += ' network-viewer-output-warn';
+	} else if (entry.responseStatus >= 500) {
+		c += ' network-viewer-output-error';
+	} else if (entry.responseStatus != 200) {
+		c += ' network-viewer-output-info';
+	} 
+
+	var l = `<tr class="${c}">`;
+	l += '<td>' + entry.responseStatus + '</td>';
 	l += '<td>' + entry.name + '</td>';
 	l += '<td>' + entry.contentType + '</td>';
-	l += '<td>' + entry.encodedBodySize + '</td>';
+	l += '<td>' + getEncodedSize(entry.encodedBodySize) + '</td>';
 	l += '</tr>';
 	return l;
 }
@@ -175,7 +215,7 @@ var networkHistory = [];
 var renderNetworkViewerOutput = () => {
 	let innerHTML = '<table>';
 	innerHTML += '<tr>';
-	innerHTML += '<th>Next Hop Protocol</th>';
+	innerHTML += '<th>Status</th>';
 	innerHTML += '<th>URL</th>';
 	innerHTML += '<th>Content Type</th>';
 	innerHTML += '<th>Size</th>';
