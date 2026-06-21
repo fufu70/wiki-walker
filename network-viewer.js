@@ -196,7 +196,7 @@ let renderNetworkOutputRow = (entry) => {
 	
 	if (entry.responseStatus == 0) {
 		c += ' network-viewer-output-warn';
-	} else if (entry.responseStatus >= 500) {
+	} else if (entry.responseStatus >= 400) {
 		c += ' network-viewer-output-error';
 	} else if (entry.responseStatus != 200) {
 		c += ' network-viewer-output-info';

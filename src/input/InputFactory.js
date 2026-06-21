@@ -6,6 +6,7 @@ export class InputFactory {
 
 	static getInput(supportingCharacters = '') {
 		if (InputFactory.input) {
+			InputFactory.input.setSupportingCharacters(supportingCharacters)
 			return InputFactory.input;
 		}
 		return new Input(supportingCharacters);
