@@ -1,4 +1,4 @@
-var style = `
+let style = `
 .network-viewer {
   width: 100vw;
   height: 100vh;
@@ -76,46 +76,46 @@ var style = `
   color: #71f2ff;
 }
 `;
-var networkViewerStyle = document.createElement('style');
+let networkViewerStyle = document.createElement('style');
 networkViewerStyle.type = "text/css";
 networkViewerStyle.innerHTML = style;
 document.body.appendChild(networkViewerStyle);
 
-var capturedConsole = [];
+let capturedConsole = [];
 let pressedKeys = {};
 
-var networkElement = document.createElement('div');
+let networkElement = document.createElement('div');
 networkElement.className = 'network-viewer';
 networkElement.style.display = 'none';
-var networkOutputElement = document.createElement('div');
+let networkOutputElement = document.createElement('div');
 networkOutputElement.className = 'network-viewer-output';
-var inputFocused = false;
-var input = document.createElement('div');
-input.contentEditable = "true";
-input.setAttribute('spellcheck', 'false');
-input.setAttribute('autocorrect', 'off');
-input.setAttribute('autocapitalize', 'off');
-input.className = 'network-viewer-input';
-input.innerHTML = '<br>';
-input.onblur = () => {
-  this.inputFocused = false;
+let networkInputFocused = false;
+let networkInput = document.createElement('div');
+networkInput.contentEditable = "true";
+networkInput.setAttribute('spellcheck', 'false');
+networkInput.setAttribute('autocorrect', 'off');
+networkInput.setAttribute('autocapitalize', 'off');
+networkInput.className = 'network-viewer-input';
+networkInput.innerHTML = '<br>';
+networkInput.onblur = () => {
+  networkInputFocused = false;
 };
-input.onclick = () => {
-  this.inputFocused = true;
+networkInput.onclick = () => {
+  networkInputFocused = true;
 };
-networkElement.appendChild(input);
+networkElement.appendChild(networkInput);
 networkElement.appendChild(networkOutputElement);
 document.body.appendChild(networkElement);
 
-var isNetworkOutputShowing = false;
-var toggleNetworkOuputDisplay = () => {
+let isNetworkOutputShowing = false;
+let toggleNetworkOuputDisplay = () => {
   isNetworkOutputShowing = !isNetworkOutputShowing;
   document.querySelector('.network-viewer').style.display = isNetworkOutputShowing ? 'block' : 'none';
 }
 
-var toggleNetworkFocus = () => {
-  if (!inputFocused) {
-    inputFocused = true;
+let toggleNetworkFocus = () => {
+  if (!networkInputFocused) {
+    networkInputFocused = true;
     document.querySelector('.network-viewer-input').focus(); 
   } else {
     document.querySelector('.network-viewer-input').blur();
@@ -123,14 +123,14 @@ var toggleNetworkFocus = () => {
 }
 
 
-var evalHistory = [`index.html`];
-var evalHistoryIndex = 0;
-var renderNetworkHistory = (direction) => {
-  if (!inputFocused) {
+let evalHistory = [`index.html`];
+let evalHistoryIndex = 0;
+let renderNetworkHistory = (direction) => {
+  if (!networkInputFocused) {
     return;
   }
   evalHistoryIndex += direction;
-  var text = "";
+  let text = "";
   if (evalHistoryIndex < evalHistory.length && evalHistoryIndex > -1) {
     text = evalHistory[evalHistoryIndex];
   } else {
@@ -139,7 +139,7 @@ var renderNetworkHistory = (direction) => {
   document.querySelector('.network-viewer-input').innerHTML = text;
 }
 
-var evalNetworkInput = () => {
+let evalNetworkInput = () => {
   try {
     const text = document.querySelector('.network-viewer-input').innerText;
     if (text == 'clear') {
@@ -180,7 +180,7 @@ document.addEventListener('keyup', function(event) {
   pressedKeys[event.code] = false; // Remove the released key
 });
 
-var getEncodedSize = (size) => {
+let getEncodedSize = (size) => {
 	if (size < 1000)
 		return size + " B";
 	if (size < (1000 * 1000))
@@ -191,7 +191,7 @@ var getEncodedSize = (size) => {
 		return (size/(1000 * 1000 * 1000)).toFixed(2) + " GB";
 }
 
-var renderNetworkOutputRow = (entry) => {
+let renderNetworkOutputRow = (entry) => {
 	let c = 'network-viewer-output-log';
 	
 	if (entry.responseStatus == 0) {
@@ -202,7 +202,7 @@ var renderNetworkOutputRow = (entry) => {
 		c += ' network-viewer-output-info';
 	} 
 
-	var l = `<tr class="${c}">`;
+	let l = `<tr class="${c}">`;
 	l += '<td>' + entry.responseStatus + '</td>';
 	l += '<td>' + entry.name + '</td>';
 	l += '<td>' + entry.contentType + '</td>';
@@ -211,8 +211,8 @@ var renderNetworkOutputRow = (entry) => {
 	return l;
 }
 
-var networkHistory = [];
-var renderNetworkViewerOutput = () => {
+let networkHistory = [];
+let renderNetworkViewerOutput = () => {
 	let innerHTML = '<table>';
 	innerHTML += '<tr>';
 	innerHTML += '<th>Status</th>';

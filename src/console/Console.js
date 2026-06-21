@@ -1,6 +1,6 @@
 import {getCircularReplacer} from './Utils.js';
 
-var style = `
+let style = `
 .console {
   width: 100vw;
   height: 100vh;
@@ -20,7 +20,7 @@ var style = `
   width: 100%;
   border: 0px;
   padding: 10px;
-  text-indent: 20px;
+  text-indent: 26px;
 }
 
 .console-input:read-write:focus {
@@ -29,7 +29,7 @@ var style = `
 
 .console-input::before {
   content: "$";
-  left: -8px;
+  left: -14px;
   position: absolute;
 }
 
@@ -81,51 +81,51 @@ var style = `
   padding-top: 10px;
 }
 `;
-var consoleStyle = document.createElement('style');
+let consoleStyle = document.createElement('style');
 consoleStyle.type = "text/css";
 consoleStyle.innerHTML = style;
 document.body.appendChild(consoleStyle);
 
-var capturedConsole = [];
+let capturedConsole = [];
 let pressedKeys = {};
 
 
-var consoleElement = document.createElement('div');
+let consoleElement = document.createElement('div');
 consoleElement.className = 'console';
 consoleElement.style.display = 'none';
-var fpsElement = document.createElement('div');
+let fpsElement = document.createElement('div');
 fpsElement.className = 'console-fps';
 fpsElement.innerText = "";
-var consoleOutputElement = document.createElement('div');
+let consoleOutputElement = document.createElement('div');
 consoleOutputElement.className = 'console-output';
-var inputFocused = false;
-var input = document.createElement('div');
-input.contentEditable = "true";
-input.setAttribute('spellcheck', 'false');
-input.setAttribute('autocorrect', 'off');
-input.setAttribute('autocapitalize', 'off');
-input.className = 'console-input';
-input.innerHTML = '<br>';
-input.onblur = () => {
-  this.inputFocused = false;
+let consoleInputFocused = false;
+let consoleInput = document.createElement('div');
+consoleInput.contentEditable = "true";
+consoleInput.setAttribute('spellcheck', 'false');
+consoleInput.setAttribute('autocorrect', 'off');
+consoleInput.setAttribute('autocapitalize', 'off');
+consoleInput.className = 'console-input';
+consoleInput.innerHTML = '<br>';
+consoleInput.onblur = () => {
+  consoleInputFocused = false;
 };
-input.onclick = () => {
-  this.inputFocused = true;
+consoleInput.onclick = () => {
+  consoleInputFocused = true;
 };
-consoleElement.appendChild(input);
+consoleElement.appendChild(consoleInput);
 consoleElement.appendChild(consoleOutputElement);
 consoleElement.appendChild(fpsElement);
 document.body.appendChild(consoleElement);
 
-var isConsoleOutputShowing = false;
-var toggleConsoleOuputDisplay = () => {
+let isConsoleOutputShowing = false;
+let toggleConsoleOuputDisplay = () => {
   isConsoleOutputShowing = !isConsoleOutputShowing;
   document.querySelector('.console').style.display = isConsoleOutputShowing ? 'block' : 'none';
 }
 
-var toggleConsoleFocus = () => {
-  if (!inputFocused) {
-    inputFocused = true;
+let toggleConsoleFocus = () => {
+  if (!consoleInputFocused) {
+    consoleInputFocused = true;
     document.querySelector('.console-input').focus(); 
   } else {
     document.querySelector('.console-input').blur();
@@ -133,14 +133,14 @@ var toggleConsoleFocus = () => {
 }
 
 
-var evalHistory = [`console.info("hello - world")`];
-var evalHistoryIndex = 0;
-var renderHistory = (direction) => {
-  if (!inputFocused) {
+let evalHistory = [`console.info("hello - world")`];
+let evalHistoryIndex = 0;
+let renderHistory = (direction) => {
+  if (!consoleInputFocused) {
     return;
   }
   evalHistoryIndex += direction;
-  var text = "";
+  let text = "";
   if (evalHistoryIndex < evalHistory.length && evalHistoryIndex > -1) {
     text = evalHistory[evalHistoryIndex];
   } else {
@@ -149,7 +149,7 @@ var renderHistory = (direction) => {
   document.querySelector('.console-input').innerHTML = text;
 }
 
-var evalInput = () => {
+let evalInput = () => {
   try {
     const text = document.querySelector('.console-input').innerText;
     if (text == 'clear') {
@@ -168,11 +168,11 @@ var evalInput = () => {
   }, 1);
 }
 
-var lastTime = window.performance.now();
-var fpsArr = [];
-var fpsIndex = 0;
+let lastTime = window.performance.now();
+let fpsArr = [];
+let fpsIndex = 0;
 export const updateFPS = () => {
-  var fps =  Math.ceil(1000 / (window.performance.now() - lastTime));
+  let fps =  Math.ceil(1000 / (window.performance.now() - lastTime));
   fpsIndex ++;
   if (fpsIndex == 60) {
     fpsIndex = 0;
@@ -180,7 +180,7 @@ export const updateFPS = () => {
 
   fpsArr[fpsIndex] = fps;
   if (fpsArr.length === 60) {
-    var avgFps = Math.ceil(fpsArr.reduce((prev, curr) => {
+    let avgFps = Math.ceil(fpsArr.reduce((prev, curr) => {
       return curr + prev;
     }, 0) / 60);
     document.querySelector('.console-fps').innerText = "FPS: " + (avgFps);
@@ -212,7 +212,7 @@ document.addEventListener('keyup', function(event) {
   pressedKeys[event.code] = false; // Remove the released key
 });
 
-var updateConsole = function(type, args, trace) {
+let updateConsole = function(type, args, trace) {
   if (capturedConsole.length >= 10) {
     capturedConsole.pop();
   }
@@ -226,7 +226,7 @@ var updateConsole = function(type, args, trace) {
   renderConsole();
 }
 
-var renderConsole = () => {
+let renderConsole = () => {
   const consoleOutput = document.querySelector('.console-output');
   document.querySelector('.console-output').innerHTML = "";
   capturedConsole.sort((a, b) => {
@@ -245,7 +245,7 @@ var renderConsole = () => {
 }
 
 function getStackTrace () {
-  var stack;
+  let stack;
 
   try {
     throw new Error('');
@@ -258,7 +258,7 @@ function getStackTrace () {
   return stack.splice(stack[0] == 'Error' ? 3 : 2);
 }
 
-var originalLog = console.log;
+let originalLog = console.log;
 console.log = function(args) {
   const trace = getStackTrace();
   updateConsole("log", arguments, trace);
@@ -266,28 +266,28 @@ console.log = function(args) {
 };
 
 
-var originalWarn = console.warn;
+let originalWarn = console.warn;
 console.warn = function(message) {
   const trace = getStackTrace();
   updateConsole("warn", arguments, trace);
   originalWarn.apply(console, arguments); // Call the original console.log
 };
 
-var originalError = console.error;
+let originalError = console.error;
 console.error = function(message) {
   const trace = getStackTrace();
   updateConsole("error", arguments, trace);
   originalError.apply(console, arguments); // Call the original console.log
 };
 
-var originalInfo = console.info;
+let originalInfo = console.info;
 console.info = function(message) {
   const trace = getStackTrace();
   updateConsole("info", arguments, trace);
   originalInfo.apply(console, arguments); // Call the original console.log
 };
 
-// var originalWindowError = window.onerror;
+// let originalWindowError = window.onerror;
 window.onerror = function(message) {
   const trace = getStackTrace();
   updateConsole("error", arguments, trace);
