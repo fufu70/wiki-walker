@@ -19,7 +19,7 @@ export class AudioFile {
 			obj = new Audio(this.resource);
 		}
 
-		console.log("Playing", this.resource);
+		// console.log("Playing", this.resource);
 
 		obj.currentTime = this.startTime;
 		if (callback) {

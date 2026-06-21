@@ -39,6 +39,7 @@ let style = `
 
 .network-viewer-output table {
 	padding: 10px;
+	font-size: 12px;
 	margin-bottom: 30px;
 	min-width: 100%;
 }
@@ -49,6 +50,7 @@ let style = `
 	position: sticky;
 	top: 0;
 }
+
 .network-viewer-output-log {
   padding: 10px;
   width: calc(100% - 20px);
@@ -205,6 +207,7 @@ let renderNetworkOutputRow = (entry) => {
 	let l = `<tr class="${c}">`;
 	l += '<td>' + entry.responseStatus + '</td>';
 	l += '<td>' + entry.name + '</td>';
+	l += '<td>' + entry.initiatorType + '</td>';
 	l += '<td>' + entry.contentType + '</td>';
 	l += '<td>' + getEncodedSize(entry.encodedBodySize) + '</td>';
 	l += '</tr>';
@@ -217,6 +220,7 @@ let renderNetworkViewerOutput = () => {
 	innerHTML += '<tr>';
 	innerHTML += '<th>Status</th>';
 	innerHTML += '<th>URL</th>';
+	innerHTML += '<th>Initiator</th>';
 	innerHTML += '<th>Content Type</th>';
 	innerHTML += '<th>Size</th>';
 	innerHTML += '</tr>';

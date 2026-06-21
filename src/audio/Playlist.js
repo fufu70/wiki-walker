@@ -7,7 +7,7 @@ export class Playlist {
 		}
 		this.index = index;
 		this.volume = volume ?? 1;
-		console.log("Playlist", this);
+		//console.log("Playlist", this);
 	}
 
 	setVolume(volume) {

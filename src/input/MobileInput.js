@@ -434,10 +434,7 @@ export class MobileInput {
 	}
 
 	remove() {
-		window.alert("remove");
 		document.getElementById("mobile-controller-style").remove();
 		document.getElementById('mobile-controller-template').remove();
-		//styleElem = "mobile-controller-style";
-		//templateElem.id = "mobile-controller-template";
 	}
 }

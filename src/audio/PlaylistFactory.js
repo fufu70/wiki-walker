@@ -19,7 +19,7 @@ export class PlaylistFactory {
 	static get() {
 		const factory = new PlaylistFactory;
 		const playlist = factory.getRandomPlaylist();
-		console.log(factory, playlist);
+		//console.log(factory, playlist);
 		return playlist;
 	}
 

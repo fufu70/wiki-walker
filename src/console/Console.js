@@ -150,9 +150,11 @@ let renderHistory = (direction) => {
 }
 
 let evalInput = () => {
-  try {
+	try {
     const text = document.querySelector('.console-input').innerText;
-    if (text == 'clear') {
+  	if (text.trim().length == 0) {
+			return;
+		} else if (text == 'clear') {
       capturedConsole = [];
       renderConsole();
     } else {
@@ -209,7 +211,7 @@ document.addEventListener('keydown', function(event) {
 });
 
 document.addEventListener('keyup', function(event) {
-  pressedKeys[event.code] = false; // Remove the released key
+	pressedKeys[event.code] = false; // Remove the released key
 });
 
 let updateConsole = function(type, args, trace) {

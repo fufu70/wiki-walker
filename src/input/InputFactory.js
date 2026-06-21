@@ -9,10 +9,14 @@ export class InputFactory {
 			InputFactory.input.setSupportingCharacters(supportingCharacters)
 			return InputFactory.input;
 		}
-		return new Input(supportingCharacters);
+		InputFactory.input = new Input(supportingCharacters);
+		return InputFactory.input;
 	}
 
 	static getMobileInput(input) {
+		if (!input && InputFactory.input) {
+			input = InputFactory.input;
+		}
 		if (!input) {
 			return null;
 		}
@@ -29,7 +33,8 @@ export class InputFactory {
 				input.onArrowPressed(RIGHT)
 			},
 			upPressed: () => {
-				input.onArrowPressed(UP)
+				input.onArrowPressed(UP);
+				console.log("UP", input)
 			},
 			downPressed: () => {
 				input.onArrowPressed(DOWN)
