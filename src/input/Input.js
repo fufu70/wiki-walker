@@ -55,9 +55,9 @@ export class Input {
 			if (e.code === "ArrowDown" || e.code === "KeyS") {
 				this.onArrowReleased(DOWN);
 			}
-			if (e.code === "KeyF") {
-				this.onFullscreenReleased();
-			}
+			//if (e.code === "KeyF") {
+			//	this.onFullscreenReleased();
+			//}
 		});
 		this.isFullscreen = false;
 		
