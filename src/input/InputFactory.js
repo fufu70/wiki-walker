@@ -3,6 +3,7 @@ import {Input, LEFT, RIGHT, UP, DOWN} from './Input.js';
 
 export class InputFactory {
 	static input = undefined;	
+	static mobileInput = undefined;
 
 	static getInput(supportingCharacters = '') {
 		if (InputFactory.input) {
@@ -21,9 +22,13 @@ export class InputFactory {
 			return null;
 		}
 		const factory = new InputFactory();
-		return factory.addMobileInput(input);
+		InputFactory.mobileInput = factory.addMobileInput(input);
+		return InputFactory.mobileInput;
 	}
 
+	static hasMobileInput() {
+		return !!InputFactory.mobileInput;
+	}
 	addMobileInput(input) {
 		const mobileParams = {
 			leftPressed: () => {

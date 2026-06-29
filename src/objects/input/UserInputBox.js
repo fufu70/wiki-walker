@@ -54,7 +54,6 @@ export class UserInputBox extends HudGameObject {
 		events.emit("START_TEXT_INPUT");
 
 		// User Text Input
-		// this.input = new Input(SUPPORTED_CHARACTERS);
 		this.input = InputFactory.getInput(SUPPORTED_CHARACTERS);
 	}
 
@@ -135,9 +134,13 @@ export class UserInputBox extends HudGameObject {
 		let cursorX = drawPosX + PADDING_LEFT;
 		let cursorY = drawPosY + PADDING_TOP;
 		let currentShowingIndex = 0;
+		let footerWords = "ENTER - Decide ⬤ ESC - Canecel";
+		if (InputFactory.hasMobileInput()) {
+			footerWords = "B - Decide ⬤ X - Cancel";
+			cursorX += 25;
+		}	 
+		const words = this.typewriter.generateWords(footerWords);
 
-		const words = this.typewriter.generateWords("ENTER - Decide ⬤ ESC - Cancel");
-		
 		words.forEach(word => {
 			word.chars.forEach(char => {
 				const {sprite, width} = char;
