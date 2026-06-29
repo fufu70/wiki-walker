@@ -140,6 +140,16 @@ html, body {
   top: 35px;
   left: 129px;
 }
+
+@media screen and (max-width: 400px) {
+	.mobile-controller-arrow-pad {
+		bottom: 70px;
+	}
+	.mobile-controller-action-pad {
+		bottom: 0px;
+		right: -20px;
+	}
+}
 `;
 
 const template = `
@@ -270,7 +280,7 @@ export class MobileInput {
 		});
 
 		document.querySelectorAll('.mobile-controller-action-pad').forEach(elem => {
-			elem.style.right = ((30 / 350) * limit) + append;
+			elem.style.right = (((-20) / 350) * limit) + append;
 			elem.style.height = ((350 / 350) * limit) + append;
 			elem.style.width = ((350 / 350) * limit) + append;
 			elem.style.fontSize = ((40 / 350) * limit) + append;
