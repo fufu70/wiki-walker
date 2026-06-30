@@ -3,8 +3,6 @@ export const RIGHT = "RIGHT";
 export const UP = "UP";
 export const DOWN = "DOWN";
 
-import {MobileInput} from './MobileInput.js';
-
 export class Input {
 
 	constructor(SUPPORTED_CHARACTERS = "") {
@@ -60,8 +58,6 @@ export class Input {
 			//}
 		});
 		this.isFullscreen = false;
-		
-	//	this.addMobileInput();
 	}
 
 	setSupportingCharacters(supportingCharacters) {
