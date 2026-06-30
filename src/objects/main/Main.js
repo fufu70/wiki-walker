@@ -20,9 +20,9 @@ export class Main extends GameObject {
 	constructor() {
 		super({});
 		this.level = null;
-		//this.input = new Input();
 		this.input = InputFactory.getInput();
 		this.mobileInput = InputFactory.getMobileInput(this.input);
+		this.inputFactory = InputFactory;
 		this.camera = new Camera();
 		
 		window.main = this;

@@ -19,3 +19,10 @@ canvas {
   max-height: 100%;
   max-width: calc(100vh * (320/180));
 }
+
+@media screen and (max-width: 400px) {
+	canvas {
+		position: absolute;
+		top: 20px;
+	}
+}
